@@ -1,0 +1,99 @@
+//
+//  ThreadUtilities.h -- cross-platform Thread Utilities
+//		We should rewrite this to use JUCE threads, like soon
+//
+//	See the copyright notice and acknowledgment of authors in the file COPYRIGHT
+//
+
+#ifndef CSL_ThreadUtilities_H
+#define CSL_ThreadUtilities_H
+
+#include "CSL_Types.h"
+#include "juce.h"			// JUCE core
+
+namespace csl {
+
+#ifdef USE_JTHREADS
+
+/// The abstract CSL Thread class
+
+class CThread : public juce::Thread {
+public:
+	CThread() : juce::Thread(T("CSL Thread")) { };
+	virtual ~CThread() { };
+	static CThread * MakeThread();	///< factory method
+
+	int createThread(VOIDFCNPTR * func, void * args);
+//	int createRealtimeThread(VOIDFCNPTR * func, void * args);
+	void run();
+
+protected:
+	VOIDFCNPTR * mFunc;
+	void * mArgs;
+};
+
+#else // USE_JTHREADS
+
+/// The abstract CSL Thread class
+
+class CThread {
+public:
+	CThread() { };
+	virtual ~CThread() { };
+	static CThread * MakeThread();	///< factory method
+
+	virtual int createThread(VOIDFCNPTR * func, void * args) = 0;
+//	virtual int createRealtimeThread(VOIDFCNPTR * func, void * args) = 0;
+};
+
+/// Sync is a cross-thread synchronization object
+
+class Synch {
+public:
+	Synch() { }					///< Constructor
+	virtual ~Synch() { }		///< Destructor
+	static Synch* MakeSynch();	///< Factory method
+						/// Utilities
+	virtual int lock() = 0;
+	virtual int unlock() = 0;
+	virtual int condWait() = 0;
+	virtual int condSignal() = 0;
+};
+
+#include <pthread.h>		// not on Wondows...
+
+/// PThread version of Sync
+
+class SynchPthread : public Synch {
+public:
+	SynchPthread();
+	~SynchPthread();
+
+	pthread_mutex_t mMutex;
+	pthread_cond_t mCond;
+
+	int lock();
+	int unlock();
+	int condWait();
+	int condSignal();
+};
+
+/// PThread version of Thread
+
+class ThreadPthread : public CThread {
+public:
+	ThreadPthread();
+	~ThreadPthread();
+
+	pthread_t mThread;
+	pthread_attr_t mAttributes;
+
+	int createThread(VOIDFCNPTR * func, void* args);	
+//	int createRealtimeThread(VOIDFCNPTR * func, void* args);	
+};
+
+#endif
+
+}
+
+#endif
