@@ -1,0 +1,261 @@
+//
+//  SoundFile.cpp -- sound file class using JUCE
+//
+//	See the copyright notice and acknowledgment of authors in the file COPYRIGHT
+//
+
+#include "SoundFileJ.h"
+
+using namespace csl;
+
+//
+// JSoundFile implementation
+//
+
+JSoundFile::JSoundFile(string tpath, bool load /* , int tstart, int tstop */ ) 
+	: Abst_SoundFile(tpath /* , tstart, tstop */),
+		mAFReader(0),
+		mAFWriter(0),
+		mIOFile(0),
+		mOutStream(0) {
+	if (load) {									// load file
+		try {
+			openForRead();						// read and cache whole file
+			setToEnd();
+		} catch (CException & e) {
+			logMsg(kLogError, "File open exception caught: %s", e.mMessage.c_str());
+			return;
+		}
+	}
+}
+
+JSoundFile::JSoundFile(string folder, string tpath, bool load)
+	: Abst_SoundFile(folder, tpath /* , start, stop */ ),
+		mAFReader(0),
+		mAFWriter(0),
+		mIOFile(0),
+		mOutStream(0) {
+	if (load) {									// load file
+		try {
+			openForRead();						// read and cache whole file
+			setToEnd();
+		} catch (CException & e) {
+			logMsg(kLogError, "File open exception caught: %s", e.mMessage.c_str());
+			return;
+		}
+	}
+}
+
+JSoundFile::JSoundFile(JSoundFile & otherSndFile)
+	: Abst_SoundFile(otherSndFile),
+		mAFReader(otherSndFile.mAFReader),
+		mAFWriter(otherSndFile.mAFWriter),
+		mIOFile(otherSndFile.mIOFile),
+		mOutStream(otherSndFile.mOutStream) { }
+
+JSoundFile::~JSoundFile() {
+	if (mAFReader)
+		delete mAFReader;
+	if (mAFWriter)
+		delete mAFWriter;
+}
+
+// Accessors
+
+unsigned JSoundFile::duration() const {
+	return mAFReader ? (unsigned) mAFReader->lengthInSamples : 0;
+}
+
+SoundFileFormat JSoundFile::format() {
+	String fmt = mAFReader->getFormatName();
+	if (fmt[0] == 'A') 
+		return kSoundFileFormatAIFF;
+	else if (fmt[0] == 'W')
+		return kSoundFileFormatWAV;
+	return kSoundFileFormatOther;
+}
+
+// set up the receiver's variables based on the file
+
+void JSoundFile::initFromSndfile() {
+	mIsValid = ((mAFReader != NULL) || (mAFWriter != NULL));
+	if ( ! mIsValid) {
+//		logMsg(kLogError, "Cannot open sound file \"%s\"", mPath.c_str());
+		return;
+	}
+	if (mAFReader) {
+		mFrameRate = (unsigned) mAFReader->sampleRate;
+		mNumChannels = (unsigned) mAFReader->numChannels;
+		mNumFrames = (unsigned) mAFReader->lengthInSamples;
+		mBytesPerSample = (unsigned) mAFReader->bitsPerSample / 8;
+	} else if (mAFWriter) {
+		mFrameRate = (unsigned) mAFWriter->getSampleRate();
+		mNumChannels = (unsigned) mAFWriter->getNumChannels();
+		mNumFrames = 0;
+		mBytesPerSample = (unsigned) mAFWriter->getBitsPerSample() / 8;
+	}
+	if (mStart > 0)
+		seekTo(mStart, kPositionStart);
+	else
+		mStart = 0;
+	if ((mStop < 0) && mAFReader)
+		mStop = mAFReader->lengthInSamples;
+}
+
+void JSoundFile::openForRead() throw (CException) {
+	mMode = kSoundFileRead;
+	String fname(mPath.c_str());
+	mIOFile = new File(fname);					// create a JUCE file object
+	if ( ! mIOFile->exists()) {
+		logMsg(kLogError, "Cannot find sound file \"%s\"", mPath.c_str());
+		return;
+	}
+//	mInStream = mIOFile->createInputStream();
+												// get a format manager 
+	AudioFormatManager formatManager;
+	formatManager.registerBasicFormats();		// set it up with the basic types (wav and aiff).
+	mAFReader = formatManager.createReaderFor(*mIOFile);
+
+	this->initFromSndfile();
+	if ( ! mIsValid) {
+		logMsg(kLogError, "Cannot open sound file \"%s\"", mPath.c_str());
+		return;
+	}
+	if (mNumFrames <= CGestalt::maxSndFileFrames()) {		// read file if size < global max
+//		logMsg("Open/read sound file \"%s\" %d frames %g sec %d channels", 
+//				mPath.c_str(), duration(), durationInSecs(), channels());
+		unsigned numFrames = mAFReader->lengthInSamples;
+
+		this->readBufferFromFile(numFrames);					// read entire file
+
+		mCurrentFrame = mStart;
+//		this->setWaveform(mWavetable);							// set up oscillator pointers
+//		mWavetable.mDidIAllocateBuffers = true;
+	}
+}
+
+void JSoundFile::openForWrite(SoundFileFormat tformat, unsigned tchannels, unsigned rate, unsigned bitDepth) 
+					throw (CException) {
+	mMode = kSoundFileWrite;
+	String fname(mPath.c_str());
+	mIOFile = new File(fname);					// create a JUCE file object
+	mOutStream = mIOFile->createOutputStream();
+	StringPairArray metaDict;
+	AiffAudioFormat afmt;
+	WavAudioFormat wfmt;
+
+	switch (tformat) {
+		case kSoundFileFormatAIFF:
+			mAFWriter = afmt.createWriterFor(mOutStream, (double) rate, tchannels, bitDepth, metaDict, 0);
+			break;
+		case kSoundFileFormatWAV:
+			mAFWriter = wfmt.createWriterFor(mOutStream, (double) rate, tchannels, bitDepth, metaDict, 0);
+			break;
+		default:
+			logMsg (kLogError, "Unsupported sound file format");
+			throw IOError("Unsupported sound file format");
+	}
+	initFromSndfile();
+}
+
+void JSoundFile::close() {
+	freeBuffer();
+}
+
+// read some samples from the file into the temp buffer
+
+void JSoundFile::readBufferFromFile(unsigned numFrames) {
+	SampleBuffer sampleBufferPtr;
+	unsigned currentFrame = mCurrentFrame;
+	unsigned myChannels = mNumChannels;
+
+	this->checkBuffer(numFrames);			// check my buffer, allocate if necessary
+											// if we are at the end of the file and not looping
+	if ((currentFrame >= (unsigned) mStop) && !mIsLooping) {
+		for (unsigned i = 0; i < mNumChannels; i++) {
+			sampleBufferPtr = mWavetable.monoBuffer(i);
+			memset(sampleBufferPtr, 0, numFrames * sizeof(sample));
+		}
+		return;
+	}
+											// JUCE read fcn
+	if (mAFReader->read(mWavetable.mBuffers, myChannels, mCurrentFrame, numFrames, false)) {
+		currentFrame += numFrames;	
+	} else {
+		logMsg (kLogError, "Sound file read error");
+		throw IOError("Sound file read error");
+	}
+															// if we are past the end of the file...
+	if (currentFrame > (unsigned) mStop) {
+		unsigned numFramesRemaining = currentFrame - mStop;
+		unsigned numFramesRead = numFrames - numFramesRemaining;
+//		SampleBuffer tempBufferPtr = sampleBufferPtr + (numFramesRead * myChannels);
+		if (mIsLooping) {									// loop back to start of file
+			while (numFramesRead < numFrames) {
+				currentFrame = seekTo(0, kPositionStart);
+															// call JUCE read function
+				mAFReader->read (mWavetable.mBuffers, myChannels, mCurrentFrame, numFrames, false);
+				currentFrame += numFramesRead;
+			}
+		} else {
+			unsigned bytesToClear = numFramesRemaining * sizeof(sample);
+			for (unsigned i = 0; i < mNumChannels; i++) {
+				sampleBufferPtr = mWavetable.monoBuffer(i);
+				memset(sampleBufferPtr, 0, bytesToClear);
+			}
+		}
+	}
+}
+
+//void JSoundFile::convertFormat(unsigned num, unsigned start) {
+//	SampleBuffer sampleBufferPtr;
+//	int * intBufferPtr;
+//	sample normFactor = 1.0 / (float) (32768 << 16);
+//	
+//	for (unsigned i = 0; i < mNumChannels; i++) {
+//		sampleBufferPtr = mWavetable.monoBuffer(i) + start;
+//		intBufferPtr = mConvBuffer[i];
+//		for (unsigned j = 0; j < num; j++) {
+//			*sampleBufferPtr++ = ((float) *intBufferPtr++) * normFactor;
+//		}
+//	}
+//}
+
+// Seek
+
+unsigned JSoundFile::seekTo(int position, SeekPosition whence) throw(CException) {
+	int whenceInt;
+	if (this->isCached())
+		return mCurrentFrame;
+	switch (whence) {
+		case kPositionStart: 
+			whenceInt = position; 
+			break;
+		case kPositionCurrent: 
+			whenceInt = mCurrentFrame - position; 
+			break;
+		case kPositionEnd: 
+			whenceInt = duration() - position; 
+			break;
+		default: 
+			whenceInt = SEEK_CUR;
+			logMsg("Error: Invalid position seek flag. Used kPositionCurrent.");			
+			break;
+	}
+	mOutStream->setPosition(whenceInt);
+	return mCurrentFrame;
+}
+
+// write a CSL buffer to the interleaved output file
+
+void JSoundFile::writeBuffer(Buffer &inputBuffer) throw(CException) {
+	unsigned numFrames = inputBuffer.mNumFrames;	
+											// JUCE write fcn
+	if (mAFWriter->write(inputBuffer.mBuffers, numFrames)) {
+		mCurrentFrame += numFrames;	
+	} else {
+		logMsg (kLogError, "Sound file write error");
+		throw IOError("Sound file write error");
+	}
+}
+
