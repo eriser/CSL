@@ -12,11 +12,16 @@
 .style3 {font-weight: bold}
 .style4 {font-family: Verdana, Arial, Helvetica, sans-serif}
 .style5 {font-family: Arial, Helvetica, sans-serif}
-.style6 {font-size: 12px}
 .style7 {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: small;
 }
+.style8 {
+	font-size: large;
+	font-weight: bold;
+}
+.style11 {font-family: Arial, Helvetica, sans-serif; font-weight: bold; }
+.style13 {font-family: Arial, Helvetica, sans-serif; font-size: small; font-weight: bold; }
 -->
   </style>
 </head>
@@ -31,23 +36,30 @@
  style="border: 0px solid ; width: 432px; height: 320px;" align="right"
  hspace="8" vspace="0"></a></h2>
 <h4>(Oct, 2009) CSL 5.0g now on MS-Windows</h4>
-<p align="left">We have a new VisualStudio project that uses JUCE 1.50 on Windows XP and Vista. </p>
-<p align="left">Here's a screen shot of the CSL_JUCE demo.</p>
-<h4>(Oct, 2009) CSL SubVersion Repository Available</h4>
-<p>To access the CSL subversion (svn) code repository at the Media Arts &amp; Technology (MAT) servers at the University of California, Santa Barbara (UCSB), use an SVN client or shell terminal and enter the command,</p>
+<p align="left">We have a new VisualStudio project for CSL 5.0 that uses JUCE 1.50 to build on MS-Windows XP and Vista. It requires that JUCE and the DirectX9 SDKs be installed. Here's a screen shot of the CSL_JUCE 5.0 demo running (with audio) on XP.</p>
+<h4>(Oct, 2009) CSL Subversion Repository Available</h4>
+<p>To access the CSL subversion (svn) code repository at the Media Arts &amp; Technology (MAT) servers at the University of California, Santa Barbara (UCSB), use any SVN client or shell terminal and enter the command,</p>
 <blockquote>
-  <p class="style4">svn co https://svn.mat.ucsb.edu/svn/CSL</p>
+  <blockquote>
+    <p class="style4">svn co https://svn.mat.ucsb.edu/svn/CSL</p>
+  </blockquote>
 </blockquote>
-<p>to down-load the latest CSL source, doc, and builds into your current directory. </p>
-<p><strong>You can also browse the whole source file set on-line via,</strong></p>
+<p>to down-load the latest CSL source, doc, and Mac/Linux/Windows build projects to your machine. </p>
+<p><strong>You can also browse the whole source file tree on-line via,</strong></p>
 <blockquote>
-  <p class="style5"><span class="style6"><span class="style2"><a href="https://svn.mat.ucsb.edu/svn/CSL">https://svn.mat.ucsb.edu/svn/CSL</a></span></span></p>
+  <blockquote>
+    <p class="style8"><a href="https://svn.mat.ucsb.edu/svn/CSL" class="style5">https://svn.mat.ucsb.edu/svn/CSL</a></p>
+  </blockquote>
 </blockquote>
 <p class="style2">See, e.g.,</p>
 <blockquote>
-  <p class="style7"><a href="https://svn.mat.ucsb.edu/svn/CSL/README">https://svn.mat.ucsb.edu/svn/CSL/README</a></p>
-  <p class="style7"><a href="https://svn.mat.ucsb.edu/svn/CSL/CSL/Kernel/CSL_Core.h">https://svn.mat.ucsb.edu/svn/CSL/CSL/Kernel/CSL_Core.h</a></p>
-  <p class="style5"><span class="style2"><a href="https://svn.mat.ucsb.edu/svn/CSL/Doc/CSL_Overview.pdf">https://svn.mat.ucsb.edu/svn/CSL/Doc/CSL_Overview.pdf</a></span></p>
+  <blockquote>
+    <p class="style7"><span class="style7"><strong><a href="https://svn.mat.ucsb.edu/svn/CSL/README">https://svn.mat.ucsb.edu/svn/CSL/README</a>
+      </strong></span>    </p>
+    <p class="style11"><span class="style7"><a href="https://svn.mat.ucsb.edu/svn/CSL/CSL/Kernel/CSL_Core.h">https://svn.mat.ucsb.edu/svn/CSL/CSL/Kernel/CSL_Core.h</a></span>    </p>
+    <p class="style5">
+      <span class="style13"><a href="https://svn.mat.ucsb.edu/svn/CSL/Doc/CSL_Overview.pdf">https://svn.mat.ucsb.edu/svn/CSL/Doc/CSL_Overview.pdf</a></span></span></p>
+  </blockquote>
 </blockquote>
 <p>Note that the repository does not include the <a href="./CSL_Data.zip">CSL Data directory</a> or the <a href="./juce.zip">patched JUCE library</a>.</p>
 <h4>(Sept., 2009): CSL 5.0 (JUCE) Released</h4>
@@ -55,27 +67,13 @@
  cellspacing="2">
   <tbody>
     <tr>
-      <td style="width: 500px; text-align: center; vertical-align: top;">
-      <a href="http://fastlabinc.com/CSL5.0-Demo.jpg"><img
- alt="CSL demo GUI" src="http://fastlabinc.com/CSL5.0-Demo2-small.jpg"
- style="border: 0px solid ; width: 432px; height: 320px;" align="middle"
- hspace="0" vspace="0"></a></td>
+      
       <td height="12" valign="top" style="vertical-align: top;">
       <ul class="style3">
-        <li>
-          <div align="left">NEW: &quot;The CSL Show&quot; Screencasts</div>
-        </li>
         
-          <div align="left">
-            <blockquote>
-              <p><span class="style2"><a href="CSL5_Demo1.mov" target="_top">Show 1: A Tour of CSL</a> (22 min, 108 MB)</span></p>
-              <p class="style2"><a href="CSL5_Demo2.mov" target="_top">Show 2: CSL App Slide Show</a> (4:20 min, 17 MB)</p>
-              <p class="style2"><a href="CSL5_Demo3.mov" target="_top">Show 3: CSL Internals, Programming</a> (19 min, 92 MB)</p>
-            </blockquote>
-          </div>
           <li>
             <div align="left">              
-              <p><a href="CSL5.0.zip">Get the CSL 5.0 Src ZIP file</a> (5.0g: Oct.17, 2009)</p>
+              <p><a href="CSL5.0.zip">Get the CSL 5.0 Src ZIP file</a> (5.0g, 28 MB, 10/09)</p>
             </div>
           </li>
         <li>
@@ -88,25 +86,38 @@
        <li>
           <div align="left">            
             <p><a href="./juce.zip">Get the patched JUCE
-              1.50 library</a></p>
+              1.50 library</a> (48 MB)</p>
           </div>
         </li>
          <li>
           <div align="left">            
-            <p><a href="./CSL_Data.zip">Get the CSL DataZIP</a></p>
+            <p><a href="./CSL_Data.zip">Get the CSL DataZIP</a> (200 MB)</p>
           </div>
         </li>
-        <li>
-          <div align="left">            
-            <p><a href="./CSL_Doc.zip">Get the CSL Doc ZIP</a> (included in new src zip)</p>
-          </div>
-        </li>
+      
         <li>
           <div align="left">
-            <a href="http://lists.mat.ucsb.edu/mailman/listinfo/CSL">Go
-              to the CSL mailing list page</a>          </div>
+           <p> <a href="http://lists.mat.ucsb.edu/mailman/listinfo/CSL">Go
+              to the CSL mailing list page</a></p>   </div>
         </li>
+        <li>
+          <div align="left"><p>NEW: &quot;The CSL Show&quot; Screencasts</p></div>
+        </li>
+        
+          <div align="left">
+            <blockquote>
+              <p><span class="style2"><a href="CSL5_Demo1.mov" target="_top">Show 1: A Tour of CSL</a> (22 min, 108 MB)</span></p>
+              <p class="style2"><a href="CSL5_Demo2.mov" target="_top">Show 2: CSL App Slide Show</a> (4:20 min, 17 MB)</p>
+              <p class="style2"><a href="CSL5_Demo3.mov" target="_top">Show 3: CSL Internals, Programming</a> (19 min, 92 MB)</p>
+            </blockquote>
+          </div>
+        
       </ul>      </td>
+      <td style="width: 500px; text-align: center; vertical-align: top;">
+      <a href="http://fastlabinc.com/CSL5.0-Demo.jpg"><img
+ alt="CSL demo GUI" src="http://fastlabinc.com/CSL5.0-Demo2-small.jpg"
+ style="border: 0px solid ; width: 432px; height: 320px;" align="middle"
+ hspace="0" vspace="16"></a></td>
     </tr>
   </tbody>
 </table>
