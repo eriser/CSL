@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C029C32108A757C00AC8EFB /* Test_Audio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C029C31108A757C00AC8EFB /* Test_Audio.cpp */; };
 		4C1081E2108255DE00A34A15 /* liblo.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C1081E1108255DE00A34A15 /* liblo.dylib */; };
 		4C1081E3108255DE00A34A15 /* liblo.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C1081E1108255DE00A34A15 /* liblo.dylib */; };
 		4C45F0C1105A53AA00E1999C /* BinauralDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C45F0BF105A53AA00E1999C /* BinauralDB.cpp */; };
@@ -151,6 +152,7 @@
 		20286C33FDCF999611CA2CEA /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		4A9504C8FFE6A3BC11CA0CBA /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
 		4A9504CAFFE6A41611CA0CBA /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
+		4C029C31108A757C00AC8EFB /* Test_Audio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Test_Audio.cpp; sourceTree = "<group>"; };
 		4C07224710704994007D4013 /* Test_Control.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Test_Control.cpp; sourceTree = "<group>"; };
 		4C0BF9E610071C8F0006F064 /* SoundFileJ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundFileJ.cpp; sourceTree = "<group>"; };
 		4C0BF9E710071C8F0006F064 /* SoundFileJ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundFileJ.h; sourceTree = "<group>"; };
@@ -500,6 +502,7 @@
 				4C904E610CD1808E00307D02 /* Test_Effects.cpp */,
 				4C904E620CD1808E00307D02 /* Test_Panners.cpp */,
 				4C07224710704994007D4013 /* Test_Control.cpp */,
+				4C029C31108A757C00AC8EFB /* Test_Audio.cpp */,
 				4C196A0410815D7100EE476C /* Test_OSC_Client.cpp */,
 			);
 			name = Tests;
@@ -899,6 +902,7 @@
 				4C9F346B1076DAFD00C90714 /* MIDIIOJ.cpp in Sources */,
 				4CC43446107AB39600AE02E9 /* OSC_support.cpp in Sources */,
 				4CA75570107D7EFA0030FF80 /* AdditiveInstrument.cpp in Sources */,
+				4C029C32108A757C00AC8EFB /* Test_Audio.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

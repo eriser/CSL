@@ -290,13 +290,13 @@ void testOSCServer() {
 testStruct ctrlTestList[] = {
 	"Dump ports",			IO_test,		"Dump list of MIDI ports to stdout",
 	"Dump input",			input_test,		"Dump MIDI input cmds from MIDI kbd",
-	"MIDI notes",			play_test,		"Play MIDI notes on a simple input (reads MIDI kbd input)",
+	"MIDI notes",			play_test,		"Play MIDI notes (reads MIDI kbd input)",
 	"MIDI output",			output_test,	"Test sending MIDI output",
 	"MIDI listener",		testListener,	"Start the MIDI listener object",
-	"MIDI file player",		testMIDIFile,	"Play a simple MIDI file with an instrument library",
+	"MIDI file player",		testMIDIFile,	"Play a MIDI file on an instrument library",
 #ifdef USE_LOSC					// liblo for OSC
-	"OSC client/server",	testOSCClientServer,"OSC client/server demo with an instrument library",
-	"OSC server",			testOSCServer,	"Start OSC server with an instrument library",
+	"OSC client/server",	testOSCClientServer,	"OSC client/server on a library",
+	"OSC server",			testOSCServer,	"Start OSC server on a library",
 #endif
 	NULL,					NULL,			NULL
 };

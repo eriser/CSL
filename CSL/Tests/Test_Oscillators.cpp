@@ -353,11 +353,11 @@ void runTests() {
 // test list for Juce GUI
 
 testStruct oscTestList[] = {
-	"Sweep test",				testSweep,			"Test a sine wave with swept freq and a volume swell",
+	"Sweep test",				testSweep,			"Test a sine wave with swept freq and volume swell",
 	"Simple sines",				testSimpleSines,	"Test some simple sine oscilators",
 	"Standard waveforms",		testBasicWaves,		"Demonstrate the standard wave forms",
 	"Scaled sine",				testScaledSin,		"Play a scaled sine wave",
-	"Wavetable interpolation",	testWavetableInterpolation,		"Show truncated and interpolated wave tables",
+	"Wavetable interpolation",	testWavetableInterpolation,		"Show truncated/interpolated wave tables",
 	"AM/FM sines",				testAMFMSin,		"Play an AM and FM sine wave",
 	"Dump AM/FM sines",			dumpAMFMSin,		"Dump the graph of the AM/FM sine",
 	"SumOfSines cached",		testSumOfSinesCached,		"Play a sum-of-sines",
@@ -366,7 +366,7 @@ testStruct oscTestList[] = {
 	"SumOfSines 1/f",			testSumOfSines1F,			"Play a 1/f spectrum sum-of-sines",
 	"Wavetable from file",		testWaveTableFromFile,		"Load a wave table frmo a sound file",
 #ifndef CSL_WINDOWS
-	"SHARC SOS",				test_SHARC,			"Load and print the SHARC timbre database and play an example",
+	"SHARC SOS",				test_SHARC,			"Load/print the SHARC timbre database, play example",
 	"Vector SHARC",				test_SHARC2,		"Show vector cross-fade of SHARC spectra",
 #endif
 	NULL,						NULL,				NULL

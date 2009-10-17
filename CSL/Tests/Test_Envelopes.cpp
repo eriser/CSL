@@ -346,17 +346,17 @@ testStruct envTestList[] = {
 	"Glissando test",		testGliss,				"Demonstrate a glissando function",
 	"Swell on aqmplitude",	testSwell,				"Make an amplitude swell",
 	"Frequency envelope",	testFrequencyEnv,		"Play a note with a frequency envelope",
-	"AR sine",				testARSin,				"Play a sine with an AR (attack/release) amplitude envelope",
+	"AR sine",				testARSin,				"Play an AR (attack/release) amplitude envelope",
 //	"AR sine 2",			testARSin2,				"",
-	"AM/FM envelopes",		testAMFMEnvs,			"Test a note with AM and FM envelopes",
-	"ADSR 2",				testADSR2,				"Play a note with an ADSR (attack/decay/sustain/release) amplitude envelope",
+	"AM/FM envelopes",		testAMFMEnvs,			"Test AM and FM envelopes",
+	"ADSR 2",				testADSR2,				"Play an ADSR (attack/decay/sustain/release)",
 	"ADSR FM",				testADSR_FM,			"Dual-envelope FM example",
-	"Rand Freq envelope",	testRandFreqEnv,		"Play a note with a random-walk frequency envelope",
-	"50 Rand F/A envs",		test50RandFreqEnv,		"Test 50 of the random frequency envelope players",
+	"Rand Freq envelope",	testRandFreqEnv,		"Play a random-walk frequency envelope",
+	"50 Rand F/A envs",		test50RandFreqEnv,		"Test 50 random frequency envelope players",
 //	"Envelope scaling",		testEnvScale,	
 	"Fancy FM",				testFancy_FM,			"Play a fancy FM note",
 	"Complex envelope",		testComplexEnvelope,	"Play a note with a complex amplitude envelope",
-	"Many random SOS",		testManyRandSOS,		"Layer many random SumOfSines instruments with envelopes",
+	"Many random SOS",		testManyRandSOS,		"Layer many SumOfSines instruments with envelopes",
 	NULL,					NULL,					NULL
 };
 

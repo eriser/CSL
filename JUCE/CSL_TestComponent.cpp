@@ -42,6 +42,7 @@ extern testStruct envTestList[];
 extern testStruct effTestList[];
 extern testStruct panTestList[];
 extern testStruct ctrlTestList[];
+extern testStruct audioTestList[];
 
 testStruct * allTests[] = {
 	oscTestList,
@@ -50,8 +51,9 @@ testStruct * allTests[] = {
 	effTestList,
 	panTestList,
 #ifdef USE_JMIDI
-	ctrlTestList
+	ctrlTestList,
 #endif
+	audioTestList
 };
 
 char * allTestNames[] = {
@@ -61,8 +63,9 @@ char * allTestNames[] = {
 	"Effect Tests",
 	"Panner Tests",
 #ifdef USE_JMIDI
-	"Control Tests"
+	"Control Tests",
 #endif
+	"Audio Tests"
 };
 
 testStruct * gTestList;				// global menu
@@ -72,24 +75,30 @@ testStruct * gTestList;				// global menu
 void dumpTestList() {
 	printf("\nMenu List\n");
 #ifdef USE_JMIDI
-	unsigned numSuites = 6;
+	unsigned numSuites = 7;
 #else
-	unsigned numSuites = 5;
+	unsigned numSuites = 6;
 #endif
+	printf("\n\n");
 	for (unsigned i = 0; i < numSuites; i++) {
 		gTestList = allTests[i];
 		char * testName = allTestNames[i];
-		printf("\t%s\n", testName);
+		printf("\n%s\n", testName);
+//		printf("</ul>\n<li>%s</li>\n<ul>", testName);
 		for (unsigned j = 0; gTestList[j].name != NULL; j++) {
-			printf("\t\t%s\n", gTestList[j].name);
+			printf("%24s    %s\n", gTestList[j].name, gTestList[j].comment);
+//			printf("<li>%s -- %s</li>\n", gTestList[j].name, gTestList[j].comment);
 		}
 	}
+	printf("\n\n");
 }
 
 // The main() function reads argv[1] as the suite selector (from the above list, 1-based)
 // and argv[2] as the test within the suite, e.g., use "2 10" to select the 10th test in the
 // srcTestList suite ("Vector IFFT" -- found at the bottom of Test_Sources.cpp).
 // This is useful for debugging; set up the GUI to run the test you're working on.
+
+// Globals are here
 
 extern IO * theIO;							// global IO object accessed by other threads
 Label* gCPULabel;							// CPU % label...
@@ -103,8 +112,9 @@ extern char **argVals;
 	int gSampIndex = 0;						// write index into out buffer
 #endif
 
-
+//
 // LThread run function spawns/loops its CThread and sleeps interruptably
+//
 
 void LThread::run() {
 	while (1) {								// endless loop
@@ -247,8 +257,8 @@ CSLComponent::CSLComponent ()
     setSize (600, 400);
 
     //[Constructor] You can add your own custom stuff here..
-					// and initialise the device manager with no settings so that it picks a
-					// default device to use.
+	
+					// initialise the device manager so it picks a default device to use.
 	const String error (mAudioDeviceManager.initialise (0,	/* no input */
 													   2,	/* stereo output  */
 													   0,	/* no XML defaults */
@@ -295,10 +305,9 @@ CSLComponent::CSLComponent ()
 	VUMeterL->setChannel(0);
 	VUMeterR->setChannel(1);
     loopButton->setToggleState (false, false);
-
 //	spectrogam->setVisible(false);
 
-//	dumpTestList();					// print out the demo/test menu
+	dumpTestList();					// print out the demo/test menu
 	
 	int whichSuite = 1;				// set default suite/test
 	int whichTest = 1;

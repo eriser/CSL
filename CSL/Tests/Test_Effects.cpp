@@ -378,8 +378,8 @@ testStruct effTestList[] = {
 	"Reverb",				testReverb,			"Show mono reverb on impulses",
 	"Stereo-verb",			testStereoverb,		"Listen to the stereo freeverb",
 	"Multi-tap",			testMultiTap,		"Play a multi-tap delay line",
-	"Block up-sizer",		testBlockUpsizer,	"test the block resizer on up-sizing",
-	"Block down-sizer",		testBlockDownsizer,	"test the block resizer on down-sizing",
+	"Block up-sizer",		testBlockUpsizer,	"Test the block resizer on up-sizing",
+	"Block down-sizer",		testBlockDownsizer,	"Test the block resizer on down-sizing",
 	"Sample-avg filter",	testSAFilter,		"Test the simple sample-averager filter",
 	NULL,					NULL,				NULL
 };

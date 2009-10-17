@@ -411,7 +411,7 @@ void runTests() {
 testStruct panTestList[] = {
 	"Stereo panner",			testPan,		"Demonstrate the stero panner",
 //	"N2M panner",				testN2MPan,	
-	"Mixer",					testSineMixer,	"Make a mixer with some sine inputs (slow sum-of-sines)",
+	"Mixer",					testSineMixer,	"Mixer with 4 sine inputs (slow sum-of-sines)",
 	"Panning mixer",			testPanMix,		"Play a panning stereo mixer",
 	"Bigger panning mixer",		testBigPanMix,	"Test a mixer with many inputs",
 #ifdef USE_CONVOLVER

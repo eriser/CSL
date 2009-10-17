@@ -422,7 +422,7 @@ void runTests() {
 
 testStruct srcTestList[] = {
 	"Noise tests",				testNoises,			"Test noise generators",
-	"Plucked string",			testString,			"Texture of string arpeggii panned in stereo space with reverb",
+	"Plucked string",			testString,			"Waves of string arpeggii in stereo with reverb",
 	"Mono Snd file player",		testMonoSoundFilePlayer,	"Test playing a sound file",
 	"Stereo Snd file player",	testStereoSoundFilePlayer,	"Play a stereo sound file",
 #ifdef USE_MP3	
@@ -431,7 +431,7 @@ testStruct srcTestList[] = {
 	"Snd file transpose",		testSoundFileTranspose,	"Demonstrate transposing a sound file",
 	"Snd file bank",			testSndFileBank,		"Play a large sample bank form sound files",
 	"FM instrument",			testFMInstrument,		"Play the basic FM instrument",
-	"Fancy FM instrument",		testFancyFMInstrument,	"Play an FM instrument with attack chiff and vibrato",
+	"Fancy FM instrument",		testFancyFMInstrument,	"FM note with attack chiff and vibrato",
 	"SumOfSines instrument",	testSOSInstrument,		"Demonstrate the SumOfSines instrument",
 	"Snd file instrument",		testSndFileInstrument,	"Test the sound file instrument",
 	"IFFT synthesis",			test_ifft,				"Make a sound with IFFT synthesis",
