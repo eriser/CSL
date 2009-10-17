@@ -283,7 +283,7 @@
 								<string>089C166AFE841209C02AAC07</string>
 								<string>4C6AE9EF10857793003A2CF1</string>
 								<string>4C6AE9F010857793003A2CF1</string>
-								<string>4C6AEA0010857793003A2CF1</string>
+								<string>4C6AE9F710857793003A2CF1</string>
 								<string>4C6AEA2C10857793003A2CF1</string>
 								<string>4C6AEADA10857804003A2CF1</string>
 								<string>089C167CFE841241C02AAC07</string>
@@ -295,8 +295,26 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>43</integer>
-									<integer>41</integer>
+									<integer>10</integer>
+									<integer>9</integer>
+									<integer>1</integer>
+									<integer>0</integer>
+								</array>
+								<array>
+									<integer>11</integer>
+									<integer>9</integer>
+									<integer>1</integer>
+									<integer>0</integer>
+								</array>
+								<array>
+									<integer>12</integer>
+									<integer>9</integer>
+									<integer>1</integer>
+									<integer>0</integer>
+								</array>
+								<array>
+									<integer>13</integer>
+									<integer>9</integer>
 									<integer>1</integer>
 									<integer>0</integer>
 								</array>
@@ -351,7 +369,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>4C1979391086D3CB00A15D23</string>
+										<string>4C029B7D108A573900AC8EFB</string>
 										<key>history</key>
 										<array>
 											<string>4C6AEB1910865957003A2CF1</string>
@@ -371,7 +389,7 @@
 											<string>4C1979341086C95600A15D23</string>
 											<string>4C1979351086C95600A15D23</string>
 											<string>4C1979361086C95600A15D23</string>
-											<string>4C1979371086C95600A15D23</string>
+											<string>4C1979391086D3CB00A15D23</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -429,9 +447,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>4C1979121086C35E00A15D23</string>
+				<string>4C029B7E108A573900AC8EFB</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>4C1979131086C35E00A15D23</string>
+				<string>4C029B7F108A573900AC8EFB</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -550,7 +568,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>277271499.74882197</real>
+	<real>277501753.38518202</real>
 	<key>ToolbarConfigUserDefaultsMinorVersion</key>
 	<string>2</string>
 	<key>ToolbarDisplayMode</key>
@@ -567,7 +585,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>1C530D57069F1CE1000CFCEE</string>
 		<string>4CF6276D1083CA1B0045BBD9</string>
 		<string>/Users/stp/Code/CSL/MacOSX/CSL_VST.xcodeproj</string>
 	</array>
@@ -610,8 +627,6 @@
 							<string>0pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -651,7 +666,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>4CF6276D1083CA1B0045BBD9</string>
-				<string>4C1979141086C35E00A15D23</string>
+				<string>4C029B80108A573900AC8EFB</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -664,7 +679,7 @@
 			<key>WindowToolGUID</key>
 			<string>4CF6276D1083CA1B0045BBD9</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>

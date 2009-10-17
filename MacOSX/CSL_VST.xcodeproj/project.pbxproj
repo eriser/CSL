@@ -55,10 +55,10 @@
 		4C6AE9F410857793003A2CF1 /* CSL_Core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CSL_Core.cpp; sourceTree = "<group>"; };
 		4C6AE9F510857793003A2CF1 /* CGestalt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGestalt.h; sourceTree = "<group>"; };
 		4C6AE9F610857793003A2CF1 /* CGestalt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGestalt.cpp; sourceTree = "<group>"; };
-		4C6AE9F810857793003A2CF1 /* Variable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Variable.h; path = ../CSL/Kernel/Variable.h; sourceTree = SOURCE_ROOT; };
-		4C6AE9F910857793003A2CF1 /* Variable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Variable.cpp; path = ../CSL/Kernel/Variable.cpp; sourceTree = SOURCE_ROOT; };
-		4C6AE9FA10857793003A2CF1 /* RingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RingBuffer.h; path = ../CSL/Kernel/RingBuffer.h; sourceTree = SOURCE_ROOT; };
-		4C6AE9FB10857793003A2CF1 /* RingBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RingBuffer.cpp; path = ../CSL/Kernel/RingBuffer.cpp; sourceTree = SOURCE_ROOT; };
+		4C6AE9F810857793003A2CF1 /* Variable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Variable.h; sourceTree = "<group>"; };
+		4C6AE9F910857793003A2CF1 /* Variable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Variable.cpp; sourceTree = "<group>"; };
+		4C6AE9FA10857793003A2CF1 /* RingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RingBuffer.h; sourceTree = "<group>"; };
+		4C6AE9FB10857793003A2CF1 /* RingBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RingBuffer.cpp; sourceTree = "<group>"; };
 		4C6AE9FC10857793003A2CF1 /* ThreadUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadUtilities.h; sourceTree = "<group>"; };
 		4C6AE9FD10857793003A2CF1 /* ThreadUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadUtilities.cpp; sourceTree = "<group>"; };
 		4C6AE9FE10857793003A2CF1 /* BlockResizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockResizer.h; sourceTree = "<group>"; };

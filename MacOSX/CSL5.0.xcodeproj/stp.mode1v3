@@ -340,7 +340,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>4C9F342C1076D7F100C90714</string>
+										<string>4C029BB0108A574A00AC8EFB</string>
 										<key>history</key>
 										<array>
 											<string>4CDAEB740D73C3F800B650D2</string>
@@ -363,8 +363,6 @@
 											<string>4C876FF60F97AE4800BECA67</string>
 											<string>4C876FFA0F97AE4800BECA67</string>
 											<string>4C9DFA1B0FA7DCDF00D3DF67</string>
-											<string>4C4B95DE0FAAC05B00B086EE</string>
-											<string>4C4B95DF0FAAC05B00B086EE</string>
 											<string>4CE1DE2B0FBB697A001C8C4C</string>
 											<string>4CE1DE2C0FBB697A001C8C4C</string>
 											<string>4CE1DE310FBB697A001C8C4C</string>
@@ -396,7 +394,6 @@
 											<string>4C374F440FDDE942004E1EFE</string>
 											<string>4C374F450FDDE942004E1EFE</string>
 											<string>4C374F460FDDE942004E1EFE</string>
-											<string>4C374F470FDDE942004E1EFE</string>
 											<string>4C374F480FDDE942004E1EFE</string>
 											<string>4C221E1B101A404700D09DA0</string>
 											<string>4C221E1C101A404700D09DA0</string>
@@ -428,7 +425,6 @@
 											<string>4C5D9B78104E203F007CD461</string>
 											<string>4C5D9B79104E203F007CD461</string>
 											<string>4C5D9B7A104E203F007CD461</string>
-											<string>4C5D9B7B104E203F007CD461</string>
 											<string>4C5D9B7C104E203F007CD461</string>
 											<string>4C5D9B7D104E203F007CD461</string>
 											<string>4C5D9B7E104E203F007CD461</string>
@@ -437,7 +433,7 @@
 											<string>4C5D9B81104E203F007CD461</string>
 											<string>4C5D9B83104E203F007CD461</string>
 											<string>4C5D9B84104E203F007CD461</string>
-											<string>4C5D9BC2104E203F007CD461</string>
+											<string>4C9F342C1076D7F100C90714</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -449,14 +445,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {841, 687}}</string>
+								<string>{{0, 0}, {841, 681}}</string>
 								<key>RubberWindowFrame</key>
 								<string>298 31 1152 1027 0 0 1920 1058 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>687pt</string>
+							<string>681pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -469,14 +465,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 692}, {841, 294}}</string>
+								<string>{{0, 686}, {841, 300}}</string>
 								<key>RubberWindowFrame</key>
 								<string>298 31 1152 1027 0 0 1920 1058 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>294pt</string>
+							<string>300pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -495,9 +491,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>4C9F342D1076D7F100C90714</string>
+				<string>4C029BB1108A574A00AC8EFB</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>4C9F342E1076D7F100C90714</string>
+				<string>4C029BB2108A574A00AC8EFB</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -616,7 +612,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>276223985.47123498</real>
+	<real>277501770.61466998</real>
 	<key>ToolbarDisplayMode</key>
 	<integer>2</integer>
 	<key>ToolbarIsVisible</key>
@@ -712,7 +708,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>4CF2D8350CE7D61500126747</string>
-				<string>4C9F342F1076D7F100C90714</string>
+				<string>4C029BB3108A574A00AC8EFB</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>

@@ -105,8 +105,8 @@
 		4C904F1C0CD1841500307D02 /* BlockResizer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = BlockResizer.cpp; sourceTree = "<group>"; };
 		4C904F1D0CD1841500307D02 /* CPoint.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CPoint.h; sourceTree = "<group>"; };
 		4C904F1E0CD1841500307D02 /* CPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = CPoint.cpp; sourceTree = "<group>"; };
-		4C9DA097103E8ED2007025BB /* CSL_HRTF_Component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CSL_HRTF_Component.cpp; path = ../HRTF/CSL_HRTF_Component.cpp; sourceTree = "<group>"; };
-		4C9DA098103E8ED2007025BB /* CSL_HRTF_Component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSL_HRTF_Component.h; path = ../HRTF/CSL_HRTF_Component.h; sourceTree = "<group>"; };
+		4C9DA097103E8ED2007025BB /* CSL_HRTF_Component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CSL_HRTF_Component.cpp; path = ../Applications/HRTF/CSL_HRTF_Component.cpp; sourceTree = "<group>"; };
+		4C9DA098103E8ED2007025BB /* CSL_HRTF_Component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSL_HRTF_Component.h; path = ../Applications/HRTF/CSL_HRTF_Component.h; sourceTree = "<group>"; };
 		4C9DA0A5103E9285007025BB /* matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrix.h; sourceTree = "<group>"; };
 		4C9DA0A6103E9285007025BB /* SpeakerLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpeakerLayout.h; sourceTree = "<group>"; };
 		4C9DA0A7103E9285007025BB /* SpeakerLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpeakerLayout.cpp; sourceTree = "<group>"; };
@@ -277,7 +277,7 @@
 				20286C2AFDCF999611CA2CEA /* JUCE */,
 			);
 			name = CSL;
-			path = ..;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		4C904E400CD1807500307D02 /* Kernel */ = {

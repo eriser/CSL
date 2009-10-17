@@ -52,10 +52,11 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 277267291;
-			PBXWorkspaceStateSaveDate = 277267291;
+			PBXPerProjectTemplateStateSaveDate = 277501728;
+			PBXWorkspaceStateSaveDate = 277501728;
 		};
 		perUserProjectItems = {
+			4C029B7D108A573900AC8EFB /* PBXTextBookmark */ = 4C029B7D108A573900AC8EFB /* PBXTextBookmark */;
 			4C19792E1086C95600A15D23 /* PBXTextBookmark */ = 4C19792E1086C95600A15D23 /* PBXTextBookmark */;
 			4C19792F1086C95600A15D23 /* PBXTextBookmark */ = 4C19792F1086C95600A15D23 /* PBXTextBookmark */;
 			4C1979301086C95600A15D23 /* PBXTextBookmark */ = 4C1979301086C95600A15D23 /* PBXTextBookmark */;
@@ -65,7 +66,6 @@
 			4C1979341086C95600A15D23 /* PBXTextBookmark */ = 4C1979341086C95600A15D23 /* PBXTextBookmark */;
 			4C1979351086C95600A15D23 /* PBXTextBookmark */ = 4C1979351086C95600A15D23 /* PBXTextBookmark */;
 			4C1979361086C95600A15D23 /* PBXTextBookmark */ = 4C1979361086C95600A15D23 /* PBXTextBookmark */;
-			4C1979371086C95600A15D23 /* PBXTextBookmark */ = 4C1979371086C95600A15D23 /* PBXTextBookmark */;
 			4C1979391086D3CB00A15D23 /* PBXTextBookmark */ = 4C1979391086D3CB00A15D23 /* PBXTextBookmark */;
 			4C6AEB1910865957003A2CF1 /* PBXTextBookmark */ = 4C6AEB1910865957003A2CF1 /* PBXTextBookmark */;
 			4C6AEB1B10865957003A2CF1 /* PBXTextBookmark */ = 4C6AEB1B10865957003A2CF1 /* PBXTextBookmark */;
@@ -79,6 +79,16 @@
 		sourceControlManager = 4C8773BC0C3C46270075C42B /* Source Control */;
 		userBuildSettings = {
 		};
+	};
+	4C029B7D108A573900AC8EFB /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 4C6AEA5C10857793003A2CF1 /* VSTIO.cpp */;
+		name = "VSTIO.cpp: 17";
+		rLen = 0;
+		rLoc = 410;
+		rType = 0;
+		vrLen = 1750;
+		vrLoc = 0;
 	};
 	4C19792E1086C95600A15D23 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -169,16 +179,6 @@
 		rType = 0;
 		vrLen = 3004;
 		vrLoc = 26777;
-	};
-	4C1979371086C95600A15D23 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 4C6AEA5C10857793003A2CF1 /* VSTIO.cpp */;
-		name = "VSTIO.cpp: 24";
-		rLen = 0;
-		rLoc = 708;
-		rType = 0;
-		vrLen = 1757;
-		vrLoc = 0;
 	};
 	4C1979391086D3CB00A15D23 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -298,7 +298,7 @@
 	4C6AEA5C10857793003A2CF1 /* VSTIO.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {901, 3888}}";
-			sepNavSelRange = "{255, 1017}";
+			sepNavSelRange = "{410, 0}";
 			sepNavVisRange = "{0, 1750}";
 		};
 	};

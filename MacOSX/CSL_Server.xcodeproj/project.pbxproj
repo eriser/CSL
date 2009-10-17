@@ -111,10 +111,10 @@
 		4C904E450CD1807500307D02 /* CSL_Core.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = CSL_Core.cpp; sourceTree = "<group>"; };
 		4C904E460CD1807500307D02 /* CGestalt.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CGestalt.h; sourceTree = "<group>"; };
 		4C904E470CD1807500307D02 /* CGestalt.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = CGestalt.cpp; sourceTree = "<group>"; };
-		4C904E480CD1807500307D02 /* Variable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Variable.h; path = ../Kernel/Variable.h; sourceTree = "<group>"; };
-		4C904E490CD1807500307D02 /* Variable.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Variable.cpp; path = ../Kernel/Variable.cpp; sourceTree = "<group>"; };
-		4C904E4A0CD1807500307D02 /* RingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RingBuffer.h; path = ../Kernel/RingBuffer.h; sourceTree = "<group>"; };
-		4C904E4B0CD1807500307D02 /* RingBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = RingBuffer.cpp; path = ../Kernel/RingBuffer.cpp; sourceTree = "<group>"; };
+		4C904E480CD1807500307D02 /* Variable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Variable.h; sourceTree = "<group>"; };
+		4C904E490CD1807500307D02 /* Variable.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Variable.cpp; sourceTree = "<group>"; };
+		4C904E4A0CD1807500307D02 /* RingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RingBuffer.h; sourceTree = "<group>"; };
+		4C904E4B0CD1807500307D02 /* RingBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = RingBuffer.cpp; sourceTree = "<group>"; };
 		4C904E5C0CD1808E00307D02 /* Test_Support.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Test_Support.cpp; sourceTree = "<group>"; };
 		4C904E5E0CD1808E00307D02 /* Test_Oscillators.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Test_Oscillators.cpp; sourceTree = "<group>"; };
 		4C904E5F0CD1808E00307D02 /* Test_Sources.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Test_Sources.cpp; sourceTree = "<group>"; };
