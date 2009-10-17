@@ -1,6 +1,15 @@
-CSL README file for windows.
+CSL 5.0g README file for MS-Windows
 
-Note: CSL 5.0 is not yet fully ported to Windows; there is a new VisualStudio project included, but it fails to compile based on missing includes and libraries (pthreads, stdlib -- these should be rewritten to use JUCE threads) and some C usage that GCC accepts and MSVC++ doesn't (e.g. declarations of the form float f_array[variable-size]). We include the partially working VS project, as well as Ryan Avery's project files for CSL 4.2 (pre-JUCE), in the hope that someone will get this running.
+A VisualStudio project is included that is known to work with Windows XP.
+It assumes the JUCE (version 1.50 with patched sound file IO) and DirectX9 SDK are installed in C:\Program Files\...
+
+stp - 0910
+
+#############################
+
+CSL 4.0 README file for windows.
+
+Note: CSL4 is not yet fully ported to Windows; there is a new VisualStudio project included, but it fails to compile based on missing includes and libraries (pthreads, stdlib -- these should be rewritten to use JUCE threads) and some C usage that GCC accepts and MSVC++ doesn't (e.g. declarations of the form float f_array[variable-size]). We include the partially working VS project, as well as Ryan Avery's project files for CSL 4.2 (pre-JUCE), in the hope that someone will get this running.
 
 #############################
 
