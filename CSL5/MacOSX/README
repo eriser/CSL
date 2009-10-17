@@ -1,7 +1,0 @@
-
-For CSL5.0, we use the JUCE XCode project CSL_JUCE.xcodeproj.
-Project CSL_Server.xcodeproj is the OSC server.
-Project CSL_VST.xcodeproj is the VST plug-in.
-
-
-stp
