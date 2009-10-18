@@ -86,7 +86,7 @@ void dumpTestList() {
 		printf("\n%s\n", testName);
 //		printf("</ul>\n<li>%s</li>\n<ul>", testName);
 		for (unsigned j = 0; gTestList[j].name != NULL; j++) {
-			printf("%24s    %s\n", gTestList[j].name, gTestList[j].comment);
+			printf("%24s	%s\n", gTestList[j].name, gTestList[j].comment);
 //			printf("<li>%s -- %s</li>\n", gTestList[j].name, gTestList[j].comment);
 		}
 	}
@@ -307,7 +307,7 @@ CSLComponent::CSLComponent ()
     loopButton->setToggleState (false, false);
 //	spectrogam->setVisible(false);
 
-	dumpTestList();					// print out the demo/test menu
+//	dumpTestList();					// print out the demo/test menu
 	
 	int whichSuite = 1;				// set default suite/test
 	int whichTest = 1;
@@ -608,10 +608,10 @@ void CSLComponent::audioDeviceIOCallback (const float** inputChannelData,
 			if ( ! gFileBuffer)
 				return;
 								// get cache ptrs & copy outbuf
-			sample * sPtr = gFileBuffer->mBuffers[0] + gSampIndex;
-			memcpy(sPtr, outputChannelData[0], (numSamples * sizeof(sample)));
+			csl::sample * sPtr = gFileBuffer->mBuffers[0] + gSampIndex;
+			memcpy(sPtr, outputChannelData[0], (numSamples * sizeof(csl::sample)));
 			sPtr = gFileBuffer->mBuffers[1] + gSampIndex;
-			memcpy(sPtr, outputChannelData[1], (numSamples * sizeof(sample)));
+			memcpy(sPtr, outputChannelData[1], (numSamples * sizeof(csl::sample)));
 								// update ptrs
 			gSampIndex += numSamples;
 			gFileBuffer->mNumFrames = gSampIndex;

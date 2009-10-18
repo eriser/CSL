@@ -371,10 +371,10 @@ void CSLServerComponent::audioDeviceIOCallback (const float** inputChannelData,
 			if ( ! gFileBuffer)
 				return;
 								// get cache ptrs & copy outbuf
-			sample * sPtr = gFileBuffer->mBuffers[0] + gSampIndex;
-			memcpy(sPtr, outputChannelData[0], (numSamples * sizeof(sample)));
+			csl::sample * sPtr = gFileBuffer->mBuffers[0] + gSampIndex;
+			memcpy(sPtr, outputChannelData[0], (numSamples * sizeof(csl::sample)));
 			sPtr = gFileBuffer->mBuffers[1] + gSampIndex;
-			memcpy(sPtr, outputChannelData[1], (numSamples * sizeof(sample)));
+			memcpy(sPtr, outputChannelData[1], (numSamples * sizeof(csl::sample)));
 								// update ptrs
 			gSampIndex += numSamples;
 			gFileBuffer->mNumFrames = gSampIndex;

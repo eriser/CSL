@@ -277,6 +277,7 @@
 								<string>20286C29FDCF999611CA2CEA</string>
 								<string>4C904E320CD1805900307D02</string>
 								<string>4C904E400CD1807500307D02</string>
+								<string>4C904F150CD1841500307D02</string>
 								<string>4C904E5A0CD1808E00307D02</string>
 								<string>20286C2AFDCF999611CA2CEA</string>
 								<string>4C1081E8108256DB00A34A15</string>
@@ -286,8 +287,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>30</integer>
-									<integer>28</integer>
+									<integer>17</integer>
+									<integer>9</integer>
 									<integer>1</integer>
 									<integer>0</integer>
 								</array>
@@ -330,7 +331,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>CSL_TestComponent.cpp</string>
+								<string>BlockResizer.cpp</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -338,11 +339,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>CSL_TestComponent.cpp</string>
+										<string>BlockResizer.cpp</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>4C029C64108A7AD700AC8EFB</string>
+										<string>4C7B597A108ADB3D003EC763</string>
 										<key>history</key>
 										<array>
 											<string>4C1617F00CC72A050083D579</string>
@@ -403,11 +404,8 @@
 											<string>4CC460AE10697EE50001512C</string>
 											<string>4CC460E0106984C30001512C</string>
 											<string>4C0720D1106F0920007D4013</string>
-											<string>4C0720E3106F0C90007D4013</string>
-											<string>4C0720FB106F16F7007D4013</string>
 											<string>4C0721C9107031DF007D4013</string>
 											<string>4C0721CA107031DF007D4013</string>
-											<string>4C0721CE107031DF007D4013</string>
 											<string>4C0721DC10704641007D4013</string>
 											<string>4C0721E410704658007D4013</string>
 											<string>4C07228D107126DE007D4013</string>
@@ -434,13 +432,10 @@
 											<string>4CA753F0107D4C050030FF80</string>
 											<string>4C92283A107F9BE600CFF691</string>
 											<string>4C92283E107F9BE600CFF691</string>
-											<string>4C922840107F9BE600CFF691</string>
 											<string>4C922842107F9BE600CFF691</string>
 											<string>4C922843107F9BE600CFF691</string>
 											<string>4C922844107F9BE600CFF691</string>
-											<string>4C922845107F9BE600CFF691</string>
 											<string>4C92284D107F9BE600CFF691</string>
-											<string>4C922854107F9BE600CFF691</string>
 											<string>4C1968AE10800C5500EE476C</string>
 											<string>4C1968B510800C5500EE476C</string>
 											<string>4C19695310812B8F00EE476C</string>
@@ -488,7 +483,6 @@
 											<string>4C1979031086B9D900A15D23</string>
 											<string>4C1979041086B9D900A15D23</string>
 											<string>4C452D1B1087EE6B00E0F9D2</string>
-											<string>4C029B41108A4F7200AC8EFB</string>
 											<string>4C029B50108A568600AC8EFB</string>
 											<string>4C029B5D108A570400AC8EFB</string>
 											<string>4C029C56108A7AD700AC8EFB</string>
@@ -503,7 +497,9 @@
 											<string>4C029C5F108A7AD700AC8EFB</string>
 											<string>4C029C60108A7AD700AC8EFB</string>
 											<string>4C029C62108A7AD700AC8EFB</string>
-											<string>4C029C63108A7AD700AC8EFB</string>
+											<string>4C808EE9108ABE28007E2B83</string>
+											<string>4C808EEA108ABE28007E2B83</string>
+											<string>4C808EEB108ABE28007E2B83</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -561,9 +557,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>4C029C20108A73F300AC8EFB</string>
+				<string>4C7B597B108ADB3D003EC763</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>4C029C21108A73F300AC8EFB</string>
+				<string>4C7B597C108ADB3D003EC763</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -682,7 +678,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>277510871.71214098</real>
+	<real>277535549.01362801</real>
 	<key>ToolbarDisplayMode</key>
 	<integer>2</integer>
 	<key>ToolbarIsVisible</key>
@@ -697,12 +693,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>4C029C2C108A742900AC8EFB</string>
-		<string>4C029C2D108A742900AC8EFB</string>
-		<string>1CD10A99069EF8BA00B06720</string>
-		<string>/Users/stp/Code/CSL/MacOSX/CSL_JUCE.xcodeproj</string>
 		<string>4C492E280CF62E0300C0BF2F</string>
-		<string>1C78EAAD065D492600B07095</string>
+		<string>/Users/stp/Code/CSL/MacOSX/CSL_JUCE.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>397 34 1117 1024 0 0 1920 1058 </string>
@@ -743,8 +735,6 @@
 							<string>0pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -784,7 +774,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>4C492E280CF62E0300C0BF2F</string>
-				<string>4C029C22108A73F300AC8EFB</string>
+				<string>4C7B597D108ADB3D003EC763</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -795,7 +785,7 @@
 			<key>WindowToolGUID</key>
 			<string>4C492E280CF62E0300C0BF2F</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>

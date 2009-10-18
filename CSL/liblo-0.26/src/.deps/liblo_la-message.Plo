@@ -1,112 +1,140 @@
 liblo_la-message.lo: message.c \
- /usr/local/lib/gcc/i386-apple-darwin9.4.0/4.4.0/include/stdarg.h \
- /usr/include/stdlib.h /usr/include/Availability.h \
- /usr/include/AvailabilityInternal.h /usr/include/_types.h \
- /usr/include/sys/_types.h /usr/include/sys/cdefs.h \
- /usr/include/machine/_types.h /usr/include/i386/_types.h \
- /usr/include/sys/wait.h /usr/include/sys/signal.h \
- /usr/include/sys/appleapiopts.h /usr/include/machine/signal.h \
- /usr/include/i386/signal.h /usr/include/i386/_structs.h \
- /usr/include/sys/_structs.h /usr/include/machine/_structs.h \
- /usr/include/mach/i386/_structs.h /usr/include/sys/resource.h \
- /usr/include/machine/endian.h /usr/include/i386/endian.h \
- /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h \
- /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h \
- /usr/include/machine/types.h /usr/include/i386/types.h \
- /usr/include/stdio.h /usr/include/secure/_stdio.h \
- /usr/include/secure/_common.h /usr/include/string.h \
- /usr/include/secure/_string.h /usr/include/math.h \
- /usr/include/architecture/i386/math.h /usr/include/netinet/in.h \
- /usr/include/stdint.h /usr/include/sys/socket.h /usr/include/sys/types.h \
- /usr/include/machine/_param.h /usr/include/i386/_param.h \
- /usr/include/netinet6/in6.h lo_types_internal.h ../config.h \
- /usr/include/poll.h /usr/include/sys/poll.h /usr/include/netdb.h \
- /usr/include/pthread.h /usr/include/pthread_impl.h /usr/include/sched.h \
- /usr/include/time.h /usr/include/_structs.h ../lo/lo_osc_types.h \
- lo_internal.h ../lo/lo.h ../lo/lo_endian.h ../lo/lo_types.h \
- ../lo/lo_errors.h ../lo/lo_lowlevel.h ../lo/lo_macros.h
+  /usr/lib/gcc/i486-linux-gnu/4.3.3/include/stdarg.h \
+  /usr/include/stdlib.h /usr/include/features.h /usr/include/sys/cdefs.h \
+  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+  /usr/include/gnu/stubs-32.h \
+  /usr/lib/gcc/i486-linux-gnu/4.3.3/include/stddef.h \
+  /usr/include/sys/types.h /usr/include/bits/types.h \
+  /usr/include/bits/typesizes.h /usr/include/time.h /usr/include/endian.h \
+  /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
+  /usr/include/sys/select.h /usr/include/bits/select.h \
+  /usr/include/bits/sigset.h /usr/include/bits/time.h \
+  /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
+  /usr/include/alloca.h /usr/include/bits/stdlib.h /usr/include/stdio.h \
+  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+  /usr/include/bits/stdio.h /usr/include/bits/stdio2.h \
+  /usr/include/string.h /usr/include/bits/string.h \
+  /usr/include/bits/string2.h /usr/include/bits/string3.h \
+  /usr/include/math.h /usr/include/bits/huge_val.h \
+  /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
+  /usr/include/bits/mathinline.h /usr/include/netinet/in.h \
+  /usr/include/stdint.h /usr/include/bits/wchar.h \
+  /usr/include/sys/socket.h /usr/include/sys/uio.h \
+  /usr/include/bits/uio.h /usr/include/bits/socket.h \
+  /usr/include/bits/sockaddr.h /usr/include/asm/socket.h \
+  /usr/include/asm/sockios.h /usr/include/bits/socket2.h \
+  /usr/include/bits/in.h lo_types_internal.h ../config.h \
+  /usr/include/poll.h /usr/include/sys/poll.h /usr/include/bits/poll.h \
+  /usr/include/netdb.h /usr/include/rpc/netdb.h /usr/include/bits/netdb.h \
+  /usr/include/pthread.h /usr/include/sched.h /usr/include/bits/sched.h \
+  /usr/include/signal.h /usr/include/bits/setjmp.h ../lo/lo_osc_types.h \
+  lo_internal.h ../lo/lo.h ../lo/lo_endian.h ../lo/lo_types.h \
+  ../lo/lo_errors.h ../lo/lo_lowlevel.h ../lo/lo_macros.h
 
-/usr/local/lib/gcc/i386-apple-darwin9.4.0/4.4.0/include/stdarg.h:
+/usr/lib/gcc/i486-linux-gnu/4.3.3/include/stdarg.h:
 
 /usr/include/stdlib.h:
 
-/usr/include/Availability.h:
-
-/usr/include/AvailabilityInternal.h:
-
-/usr/include/_types.h:
-
-/usr/include/sys/_types.h:
+/usr/include/features.h:
 
 /usr/include/sys/cdefs.h:
 
-/usr/include/machine/_types.h:
+/usr/include/bits/wordsize.h:
 
-/usr/include/i386/_types.h:
+/usr/include/gnu/stubs.h:
 
-/usr/include/sys/wait.h:
+/usr/include/gnu/stubs-32.h:
 
-/usr/include/sys/signal.h:
+/usr/lib/gcc/i486-linux-gnu/4.3.3/include/stddef.h:
 
-/usr/include/sys/appleapiopts.h:
+/usr/include/sys/types.h:
 
-/usr/include/machine/signal.h:
+/usr/include/bits/types.h:
 
-/usr/include/i386/signal.h:
+/usr/include/bits/typesizes.h:
 
-/usr/include/i386/_structs.h:
+/usr/include/time.h:
 
-/usr/include/sys/_structs.h:
+/usr/include/endian.h:
 
-/usr/include/machine/_structs.h:
+/usr/include/bits/endian.h:
 
-/usr/include/mach/i386/_structs.h:
+/usr/include/bits/byteswap.h:
 
-/usr/include/sys/resource.h:
+/usr/include/sys/select.h:
 
-/usr/include/machine/endian.h:
+/usr/include/bits/select.h:
 
-/usr/include/i386/endian.h:
+/usr/include/bits/sigset.h:
 
-/usr/include/sys/_endian.h:
+/usr/include/bits/time.h:
 
-/usr/include/libkern/_OSByteOrder.h:
+/usr/include/sys/sysmacros.h:
 
-/usr/include/libkern/i386/_OSByteOrder.h:
+/usr/include/bits/pthreadtypes.h:
 
 /usr/include/alloca.h:
 
-/usr/include/machine/types.h:
-
-/usr/include/i386/types.h:
+/usr/include/bits/stdlib.h:
 
 /usr/include/stdio.h:
 
-/usr/include/secure/_stdio.h:
+/usr/include/libio.h:
 
-/usr/include/secure/_common.h:
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/usr/include/bits/stdio.h:
+
+/usr/include/bits/stdio2.h:
 
 /usr/include/string.h:
 
-/usr/include/secure/_string.h:
+/usr/include/bits/string.h:
+
+/usr/include/bits/string2.h:
+
+/usr/include/bits/string3.h:
 
 /usr/include/math.h:
 
-/usr/include/architecture/i386/math.h:
+/usr/include/bits/huge_val.h:
+
+/usr/include/bits/mathdef.h:
+
+/usr/include/bits/mathcalls.h:
+
+/usr/include/bits/mathinline.h:
 
 /usr/include/netinet/in.h:
 
 /usr/include/stdint.h:
 
+/usr/include/bits/wchar.h:
+
 /usr/include/sys/socket.h:
 
-/usr/include/sys/types.h:
+/usr/include/sys/uio.h:
 
-/usr/include/machine/_param.h:
+/usr/include/bits/uio.h:
 
-/usr/include/i386/_param.h:
+/usr/include/bits/socket.h:
 
-/usr/include/netinet6/in6.h:
+/usr/include/bits/sockaddr.h:
+
+/usr/include/asm/socket.h:
+
+/usr/include/asm/sockios.h:
+
+/usr/include/bits/socket2.h:
+
+/usr/include/bits/in.h:
 
 lo_types_internal.h:
 
@@ -116,17 +144,23 @@ lo_types_internal.h:
 
 /usr/include/sys/poll.h:
 
+/usr/include/bits/poll.h:
+
 /usr/include/netdb.h:
+
+/usr/include/rpc/netdb.h:
+
+/usr/include/bits/netdb.h:
 
 /usr/include/pthread.h:
 
-/usr/include/pthread_impl.h:
-
 /usr/include/sched.h:
 
-/usr/include/time.h:
+/usr/include/bits/sched.h:
 
-/usr/include/_structs.h:
+/usr/include/signal.h:
+
+/usr/include/bits/setjmp.h:
 
 ../lo/lo_osc_types.h:
 

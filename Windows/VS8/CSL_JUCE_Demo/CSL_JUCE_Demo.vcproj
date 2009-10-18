@@ -41,15 +41,16 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
+				Optimization="2"
+				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="..\..\..\..\juce;..\..\..\CSL\Includes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;USE_JUCE;USE_JTHREADS;USE_JSND;USE_FFTREAL"
 				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
+				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="0"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -175,6 +176,10 @@
 			Name="Tests"
 			>
 			<File
+				RelativePath="..\..\..\CSL\Tests\Test_Audio.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\CSL\Tests\Test_Control.cpp"
 				>
 			</File>
@@ -243,11 +248,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\CSL\Kernel\RingBuffer.cpp"
+				RelativePath="..\..\..\CSL\Utilities\RingBuffer.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\CSL\Kernel\RingBuffer.h"
+				RelativePath="..\..\..\CSL\Utilities\RingBuffer.h"
 				>
 			</File>
 			<File
@@ -259,11 +264,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\CSL\Kernel\Variable.cpp"
+				RelativePath="..\..\..\CSL\Utilities\Variable.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\CSL\Kernel\Variable.h"
+				RelativePath="..\..\..\CSL\Utilities\Variable.h"
 				>
 			</File>
 		</Filter>
@@ -543,6 +548,18 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\..\COPYRIGHT"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\README"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\Version.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

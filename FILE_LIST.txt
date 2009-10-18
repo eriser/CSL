@@ -1,0 +1,604 @@
+     22 stp                   Oct 17 12:40 ./
+     12 stp                   Oct 17 12:38 Applications/
+     10 stp                   Oct 17 12:37 Applications/Granulator/
+     10 stp             17228 Oct 17 12:37 Applications/Granulator/CSL_Component.cpp
+     10 stp              3437 Oct 17 12:37 Applications/Granulator/CSL_Component.h
+     10 stp                   Oct 17 12:37 Applications/Granulator/English.lproj/
+     10 stp               266 Oct 17 12:37 Applications/Granulator/English.lproj/InfoPlist.strings
+     10 stp                   Oct 17 12:37 Applications/Granulator/Granulator.xcodeproj/
+     10 stp             32639 Oct 17 12:37 Applications/Granulator/Granulator.xcodeproj/project.pbxproj
+     10 stp             46962 Oct 17 12:37 Applications/Granulator/Granulator.xcodeproj/stp.mode1
+     10 stp             43226 Oct 17 12:37 Applications/Granulator/Granulator.xcodeproj/stp.mode1v3
+     10 stp             44347 Oct 17 12:37 Applications/Granulator/Granulator.xcodeproj/stp.pbxuser
+     10 stp               709 Oct 17 12:37 Applications/Granulator/Info.plist
+     10 stp             27967 Oct 17 12:37 Applications/Granulator/JGranulator.cpp
+     10 stp              4088 Oct 17 12:37 Applications/Granulator/JGranulator.h
+     10 stp             25143 Oct 17 12:37 Applications/Granulator/JGranulator_analog.cpp
+     10 stp              2281 Oct 17 12:37 Applications/Granulator/MIDI_Control.cpp
+     10 stp               914 Oct 17 12:37 Applications/Granulator/MIDI_Control.h
+     10 stp              1812 Oct 17 12:37 Applications/Granulator/Main.cpp
+     10 stp               458 Oct 17 12:37 Applications/Granulator/version.plist
+     10 stp                   Oct 17 12:37 Applications/HRTF/
+     10 stp             47446 Oct 17 12:37 Applications/HRTF/CSL_HRTF_Ambi_Component.cpp
+     10 stp              4806 Oct 17 12:37 Applications/HRTF/CSL_HRTF_Ambi_Component.h
+     10 stp             48268 Oct 17 12:37 Applications/HRTF/CSL_HRTF_Component.cpp
+     10 stp              5058 Oct 17 12:37 Applications/HRTF/CSL_HRTF_Component.h
+     10 stp           1465126 Oct 17 12:37 Applications/HRTF/CSL_HRTF_Player.app.zip
+     10 stp               703 Oct 17 12:37 Applications/HRTF/Info.plist
+     10 stp              1779 Oct 17 12:37 Applications/HRTF/Main.cpp
+     10 stp                   Oct 17 12:37 Applications/HRTF/juce_HRTF.xcodeproj/
+     10 stp             45298 Oct 17 12:37 Applications/HRTF/juce_HRTF.xcodeproj/project.pbxproj
+     10 stp             45145 Oct 17 12:37 Applications/HRTF/juce_HRTF.xcodeproj/stp.mode1
+     10 stp             45357 Oct 17 12:37 Applications/HRTF/juce_HRTF.xcodeproj/stp.mode1v3
+     10 stp             65618 Oct 17 12:37 Applications/HRTF/juce_HRTF.xcodeproj/stp.pbxuser
+     10 stp             29951 Oct 17 12:37 Applications/HRTF/juce_HRTF.xcodeproj.zip
+     10 stp                   Oct 17 12:37 Applications/HRTF/juce_HRTF_Ambi.xcodeproj/
+     10 stp             45790 Oct 17 12:37 Applications/HRTF/juce_HRTF_Ambi.xcodeproj/project.pbxproj
+     10 stp             45145 Oct 17 12:37 Applications/HRTF/juce_HRTF_Ambi.xcodeproj/stp.mode1
+     10 stp             42484 Oct 17 12:37 Applications/HRTF/juce_HRTF_Ambi.xcodeproj/stp.mode1v3
+     10 stp             44375 Oct 17 12:37 Applications/HRTF/juce_HRTF_Ambi.xcodeproj/stp.pbxuser
+     10 stp                   Oct 17 12:37 Applications/OSC_Tests/
+     10 stp               286 Oct 17 12:37 Applications/OSC_Tests/OSC_test0
+     10 stp               504 Oct 17 12:37 Applications/OSC_Tests/OSC_test1
+     10 stp               699 Oct 17 12:37 Applications/OSC_Tests/OSC_test2
+     10 stp              1822 Oct 17 12:37 Applications/OSC_Tests/OSC_test_additive
+     10 stp               296 Oct 17 12:37 Applications/OSC_Tests/OSC_test_fm0
+     10 stp               514 Oct 17 12:37 Applications/OSC_Tests/OSC_test_fm1
+     10 stp               709 Oct 17 12:37 Applications/OSC_Tests/OSC_test_sndfile
+     10 stp               531 Oct 17 12:37 Applications/OSC_Tests/OSC_test_sndfile.txt
+     10 stp                   Oct 17 12:37 Applications/SignalGen/
+     10 stp             17228 Oct 17 12:37 Applications/SignalGen/CSL_Component.cpp
+     10 stp              3437 Oct 17 12:37 Applications/SignalGen/CSL_Component.h
+     10 stp             24352 Oct 17 12:37 Applications/SignalGen/CSL_SignalGen.cpp
+     10 stp              3856 Oct 17 12:37 Applications/SignalGen/CSL_SignalGen.h
+     10 stp                   Oct 17 12:37 Applications/SignalGen/CSL_SignalGen.xcodeproj/
+     10 stp             36548 Oct 17 12:37 Applications/SignalGen/CSL_SignalGen.xcodeproj/project.pbxproj
+     10 stp             46962 Oct 17 12:37 Applications/SignalGen/CSL_SignalGen.xcodeproj/stp.mode1
+     10 stp             41858 Oct 17 12:37 Applications/SignalGen/CSL_SignalGen.xcodeproj/stp.mode1v3
+     10 stp             35370 Oct 17 12:37 Applications/SignalGen/CSL_SignalGen.xcodeproj/stp.pbxuser
+     10 stp                   Oct 17 12:37 Applications/SignalGen/English.lproj/
+     10 stp               268 Oct 17 12:37 Applications/SignalGen/English.lproj/InfoPlist.strings
+     10 stp               708 Oct 17 12:37 Applications/SignalGen/Info.plist
+     10 stp              1625 Oct 17 12:37 Applications/SignalGen/Main.cpp
+     10 stp               458 Oct 17 12:37 Applications/SignalGen/version.plist
+     19 stp              2742 Oct 17 12:40 COPYRIGHT
+     13 stp                   Oct 17 12:38 CSL/
+     10 stp                   Oct 17 12:37 CSL/CRAM/
+     10 stp             11707 Oct 17 12:37 CSL/CRAM/CRAM_Service.cpp
+     10 stp              2335 Oct 17 12:37 CSL/CRAM/CRAM_Service.h
+     10 stp                   Oct 17 12:37 CSL/IO/
+     10 stp              6659 Oct 17 12:37 CSL/IO/CAIO.cpp
+     10 stp              1640 Oct 17 12:37 CSL/IO/CAIO.h
+     10 stp              3961 Oct 17 12:37 CSL/IO/FileIO.cpp
+     10 stp              1704 Oct 17 12:37 CSL/IO/FileIO.h
+     10 stp              2905 Oct 17 12:37 CSL/IO/JUCEIO.cpp
+     10 stp              1299 Oct 17 12:37 CSL/IO/JUCEIO.h
+     10 stp              3777 Oct 17 12:37 CSL/IO/JackIO.cpp
+     10 stp              1134 Oct 17 12:37 CSL/IO/JackIO.h
+     10 stp             13868 Oct 17 12:37 CSL/IO/MIDIIOJ.cpp
+     10 stp              5974 Oct 17 12:37 CSL/IO/MIDIIOJ.h
+     10 stp             18999 Oct 17 12:37 CSL/IO/MIDIIOP.cpp
+     10 stp              6401 Oct 17 12:37 CSL/IO/MIDIIOP.h
+     10 stp               359 Oct 17 12:37 CSL/IO/Microphone.cpp
+     10 stp               631 Oct 17 12:37 CSL/IO/Microphone.h
+     10 stp              1926 Oct 17 12:37 CSL/IO/NullIO.cpp
+     10 stp              1946 Oct 17 12:37 CSL/IO/NullIO.h
+     10 stp              5052 Oct 17 12:37 CSL/IO/OSC_support.cpp
+     10 stp               586 Oct 17 12:37 CSL/IO/OSC_support.h
+     10 stp              8460 Oct 17 12:37 CSL/IO/PAIO.cpp
+     10 stp              1382 Oct 17 12:37 CSL/IO/PAIO.h
+     10 stp              7235 Oct 17 12:37 CSL/IO/RemoteIO.cpp
+     10 stp              2030 Oct 17 12:37 CSL/IO/RemoteIO.h
+     10 stp              9043 Oct 17 12:37 CSL/IO/RemoteStream.cpp
+     10 stp              5002 Oct 17 12:37 CSL/IO/RemoteStream.h
+     10 stp             11487 Oct 17 12:37 CSL/IO/SoundFile.cpp
+     10 stp              6860 Oct 17 12:37 CSL/IO/SoundFile.h
+     10 stp             10666 Oct 17 12:37 CSL/IO/SoundFileCA.cpp
+     10 stp              1887 Oct 17 12:37 CSL/IO/SoundFileCA.h
+     10 stp              7688 Oct 17 12:37 CSL/IO/SoundFileJ.cpp
+     10 stp              1862 Oct 17 12:37 CSL/IO/SoundFileJ.h
+     10 stp             23778 Oct 17 12:37 CSL/IO/SoundFileL.cpp
+     10 stp              5729 Oct 17 12:37 CSL/IO/SoundFileL.h
+     10 stp              6551 Oct 17 12:37 CSL/IO/VSTIO.cpp
+     10 stp              3238 Oct 17 12:37 CSL/IO/VSTIO.h
+     10 stp                   Oct 17 12:37 CSL/Includes/
+     10 stp                30 Oct 17 12:37 CSL/Includes/Accessor.h
+     10 stp                40 Oct 17 12:37 CSL/Includes/AdditiveInstrument.h
+     10 stp                42 Oct 17 12:37 CSL/Includes/Ambisonic.h
+     10 stp                48 Oct 17 12:37 CSL/Includes/AmbisonicPanner.h
+     10 stp                51 Oct 17 12:37 CSL/Includes/AmbisonicUtilities.h
+     10 stp                39 Oct 17 12:37 CSL/Includes/BasicFMInstrument.h
+     10 stp                29 Oct 17 12:37 CSL/Includes/BinaryOp.h
+     10 stp                40 Oct 17 12:37 CSL/Includes/Binaural.h
+     10 stp                42 Oct 17 12:37 CSL/Includes/BinauralDB.h
+     10 stp                32 Oct 17 12:37 CSL/Includes/BlockResizer.h
+     10 stp                33 Oct 17 12:37 CSL/Includes/BlockResizer0.h
+     10 stp                17 Oct 17 12:37 CSL/Includes/CAIO.h
+     10 stp                25 Oct 17 12:37 CSL/Includes/CGestalt.h
+     10 stp                26 Oct 17 12:37 CSL/Includes/CPoint.h
+     10 stp                27 Oct 17 12:37 CSL/Includes/CRAM_Service.h
+     10 stp                27 Oct 17 12:37 CSL/Includes/CSL_All.h
+     10 stp                25 Oct 17 12:37 CSL/Includes/CSL_Core.h
+     10 stp                31 Oct 17 12:37 CSL/Includes/CSL_Exceptions.h
+     10 stp                29 Oct 17 12:37 CSL/Includes/CSL_Includes.h
+     10 stp                26 Oct 17 12:37 CSL/Includes/CSL_Types.h
+     10 stp                28 Oct 17 12:37 CSL/Includes/Clipper.h
+     10 stp                28 Oct 17 12:37 CSL/Includes/CslRtpIncludes.h
+     10 stp                27 Oct 17 12:37 CSL/Includes/CslRtpSession.h
+     10 stp                33 Oct 17 12:37 CSL/Includes/DLine.h
+     10 stp                37 Oct 17 12:37 CSL/Includes/DelayLine.h
+     10 stp                40 Oct 17 12:37 CSL/Includes/DistanceSimulator.h
+     10 stp                26 Oct 17 12:37 CSL/Includes/Envelope.h
+     10 stp                27 Oct 17 12:37 CSL/Includes/FFTReal.h
+     10 stp                31 Oct 17 12:37 CSL/Includes/FFT_Wrapper.h
+     10 stp                24 Oct 17 12:37 CSL/Includes/FIR.h
+     10 stp                19 Oct 17 12:37 CSL/Includes/FileIO.h
+     10 stp                28 Oct 17 12:37 CSL/Includes/Filters.h
+     10 stp                29 Oct 17 12:37 CSL/Includes/Freeverb.h
+     10 stp                28 Oct 17 12:37 CSL/Includes/Granulator.h
+     10 stp                26 Oct 17 12:37 CSL/Includes/InOut.h
+     10 stp                32 Oct 17 12:37 CSL/Includes/Instrument.h
+     10 stp                19 Oct 17 12:37 CSL/Includes/JUCEIO.h
+     10 stp                19 Oct 17 12:37 CSL/Includes/JackIO.h
+     10 stp                31 Oct 17 12:37 CSL/Includes/KarplusString.h
+     10 stp                24 Oct 17 12:37 CSL/Includes/Lorenz.h
+     10 stp                20 Oct 17 12:37 CSL/Includes/MIDIIOJ.h
+     10 stp                20 Oct 17 12:37 CSL/Includes/MIDIIOP.h
+     10 stp                23 Oct 17 12:37 CSL/Includes/Microphone.h
+     10 stp                26 Oct 17 12:37 CSL/Includes/Mixer.h
+     10 stp                23 Oct 17 12:37 CSL/Includes/Noise.h
+     10 stp                19 Oct 17 12:37 CSL/Includes/NullIO.h
+     10 stp                24 Oct 17 12:37 CSL/Includes/OSC_support.h
+     10 stp                28 Oct 17 12:37 CSL/Includes/Oscillator.h
+     10 stp                30 Oct 17 12:37 CSL/Includes/OscillatorBL.h
+     10 stp                17 Oct 17 12:37 CSL/Includes/PAIO.h
+     10 stp                31 Oct 17 12:37 CSL/Includes/PME.h
+     10 stp                43 Oct 17 12:37 CSL/Includes/PracticalSocket.h
+     10 stp                21 Oct 17 12:37 CSL/Includes/RemoteIO.h
+     10 stp                25 Oct 17 12:37 CSL/Includes/RemoteStream.h
+     10 stp                27 Oct 17 12:37 CSL/Includes/RingBuffer.h
+     10 stp                25 Oct 17 12:37 CSL/Includes/RtpReceiver.h
+     10 stp                23 Oct 17 12:37 CSL/Includes/RtpSender.h
+     10 stp                23 Oct 17 12:37 CSL/Includes/SHARC.h
+     10 stp                44 Oct 17 12:37 CSL/Includes/ShoeBox.h
+     10 stp                29 Oct 17 12:37 CSL/Includes/SimpleSines.h
+     10 stp                39 Oct 17 12:37 CSL/Includes/SndFileInstrument.h
+     10 stp                22 Oct 17 12:37 CSL/Includes/SoundFile.h
+     10 stp                24 Oct 17 12:37 CSL/Includes/SoundFileCA.h
+     10 stp                23 Oct 17 12:37 CSL/Includes/SoundFileJ.h
+     10 stp                23 Oct 17 12:37 CSL/Includes/SoundFileL.h
+     10 stp                35 Oct 17 12:37 CSL/Includes/SpatialAudio.h
+     10 stp                36 Oct 17 12:37 CSL/Includes/SpatialPanner.h
+     10 stp                36 Oct 17 12:37 CSL/Includes/SpatialSource.h
+     10 stp                36 Oct 17 12:37 CSL/Includes/SpeakerLayout.h
+     10 stp                26 Oct 17 12:37 CSL/Includes/Spectral.h
+     10 stp                28 Oct 17 12:37 CSL/Includes/Test_Support.h
+     10 stp                35 Oct 17 12:37 CSL/Includes/ThreadUtilities.h
+     10 stp                32 Oct 17 12:37 CSL/Includes/VBAP.h
+     10 stp                18 Oct 17 12:37 CSL/Includes/VSTIO.h
+     10 stp                25 Oct 17 12:37 CSL/Includes/Variable.h
+     10 stp                28 Oct 17 12:37 CSL/Includes/WaveShaper.h
+     10 stp                42 Oct 17 12:37 CSL/Includes/WhiteNoiseInstrument.h
+     10 stp                24 Oct 17 12:37 CSL/Includes/Window.h
+     10 stp                27 Oct 17 12:37 CSL/Includes/config.h
+     10 stp                28 Oct 17 12:37 CSL/Includes/kiss_fft.h
+     10 stp                29 Oct 17 12:37 CSL/Includes/matrix.h
+     10 stp                54 Oct 17 12:37 CSL/Includes/remake
+     10 stp                   Oct 17 12:37 CSL/Instruments/
+     10 stp               982 Oct 17 12:37 CSL/Instruments/Accessor.h
+     10 stp              6519 Oct 17 12:37 CSL/Instruments/AdditiveInstrument.cpp
+     10 stp              2772 Oct 17 12:37 CSL/Instruments/AdditiveInstrument.h
+     10 stp             10335 Oct 17 12:37 CSL/Instruments/BasicFMInstrument.cpp
+     10 stp              2948 Oct 17 12:37 CSL/Instruments/BasicFMInstrument.h
+     10 stp              2124 Oct 17 12:37 CSL/Instruments/Instrument.cpp
+     10 stp              3344 Oct 17 12:37 CSL/Instruments/Instrument.h
+     10 stp              7700 Oct 17 12:37 CSL/Instruments/SndFileInstrument.cpp
+     10 stp              2998 Oct 17 12:37 CSL/Instruments/SndFileInstrument.h
+     10 stp              3729 Oct 17 12:37 CSL/Instruments/WhiteNoiseInstrument.cpp
+     10 stp              1236 Oct 17 12:37 CSL/Instruments/WhiteNoiseInstrument.h
+     10 stp                   Oct 17 12:37 CSL/Kernel/
+     10 stp             14374 Oct 17 12:37 CSL/Kernel/CGestalt.cpp
+     10 stp              8559 Oct 17 12:37 CSL/Kernel/CGestalt.h
+     10 stp             32873 Oct 17 12:37 CSL/Kernel/CSL_Core.cpp
+     10 stp             30398 Oct 17 12:37 CSL/Kernel/CSL_Core.h
+     10 stp              1777 Oct 17 12:37 CSL/Kernel/CSL_Exceptions.h
+     10 stp              1453 Oct 17 12:37 CSL/Kernel/CSL_Includes.h
+     10 stp             11897 Oct 17 12:37 CSL/Kernel/CSL_Types.h
+     10 stp                   Oct 17 12:37 CSL/Processors/
+     10 stp              3158 Oct 17 12:37 CSL/Processors/BinaryOp.cpp
+     10 stp              4051 Oct 17 12:37 CSL/Processors/BinaryOp.h
+     10 stp              1581 Oct 17 12:37 CSL/Processors/Clipper.cpp
+     10 stp               788 Oct 17 12:37 CSL/Processors/Clipper.h
+     10 stp             23475 Oct 17 12:37 CSL/Processors/FIR.cpp
+     10 stp              3498 Oct 17 12:37 CSL/Processors/FIR.h
+     10 stp             13466 Oct 17 12:37 CSL/Processors/Filters.cpp
+     10 stp              8211 Oct 17 12:37 CSL/Processors/Filters.h
+     10 stp              6889 Oct 17 12:37 CSL/Processors/Freeverb.cpp
+     10 stp              3720 Oct 17 12:37 CSL/Processors/Freeverb.h
+     10 stp              3698 Oct 17 12:37 CSL/Processors/InOut.cpp
+     10 stp              2266 Oct 17 12:37 CSL/Processors/InOut.h
+     10 stp             14077 Oct 17 12:37 CSL/Processors/Mixer.cpp
+     10 stp              4971 Oct 17 12:37 CSL/Processors/Mixer.h
+     10 stp                   Oct 17 12:37 CSL/Processors/OLD/
+     10 stp              8841 Oct 17 12:37 CSL/Processors/OLD/Convolver.cpp
+     10 stp              2882 Oct 17 12:37 CSL/Processors/OLD/Convolver.h
+     10 stp              2707 Oct 17 12:37 CSL/Processors/OLD/DelayLine.cpp
+     10 stp              1112 Oct 17 12:37 CSL/Processors/OLD/DelayLine.h
+     10 stp              3093 Oct 17 12:37 CSL/Processors/OLD/FDN.cpp
+     10 stp              1464 Oct 17 12:37 CSL/Processors/OLD/FDN.h
+     10 stp             12676 Oct 17 12:37 CSL/Processors/OLD/LPC.cpp
+     10 stp              6070 Oct 17 12:37 CSL/Processors/OLD/LPC.h
+     10 stp                   Oct 17 12:37 CSL/RTP/
+     10 stp               666 Oct 17 12:37 CSL/RTP/CslRtpIncludes.h
+     10 stp             12333 Oct 17 12:37 CSL/RTP/CslRtpSession.cpp
+     10 stp              3437 Oct 17 12:37 CSL/RTP/CslRtpSession.h
+     10 stp              4821 Oct 17 12:37 CSL/RTP/RtpReceiver.cpp
+     10 stp              3228 Oct 17 12:37 CSL/RTP/RtpReceiver.h
+     10 stp              4830 Oct 17 12:37 CSL/RTP/RtpSender.cpp
+     10 stp              2498 Oct 17 12:37 CSL/RTP/RtpSender.h
+     10 stp                   Oct 17 12:37 CSL/SWIG/
+     10 stp              2242 Oct 17 12:37 CSL/SWIG/CSL_SWIG.i
+     10 stp              1238 Oct 17 12:37 CSL/SWIG/Makefile
+     10 stp                   Oct 17 12:37 CSL/Sources/
+     10 stp             19584 Oct 17 12:37 CSL/Sources/Envelope.cpp
+     10 stp             11323 Oct 17 12:37 CSL/Sources/Envelope.h
+     10 stp              8790 Oct 17 12:37 CSL/Sources/Granulator.cpp
+     10 stp              3506 Oct 17 12:37 CSL/Sources/Granulator.h
+     10 stp              2600 Oct 17 12:37 CSL/Sources/KarplusString.cpp
+     10 stp              1507 Oct 17 12:37 CSL/Sources/KarplusString.h
+     10 stp              1245 Oct 17 12:37 CSL/Sources/Lorenz.cpp
+     10 stp               844 Oct 17 12:37 CSL/Sources/Lorenz.h
+     10 stp              4735 Oct 17 12:37 CSL/Sources/Noise.cpp
+     10 stp              3456 Oct 17 12:37 CSL/Sources/Noise.h
+     10 stp             20289 Oct 17 12:37 CSL/Sources/Oscillator.cpp
+     10 stp              7772 Oct 17 12:37 CSL/Sources/Oscillator.h
+     10 stp              4684 Oct 17 12:37 CSL/Sources/OscillatorBL.cpp
+     10 stp              1405 Oct 17 12:37 CSL/Sources/OscillatorBL.h
+     10 stp             10841 Oct 17 12:37 CSL/Sources/SHARC.cpp
+     10 stp              5256 Oct 17 12:37 CSL/Sources/SHARC.h
+     10 stp             10596 Oct 17 12:37 CSL/Sources/SimpleSines.cpp
+     10 stp              2477 Oct 17 12:37 CSL/Sources/SimpleSines.h
+     10 stp              4542 Oct 17 12:37 CSL/Sources/Spectral.cpp
+     10 stp              2618 Oct 17 12:37 CSL/Sources/Spectral.h
+     10 stp              2284 Oct 17 12:37 CSL/Sources/WaveShaper.cpp
+     10 stp              1011 Oct 17 12:37 CSL/Sources/WaveShaper.h
+     10 stp              3681 Oct 17 12:37 CSL/Sources/Window.cpp
+     10 stp              4165 Oct 17 12:37 CSL/Sources/Window.h
+     10 stp                   Oct 17 12:37 CSL/Spatializers/
+     10 stp               393 Oct 17 12:37 CSL/Spatializers/4thFloorSpeakers.dat
+     10 stp               123 Oct 17 12:37 CSL/Spatializers/5point1.dat
+     10 stp                   Oct 17 12:37 CSL/Spatializers/Ambisonic/
+     10 stp             26836 Oct 17 12:37 CSL/Spatializers/Ambisonic/Ambisonic.cpp
+     10 stp              9789 Oct 17 12:37 CSL/Spatializers/Ambisonic/Ambisonic.h
+     10 stp              2177 Oct 17 12:37 CSL/Spatializers/Ambisonic/AmbisonicPanner.cpp
+     10 stp              1783 Oct 17 12:37 CSL/Spatializers/Ambisonic/AmbisonicPanner.h
+     10 stp             33723 Oct 17 12:37 CSL/Spatializers/Ambisonic/AmbisonicUtilities.cpp
+     10 stp              5940 Oct 17 12:37 CSL/Spatializers/Ambisonic/AmbisonicUtilities.h
+     10 stp               165 Oct 17 12:37 CSL/Spatializers/Ambisonic/Change Log
+     10 stp              1143 Oct 17 12:37 CSL/Spatializers/Ambisonic/TODO
+     10 stp                   Oct 17 12:37 CSL/Spatializers/Binaural/
+     10 stp              9694 Oct 17 12:37 CSL/Spatializers/Binaural/Binaural.cpp
+     10 stp              3564 Oct 17 12:37 CSL/Spatializers/Binaural/Binaural.h
+     10 stp             20785 Oct 17 12:37 CSL/Spatializers/Binaural/BinauralDB.cpp
+     10 stp              7241 Oct 17 12:37 CSL/Spatializers/Binaural/BinauralDB.h
+     10 stp               132 Oct 17 12:37 CSL/Spatializers/Circular8.dat
+     10 stp              4930 Oct 17 12:37 CSL/Spatializers/DistanceSimulator.cpp
+     10 stp              3232 Oct 17 12:37 CSL/Spatializers/DistanceSimulator.h
+     10 stp                   Oct 17 12:37 CSL/Spatializers/RoomAcoustics/
+     10 stp             12672 Oct 17 12:37 CSL/Spatializers/RoomAcoustics/ShoeBox.cpp
+     10 stp              1416 Oct 17 12:37 CSL/Spatializers/RoomAcoustics/ShoeBox.h
+     10 stp              4089 Oct 17 12:37 CSL/Spatializers/SpatialAudio.cpp
+     10 stp              4195 Oct 17 12:37 CSL/Spatializers/SpatialAudio.h
+     10 stp              2689 Oct 17 12:37 CSL/Spatializers/SpatialPanner.cpp
+     10 stp              2192 Oct 17 12:37 CSL/Spatializers/SpatialPanner.h
+     10 stp              3008 Oct 17 12:37 CSL/Spatializers/SpatialSource.cpp
+     10 stp              4481 Oct 17 12:37 CSL/Spatializers/SpatialSource.h
+     10 stp             10685 Oct 17 12:37 CSL/Spatializers/SpeakerLayout.cpp
+     10 stp              5540 Oct 17 12:37 CSL/Spatializers/SpeakerLayout.h
+     10 stp               760 Oct 17 12:37 CSL/Spatializers/Speaker_layout.dat
+     10 stp                   Oct 17 12:37 CSL/Spatializers/VBAP/
+     10 stp              3100 Oct 17 12:37 CSL/Spatializers/VBAP/DLine.cpp
+     10 stp              1074 Oct 17 12:37 CSL/Spatializers/VBAP/DLine.h
+     10 stp              5424 Oct 17 12:37 CSL/Spatializers/VBAP/DelayLine.cpp
+     10 stp              1670 Oct 17 12:37 CSL/Spatializers/VBAP/DelayLine.h
+     10 stp             11082 Oct 17 12:37 CSL/Spatializers/VBAP/PME.cpp
+     10 stp              4594 Oct 17 12:37 CSL/Spatializers/VBAP/PME.h
+     10 stp             12348 Oct 17 12:37 CSL/Spatializers/VBAP/PracticalSocket.cpp
+     10 stp             11769 Oct 17 12:37 CSL/Spatializers/VBAP/PracticalSocket.h
+     10 stp             15714 Oct 17 12:37 CSL/Spatializers/VBAP/VBAP.cpp
+     10 stp              6737 Oct 17 12:37 CSL/Spatializers/VBAP/VBAP.h
+     10 stp              5688 Oct 17 12:37 CSL/Spatializers/VBAP/VBAP_test.cpp
+     10 stp             27219 Oct 17 12:37 CSL/Spatializers/matrix.h
+     10 stp                   Oct 17 12:37 CSL/Tests/
+     10 stp               186 Oct 17 12:37 CSL/Tests/Makefile
+     10 stp                   Oct 17 12:37 CSL/Tests/OLD/
+     10 stp              2479 Oct 17 12:37 CSL/Tests/OLD/Beep_demo.cpp
+     10 stp              5083 Oct 17 12:37 CSL/Tests/OLD/Beep_demo_OSC.cpp
+     10 stp              2263 Oct 17 12:37 CSL/Tests/OLD/Beep_demo_rhy.cpp
+     10 stp              6246 Oct 17 12:37 CSL/Tests/OLD/GestureSensorTests.cpp
+     10 stp             10962 Oct 17 12:37 CSL/Tests/OLD/MIDI_Test.cpp
+     10 stp              7068 Oct 17 12:37 CSL/Tests/OLD/OSC_main.cpp
+     10 stp             10139 Oct 17 12:37 CSL/Tests/OLD/OSC_support_Old.cpp
+     10 stp              1091 Oct 17 12:37 CSL/Tests/OLD/Player_main.cpp
+     10 stp              7720 Oct 17 12:37 CSL/Tests/OLD/ProtoAuralizer.cpp
+     10 stp              8532 Oct 17 12:37 CSL/Tests/OLD/Server_Tests.cpp
+     10 stp              7405 Oct 17 12:37 CSL/Tests/OLD/Spectrograph_demo.cpp
+     10 stp              5384 Oct 17 12:37 CSL/Tests/OLD/Test_Ambisonic.cpp
+     10 stp              5787 Oct 17 12:37 CSL/Tests/OLD/Test_Ambisonic_OSC.cpp
+     10 stp              5297 Oct 17 12:37 CSL/Tests/OLD/Test_Control2.cpp
+     10 stp              3794 Oct 17 12:37 CSL/Tests/OLD/Test_LPC.cpp
+     10 stp              1477 Oct 17 12:37 CSL/Tests/OLD/Test_RTP_Server.cpp
+     10 stp              2974 Oct 17 12:37 CSL/Tests/OLD/Test_Spatializers.cpp
+     10 stp             28198 Oct 17 12:37 CSL/Tests/OLD/Test_all.cpp
+     10 stp              1488 Oct 17 12:37 CSL/Tests/OLD/Test_main.cpp
+     10 stp              8411 Oct 17 12:37 CSL/Tests/OLD/Ulysses.cpp
+     10 stp              4628 Oct 17 12:37 CSL/Tests/OLD/VBAP_test.cpp
+     10 stp              9484 Oct 17 12:37 CSL/Tests/OSC_support.cpp
+     10 stp              8566 Oct 17 12:37 CSL/Tests/Test_Audio.cpp
+     10 stp              8566 Oct 17 12:37 CSL/Tests/Test_Control.cpp
+     10 stp             13319 Oct 17 12:37 CSL/Tests/Test_Effects.cpp
+     10 stp             11836 Oct 17 12:37 CSL/Tests/Test_Envelopes.cpp
+     10 stp              3979 Oct 17 12:37 CSL/Tests/Test_OSC_Client.cpp
+     10 stp             12451 Oct 17 12:37 CSL/Tests/Test_Oscillators.cpp
+     10 stp             12722 Oct 17 12:37 CSL/Tests/Test_Panners.cpp
+     10 stp             14453 Oct 17 12:37 CSL/Tests/Test_Sources.cpp
+     10 stp              5361 Oct 17 12:37 CSL/Tests/Test_Support.cpp
+     10 stp              1494 Oct 17 12:37 CSL/Tests/Test_Support.h
+     10 stp             70756 Oct 17 12:37 CSL/Tests/osc_client
+     10 stp                   Oct 17 12:37 CSL/Utilities/
+     10 stp              2496 Oct 17 12:37 CSL/Utilities/BlockResizer.cpp
+     10 stp              1557 Oct 17 12:37 CSL/Utilities/BlockResizer.h
+     10 stp              4283 Oct 17 12:37 CSL/Utilities/BlockResizer0.cpp
+     10 stp              3113 Oct 17 12:37 CSL/Utilities/BlockResizer0.h
+     10 stp              8096 Oct 17 12:37 CSL/Utilities/CPoint.cpp
+     10 stp              6416 Oct 17 12:37 CSL/Utilities/CPoint.h
+     10 stp               876 Oct 17 12:37 CSL/Utilities/CSL_All.h
+     10 stp             17946 Oct 17 12:37 CSL/Utilities/FFTReal.cpp
+     10 stp              3607 Oct 17 12:37 CSL/Utilities/FFTReal.h
+     10 stp              8280 Oct 17 12:37 CSL/Utilities/FFT_Wrapper.cpp
+     10 stp              4328 Oct 17 12:37 CSL/Utilities/FFT_Wrapper.h
+     10 stp                   Oct 17 12:37 CSL/Utilities/OLD/
+     10 stp              5746 Oct 17 12:37 CSL/Utilities/OLD/ThreadedFrameStream.cpp
+     10 stp              2512 Oct 17 12:37 CSL/Utilities/OLD/ThreadedFrameStream.h
+     10 stp             12875 Oct 17 12:37 CSL/Utilities/RingBuffer.cpp
+     10 stp              5024 Oct 17 12:37 CSL/Utilities/RingBuffer.h
+     10 stp              4964 Oct 17 12:37 CSL/Utilities/ThreadUtilities.cpp
+     10 stp              1903 Oct 17 12:37 CSL/Utilities/ThreadUtilities.h
+     10 stp              3756 Oct 17 12:37 CSL/Utilities/Variable.cpp
+     10 stp              5226 Oct 17 12:37 CSL/Utilities/Variable.h
+     10 stp             12948 Oct 17 12:37 CSL/Utilities/kiss_fft.c
+     10 stp              3258 Oct 17 12:37 CSL/Utilities/kiss_fft.h
+     10 stp                   Oct 17 12:37 CSL/liblo-0.26/
+     10 stp               835 Oct 17 12:37 CSL/liblo-0.26/AUTHORS
+     10 stp             26436 Oct 17 12:37 CSL/liblo-0.26/COPYING
+     10 stp             12871 Oct 17 12:37 CSL/liblo-0.26/ChangeLog
+     10 stp              9240 Oct 17 12:37 CSL/liblo-0.26/INSTALL
+     10 stp             21558 Oct 17 12:37 CSL/liblo-0.26/Makefile
+     10 stp               181 Oct 17 12:37 CSL/liblo-0.26/Makefile.am
+     10 stp             21179 Oct 17 12:37 CSL/liblo-0.26/Makefile.in
+     10 stp             10834 Oct 17 12:37 CSL/liblo-0.26/NEWS
+     10 stp              2189 Oct 17 12:37 CSL/liblo-0.26/README
+     10 stp               394 Oct 17 12:37 CSL/liblo-0.26/TODO
+     10 stp            313821 Oct 17 12:37 CSL/liblo-0.26/aclocal.m4
+     10 stp              3310 Oct 17 12:37 CSL/liblo-0.26/autogen.sh
+     10 stp                   Oct 17 12:37 CSL/liblo-0.26/build/
+     10 stp              9258 Oct 17 12:37 CSL/liblo-0.26/build/Makefile
+     10 stp               107 Oct 17 12:37 CSL/liblo-0.26/build/Makefile.am
+     10 stp              8850 Oct 17 12:37 CSL/liblo-0.26/build/Makefile.in
+     10 stp              2618 Oct 17 12:37 CSL/liblo-0.26/build/config-msvc.h
+     10 stp              3148 Oct 17 12:37 CSL/liblo-0.26/build/lo_endian-msvc.h
+     10 stp            205312 Oct 17 12:37 CSL/liblo-0.26/build/premake4.exe
+     10 stp              5326 Oct 17 12:37 CSL/liblo-0.26/build/premake4.lua
+     10 stp              3707 Oct 17 12:37 CSL/liblo-0.26/compile
+     10 stp             44892 Oct 17 12:37 CSL/liblo-0.26/config.guess
+     10 stp              2768 Oct 17 12:37 CSL/liblo-0.26/config.h
+     10 stp              2516 Oct 17 12:37 CSL/liblo-0.26/config.h.in
+     10 stp             24657 Oct 17 12:37 CSL/liblo-0.26/config.log
+     10 stp             57331 Oct 17 12:37 CSL/liblo-0.26/config.status
+     10 stp             33387 Oct 17 12:37 CSL/liblo-0.26/config.sub
+     10 stp            423215 Oct 17 12:37 CSL/liblo-0.26/configure
+     10 stp              2524 Oct 17 12:37 CSL/liblo-0.26/configure.ac
+     10 stp             17867 Oct 17 12:37 CSL/liblo-0.26/depcomp
+     10 stp                   Oct 17 12:37 CSL/liblo-0.26/doc/
+     10 stp             10115 Oct 17 12:37 CSL/liblo-0.26/doc/Makefile
+     10 stp               703 Oct 17 12:37 CSL/liblo-0.26/doc/Makefile.am
+     10 stp              9713 Oct 17 12:37 CSL/liblo-0.26/doc/Makefile.in
+     10 stp             43631 Oct 17 12:37 CSL/liblo-0.26/doc/reference.doxygen
+     10 stp             43684 Oct 17 12:37 CSL/liblo-0.26/doc/reference.doxygen.in
+     10 stp                   Oct 17 12:37 CSL/liblo-0.26/examples/
+     10 stp                   Oct 17 12:37 CSL/liblo-0.26/examples/.deps/
+     10 stp              3086 Oct 17 12:37 CSL/liblo-0.26/examples/.deps/example_client.Po
+     10 stp              3086 Oct 17 12:37 CSL/liblo-0.26/examples/.deps/example_server.Po
+     10 stp              3322 Oct 17 12:37 CSL/liblo-0.26/examples/.deps/nonblocking_server_example.Po
+     10 stp             14459 Oct 17 12:37 CSL/liblo-0.26/examples/Makefile
+     10 stp               426 Oct 17 12:37 CSL/liblo-0.26/examples/Makefile.am
+     10 stp             14644 Oct 17 12:37 CSL/liblo-0.26/examples/Makefile.in
+     10 stp              2108 Oct 17 12:37 CSL/liblo-0.26/examples/example_client.c
+     10 stp              2980 Oct 17 12:37 CSL/liblo-0.26/examples/example_server.c
+     10 stp              4926 Oct 17 12:37 CSL/liblo-0.26/examples/nonblocking_server_example.c
+     10 stp             13620 Oct 17 12:37 CSL/liblo-0.26/install-sh
+     10 stp               232 Oct 17 12:37 CSL/liblo-0.26/liblo.pc
+     10 stp               232 Oct 17 12:37 CSL/liblo-0.26/liblo.pc.in
+     10 stp            239995 Oct 17 12:37 CSL/liblo-0.26/libtool
+     10 stp                   Oct 17 12:37 CSL/liblo-0.26/lo/
+     10 stp             12374 Oct 17 12:37 CSL/liblo-0.26/lo/Makefile
+     10 stp               154 Oct 17 12:37 CSL/liblo-0.26/lo/Makefile.am
+     10 stp             11975 Oct 17 12:37 CSL/liblo-0.26/lo/Makefile.in
+     10 stp             12281 Oct 17 12:37 CSL/liblo-0.26/lo/lo.h
+     10 stp              2956 Oct 17 12:37 CSL/liblo-0.26/lo/lo_endian.h
+     10 stp              2969 Oct 17 12:37 CSL/liblo-0.26/lo/lo_endian.h.in
+     10 stp              1166 Oct 17 12:37 CSL/liblo-0.26/lo/lo_errors.h
+     10 stp             27481 Oct 17 12:37 CSL/liblo-0.26/lo/lo_lowlevel.h
+     10 stp              2600 Oct 17 12:37 CSL/liblo-0.26/lo/lo_macros.h
+     10 stp              3768 Oct 17 12:37 CSL/liblo-0.26/lo/lo_osc_types.h
+     10 stp               779 Oct 17 12:37 CSL/liblo-0.26/lo/lo_throw.h
+     10 stp              4303 Oct 17 12:37 CSL/liblo-0.26/lo/lo_types.h
+     10 stp            225293 Oct 17 12:37 CSL/liblo-0.26/ltmain.sh
+     10 stp             11135 Oct 17 12:37 CSL/liblo-0.26/missing
+     10 stp                   Oct 17 12:37 CSL/liblo-0.26/src/
+     10 stp                   Oct 17 12:37 CSL/liblo-0.26/src/.deps/
+     10 stp              3356 Oct 17 12:37 CSL/liblo-0.26/src/.deps/liblo_la-address.Plo
+     10 stp              3027 Oct 17 12:37 CSL/liblo-0.26/src/.deps/liblo_la-blob.Plo
+     10 stp              3138 Oct 17 12:37 CSL/liblo-0.26/src/.deps/liblo_la-bundle.Plo
+     10 stp              3293 Oct 17 12:37 CSL/liblo-0.26/src/.deps/liblo_la-message.Plo
+     10 stp              2309 Oct 17 12:37 CSL/liblo-0.26/src/.deps/liblo_la-method.Plo
+     10 stp              1991 Oct 17 12:37 CSL/liblo-0.26/src/.deps/liblo_la-pattern_match.Plo
+     10 stp              3495 Oct 17 12:37 CSL/liblo-0.26/src/.deps/liblo_la-send.Plo
+     10 stp              3750 Oct 17 12:37 CSL/liblo-0.26/src/.deps/liblo_la-server.Plo
+     10 stp              3750 Oct 17 12:37 CSL/liblo-0.26/src/.deps/liblo_la-server.Tpo
+     10 stp              3404 Oct 17 12:37 CSL/liblo-0.26/src/.deps/liblo_la-server_thread.Plo
+     10 stp              2248 Oct 17 12:37 CSL/liblo-0.26/src/.deps/liblo_la-timetag.Plo
+     10 stp              3191 Oct 17 12:37 CSL/liblo-0.26/src/.deps/subtest-subtest.Po
+     10 stp              3637 Oct 17 12:37 CSL/liblo-0.26/src/.deps/testlo-testlo.Po
+     10 stp             31691 Oct 17 12:37 CSL/liblo-0.26/src/Makefile
+     10 stp               762 Oct 17 12:37 CSL/liblo-0.26/src/Makefile.am
+     10 stp             34407 Oct 17 12:37 CSL/liblo-0.26/src/Makefile.in
+     10 stp              6758 Oct 17 12:37 CSL/liblo-0.26/src/address.c
+     10 stp              1274 Oct 17 12:37 CSL/liblo-0.26/src/blob.c
+     10 stp              3600 Oct 17 12:37 CSL/liblo-0.26/src/bundle.c
+     10 stp              5226 Oct 17 12:37 CSL/liblo-0.26/src/liblo.def
+     10 stp              1859 Oct 17 12:37 CSL/liblo-0.26/src/lo_internal.h
+     10 stp              2710 Oct 17 12:37 CSL/liblo-0.26/src/lo_types_internal.h
+     10 stp             23161 Oct 17 12:37 CSL/liblo-0.26/src/message.c
+     10 stp              1003 Oct 17 12:37 CSL/liblo-0.26/src/method.c
+     10 stp              8623 Oct 17 12:37 CSL/liblo-0.26/src/pattern_match.c
+     10 stp             11271 Oct 17 12:37 CSL/liblo-0.26/src/send.c
+     10 stp             33037 Oct 17 12:37 CSL/liblo-0.26/src/server.c
+     10 stp              3909 Oct 17 12:37 CSL/liblo-0.26/src/server_thread.c
+     10 stp              2237 Oct 17 12:37 CSL/liblo-0.26/src/subtest.c
+     10 stp             36541 Oct 17 12:37 CSL/liblo-0.26/src/testlo.c
+     10 stp              1594 Oct 17 12:37 CSL/liblo-0.26/src/timetag.c
+     10 stp                   Oct 17 12:37 CSL/liblo-0.26/src/tools/
+     10 stp                   Oct 17 12:37 CSL/liblo-0.26/src/tools/.deps/
+     10 stp              3197 Oct 17 12:37 CSL/liblo-0.26/src/tools/.deps/oscdump-oscdump.Po
+     10 stp              3862 Oct 17 12:37 CSL/liblo-0.26/src/tools/.deps/oscsend-oscsend.Po
+     10 stp             21652 Oct 17 12:37 CSL/liblo-0.26/src/tools/Makefile
+     10 stp               250 Oct 17 12:37 CSL/liblo-0.26/src/tools/Makefile.am
+     10 stp             22391 Oct 17 12:37 CSL/liblo-0.26/src/tools/Makefile.in
+     10 stp              2017 Oct 17 12:37 CSL/liblo-0.26/src/tools/README
+     10 stp              2092 Oct 17 12:37 CSL/liblo-0.26/src/tools/oscdump.c
+     10 stp              6606 Oct 17 12:37 CSL/liblo-0.26/src/tools/oscsend.c
+     10 stp                23 Oct 17 12:37 CSL/liblo-0.26/stamp-h1
+     14 stp                   Oct 17 12:39 Doc/
+     10 stp            256477 Oct 17 12:37 Doc/CSL.pdf
+     10 stp            267289 Oct 17 12:37 Doc/CSL4_ICMC06.pdf
+     10 stp            749451 Oct 17 12:37 Doc/CSL_ICMC_2003.pdf
+     10 stp           4800902 Oct 17 12:37 Doc/CSL_Overview.pdf
+     10 stp                   Oct 17 12:37 Doc/ScreenShots/
+     10 stp              8063 Oct 17 12:37 Doc/ScreenShots/CSL4_osc.gif
+     10 stp             59279 Oct 17 12:37 Doc/ScreenShots/CSL5.0-Demo-small.jpg
+     10 stp            120073 Oct 17 12:37 Doc/ScreenShots/CSL5.0-Demo.jpg
+     10 stp             52308 Oct 17 12:37 Doc/ScreenShots/CSL5.0-Demo2-small.jpg
+     10 stp            101046 Oct 17 12:37 Doc/ScreenShots/CSL5.0-Demo2.jpg
+     10 stp             52559 Oct 17 12:37 Doc/ScreenShots/CSL_Granulator.gif
+     10 stp             66795 Oct 17 12:37 Doc/ScreenShots/CSL_Granulator2.gif
+     10 stp             66454 Oct 17 12:37 Doc/ScreenShots/CSL_Granulator3.gif
+     10 stp             97591 Oct 17 12:37 Doc/ScreenShots/CSL_Granulator4.gif
+     10 stp             69992 Oct 17 12:37 Doc/ScreenShots/CSL_Granulator5.gif
+     10 stp             81073 Oct 17 12:37 Doc/ScreenShots/CSL_Granulator6.gif
+     10 stp             53223 Oct 17 12:37 Doc/ScreenShots/CSL_SigGen.gif
+     10 stp            495623 Oct 17 12:37 Doc/ScreenShots/CSL_Windows1.jpg
+     10 stp            197008 Oct 17 12:37 Doc/ScreenShots/CSL_Windows1b.jpg
+     10 stp            207791 Oct 17 12:37 Doc/ScreenShots/CSL_Windows1small.jpg
+     10 stp             74947 Oct 17 12:37 Doc/ScreenShots/HRTF-Player.jpg
+     10 stp             80499 Oct 17 12:37 Doc/ScreenShots/HRTF_Ambi.jpg
+     10 stp             64919 Oct 17 12:37 Doc/ScreenShots/Spectrogram.jpg
+     10 stp             71372 Oct 17 12:37 Doc/ScreenShots/SrcFiles.jpg
+     10 stp            112634 Oct 17 12:37 Doc/ScreenShots/sweep-spectrum.jpg
+     10 stp            118613 Oct 17 12:37 Doc/ScreenShots/sweep-speech.jpg
+     10 stp               612 Oct 17 12:37 Doc/ThingsToDo
+     10 stp              3006 Oct 17 12:37 Doc/csl-stack.txt
+     10 stp             51457 Oct 17 12:37 Doc/doxygen.conf
+     10 stp           2101001 Oct 17 12:37 Doc/html.zip
+     10 stp             19002 Oct 17 12:37 Doc/index.html
+     16 stp                   Oct 17 12:39 JUCE/
+     10 stp             36193 Oct 17 12:37 JUCE/CSL_ServerComponent.cpp
+     10 stp              3928 Oct 17 12:37 JUCE/CSL_ServerComponent.h
+     10 stp             30300 Oct 17 12:37 JUCE/CSL_TestComponent.cpp
+     10 stp              5736 Oct 17 12:37 JUCE/CSL_TestComponent.h
+     10 stp             24468 Oct 17 12:37 JUCE/JCSL_Widgets.cpp
+     10 stp              7240 Oct 17 12:37 JUCE/JCSL_Widgets.h
+     10 stp              1775 Oct 17 12:37 JUCE/Main.cpp
+     10 stp              1785 Oct 17 12:37 JUCE/MainServer.cpp
+     10 stp             35668 Oct 17 12:37 JUCE/SpectralProc.cpp
+     10 stp              3826 Oct 17 12:37 JUCE/SpectralProc.h
+     17 stp                   Oct 17 12:39 Linux/
+     10 stp              1771 Oct 17 12:37 Linux/CSL_premake.lua
+     10 stp               512 Oct 17 12:37 Linux/Makefile
+     10 stp              8352 Oct 17 12:37 Linux/Makefile.old
+     10 stp               730 Oct 17 12:37 Linux/README
+     10 stp                52 Oct 17 12:37 Linux/runpremake
+     18 stp                   Oct 17 12:40 MacOSX/
+     10 stp             40705 Oct 17 12:37 MacOSX/CSL4.2.xcodeproj.zip
+     10 stp                   Oct 17 12:37 MacOSX/CSL5.0.xcodeproj/
+     10 stp            114108 Oct 17 12:37 MacOSX/CSL5.0.xcodeproj/project.pbxproj
+     10 stp             46867 Oct 17 12:37 MacOSX/CSL5.0.xcodeproj/stp.mode1
+     10 stp             44906 Oct 17 12:37 MacOSX/CSL5.0.xcodeproj/stp.mode1v3
+     10 stp             71788 Oct 17 12:37 MacOSX/CSL5.0.xcodeproj/stp.pbxuser
+     10 stp                   Oct 17 12:37 MacOSX/CSL_JUCE.xcodeproj/
+     10 stp             83178 Oct 17 12:37 MacOSX/CSL_JUCE.xcodeproj/project.pbxproj
+     10 stp             45145 Oct 17 12:37 MacOSX/CSL_JUCE.xcodeproj/stp.mode1
+     10 stp             48368 Oct 17 12:37 MacOSX/CSL_JUCE.xcodeproj/stp.mode1v3
+     10 stp            104091 Oct 17 12:37 MacOSX/CSL_JUCE.xcodeproj/stp.pbxuser
+     10 stp               700 Oct 17 12:37 MacOSX/CSL_PlugIn-Info.plist
+     10 stp                   Oct 17 12:37 MacOSX/CSL_Server.xcodeproj/
+     10 stp             59790 Oct 17 12:37 MacOSX/CSL_Server.xcodeproj/project.pbxproj
+     10 stp             45145 Oct 17 12:37 MacOSX/CSL_Server.xcodeproj/stp.mode1
+     10 stp             48379 Oct 17 12:37 MacOSX/CSL_Server.xcodeproj/stp.mode1v3
+     10 stp            101531 Oct 17 12:37 MacOSX/CSL_Server.xcodeproj/stp.pbxuser
+     10 stp                   Oct 17 12:37 MacOSX/CSL_VST.xcodeproj/
+     10 stp             55705 Oct 17 12:37 MacOSX/CSL_VST.xcodeproj/project.pbxproj
+     10 stp             41452 Oct 17 12:37 MacOSX/CSL_VST.xcodeproj/stp.mode1
+     10 stp             40810 Oct 17 12:37 MacOSX/CSL_VST.xcodeproj/stp.mode1v3
+     10 stp             12162 Oct 17 12:37 MacOSX/CSL_VST.xcodeproj/stp.pbxuser
+     10 stp                   Oct 17 12:37 MacOSX/English.lproj/
+     10 stp               254 Oct 17 12:37 MacOSX/English.lproj/InfoPlist.strings
+     10 stp               254 Oct 17 12:37 MacOSX/English.lproj/InfoPlistServer.strings
+     10 stp               694 Oct 17 12:37 MacOSX/Info copy.plist
+     10 stp               691 Oct 17 12:37 MacOSX/Info.plist
+     10 stp               693 Oct 17 12:37 MacOSX/InfoServer.plist
+     10 stp               163 Oct 17 12:37 MacOSX/README
+     10 stp                   Oct 17 12:37 MacOSX/build/
+     10 stp                   Oct 17 12:37 MacOSX/build/CSL_JUCE.build/
+     10 stp                   Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/
+     10 stp                84 Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/categories.pbxbtree
+     10 stp            312992 Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/cdecls.pbxbtree
+     10 stp            314072 Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/decls.pbxbtree
+     10 stp              5736 Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/files.pbxbtree
+     10 stp             13812 Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/imports.pbxbtree
+     10 stp                24 Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/pbxindex.header
+     10 stp                84 Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/protocols.pbxbtree
+     10 stp            226728 Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/refs.pbxbtree
+     10 stp                   Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/strings.pbxstrings/
+     10 stp            262164 Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/strings.pbxstrings/control
+     10 stp            397570 Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/strings.pbxstrings/strings
+     10 stp              6200 Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/subclasses.pbxbtree
+     10 stp           1540680 Oct 17 12:37 MacOSX/build/CSL_JUCE.build/CSL_JUCE.pbxindex/symbols0.pbxsymbols
+     10 stp               458 Oct 17 12:37 MacOSX/version.plist
+     10 stp               880 Oct 17 12:37 MacOSX/vst2.4Info copy.plist
+     10 stp               843 Oct 17 12:37 MacOSX/vst2.4Info.plist
+     20 stp             13178 Oct 17 12:40 README
+     21 stp                18 Oct 17 12:40 Version.txt
+     15 stp                   Oct 17 12:39 Windows/
+     10 stp              3149 Oct 17 12:37 Windows/README.txt
+     10 stp                   Oct 17 12:37 Windows/VS8/
+     10 stp           6876160 Oct 17 12:37 Windows/VS8/CSL.ncb
+     10 stp               905 Oct 17 12:37 Windows/VS8/CSL.sln
+     10 stp             79360 Oct 17 12:37 Windows/VS8/CSL.suo
+     10 stp                   Oct 17 12:37 Windows/VS8/CSL_JUCE_Demo/
+     10 stp               166 Oct 17 12:37 Windows/VS8/CSL_JUCE_Demo/CSL_JUCE_Demo.cpp
+     10 stp             11137 Oct 17 12:37 Windows/VS8/CSL_JUCE_Demo/CSL_JUCE_Demo.vcproj
+     10 stp              1425 Oct 17 12:37 Windows/VS8/CSL_JUCE_Demo/CSL_JUCE_Demo.vcproj.STEPHEN6CF5.Administrator.user
+     10 stp              1338 Oct 17 12:37 Windows/VS8/CSL_JUCE_Demo/ReadMe.txt
+     10 stp               300 Oct 17 12:37 Windows/VS8/CSL_JUCE_Demo/stdafx.cpp
+     10 stp               320 Oct 17 12:37 Windows/VS8/CSL_JUCE_Demo/stdafx.h
+     10 stp               765 Oct 17 12:37 Windows/VS8/CSL_JUCE_Demo/targetver.h
+     10 stp                   Oct 17 12:37 Windows/VS8/CSL_StaticLib/
+     10 stp             10417 Oct 17 12:37 Windows/VS8/CSL_StaticLib/CSL_StaticLib.vcproj
+     10 stp              1460 Oct 17 12:37 Windows/VS8/CSL_StaticLib/CSL_StaticLib.vcproj.STEPHEN6CF5.Administrator.user
+     10 stp                   Oct 17 12:37 Windows/VS8/CSL_Test_Beep/
+     10 stp              5238 Oct 17 12:37 Windows/VS8/CSL_Test_Beep/CSL_Test_Beep.vcproj
+     10 stp              1425 Oct 17 12:37 Windows/VS8/CSL_Test_Beep/CSL_Test_Beep.vcproj.STEPHEN6CF5.Administrator.user
+     10 stp               905 Oct 17 12:37 Windows/VS8/CSL_copy.sln
+     10 stp             16896 Oct 17 12:37 Windows/VS8/CSL_copy.suo
+     10 stp              3425 Oct 17 12:37 Windows/VS8/README.txt

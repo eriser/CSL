@@ -429,14 +429,14 @@ testStruct srcTestList[] = {
 	"MP3 Snd file player",		testMP3FilePlayer,	"Play an MP3 file",
 #endif
 	"Snd file transpose",		testSoundFileTranspose,	"Demonstrate transposing a sound file",
-	"Snd file bank",			testSndFileBank,		"Play a large sample bank form sound files",
+	"Sample file bank",			testSndFileBank,		"Play a large sample bank from sound files",
 	"FM instrument",			testFMInstrument,		"Play the basic FM instrument",
 	"Fancy FM instrument",		testFancyFMInstrument,	"FM note with attack chiff and vibrato",
 	"SumOfSines instrument",	testSOSInstrument,		"Demonstrate the SumOfSines instrument",
 	"Snd file instrument",		testSndFileInstrument,	"Test the sound file instrument",
 	"IFFT synthesis",			test_ifft,				"Make a sound with IFFT synthesis",
 	"Vector IFFT",				test_vector_ifft,		"Vector synthesis with 2 IFFTs",
-	"Soundfile granulation",	testGrainCloud,			"Sound file granulation example",
+	"Soundfile granulation",	testGrainCloud,			"Random sound file granulation example",
 	NULL,						NULL,					NULL
 };
 

@@ -5,7 +5,8 @@
 //
 
 #include "BlockResizer.h"
-
+#include <string.h>			// memcpy
+ 
 using namespace csl;
 
 // Constructor - set up cache buffer for 1 block at the input's block size

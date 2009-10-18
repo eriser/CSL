@@ -159,7 +159,7 @@
 		4C1081E1108255DE00A34A15 /* liblo.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = liblo.dylib; path = /usr/local/lib/liblo.dylib; sourceTree = "<absolute>"; };
 		4C1081EF108256F500A34A15 /* COPYRIGHT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = COPYRIGHT; path = ../COPYRIGHT; sourceTree = SOURCE_ROOT; };
 		4C1081F0108256F500A34A15 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../README; sourceTree = SOURCE_ROOT; };
-		4C196A0410815D7100EE476C /* Test_OSC_Client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Test_OSC_Client.cpp; sourceTree = "<group>"; };
+		4C196A0410815D7100EE476C /* Test_OSC_Client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Test_OSC_Client.cpp; path = OSC/Test_OSC_Client.cpp; sourceTree = "<group>"; };
 		4C1978E81086B92000A15D23 /* ThingsToDo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ThingsToDo; path = ../Doc/ThingsToDo; sourceTree = SOURCE_ROOT; };
 		4C37531D0FE0A14B004E1EFE /* JUCEIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JUCEIO.cpp; path = CSL/IO/JUCEIO.cpp; sourceTree = "<group>"; };
 		4C37531E0FE0A14B004E1EFE /* JUCEIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JUCEIO.h; path = CSL/IO/JUCEIO.h; sourceTree = "<group>"; };
