@@ -289,8 +289,8 @@ void testOSCServer() {
 
 testStruct ctrlTestList[] = {
 	"Dump ports",			IO_test,		"Dump list of MIDI ports to stdout",
-	"Dump input",			input_test,		"Dump MIDI input cmds from MIDI kbd",
-	"MIDI notes",			play_test,		"Play MIDI notes (reads MIDI kbd input)",
+	"Dump input",			input_test,		"Dump MIDI input from default device",
+	"MIDI notes",			play_test,		"Play MIDI notes (reads MIDI kbd)",
 	"MIDI output",			output_test,	"Test sending MIDI output",
 	"MIDI listener",		testListener,	"Start the MIDI listener object",
 	"MIDI file player",		testMIDIFile,	"Play a MIDI file on an instrument library",

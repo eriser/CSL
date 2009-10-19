@@ -41,13 +41,14 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
+				Optimization="0"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="..\..\..\..\juce;..\..\..\CSL\Includes"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;USE_JUCE;USE_JTHREADS;USE_JSND;USE_FFTREAL"
-				MinimalRebuild="true"
+				AdditionalIncludeDirectories="Z:\Code\juce;..\..\..\..\juce;..\..\..\CSL\Includes;&quot;C:\Program Files\ASIOSDK2\common&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;USE_JUCE;USE_JTHREADS;USE_JSND;USE_FFTREAL;JUCE_ASIO"
+				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
+				FloatingPointModel="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="0"
 				DebugInformationFormat="3"

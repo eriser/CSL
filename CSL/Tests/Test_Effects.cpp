@@ -376,11 +376,11 @@ testStruct effTestList[] = {
 	"Dynamic filter",		testDynamicFilters,	"Play a dynamic BP filter on noise",
 	"Many dynamic filters",	testManyDynamicFilters,	"Many dynamic filtered-noise instruments",
 	"Reverb",				testReverb,			"Show mono reverb on impulses",
-	"Stereo-verb",			testStereoverb,		"Listen to the stereo freeverb",
+	"Stereo-verb",			testStereoverb,		"Listen to the stereo reverb",
 	"Multi-tap",			testMultiTap,		"Play a multi-tap delay line",
 	"Block up-sizer",		testBlockUpsizer,	"Test the block resizer on up-sizing",
 	"Block down-sizer",		testBlockDownsizer,	"Test the block resizer on down-sizing",
-	"Sample-avg filter",	testSAFilter,		"Test the simple sample-averager filter",
+	"Sample-avg filter",	testSAFilter,		"Demo in-line sample-average-filter class",
 	NULL,					NULL,				NULL
 };
 

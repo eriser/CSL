@@ -23,7 +23,7 @@
 #endif
 
 #ifdef USE_PAIO
-	#include "PAIO.h"			// PortAudio IO
+	#include "PAIO.h"			// PortAu dio IO
 	#define IO_CLASS PAIO
 #endif
 

@@ -95,7 +95,7 @@ public:
 	int mDeviceID;					///< device ID which will/is opened.
 	CMIDIMessage mMsg;				///< current message (its flags determine the port state)
 	CMIDIMessage mMsg2;	
-	MidiBuffer mBuffer;				///< I/O buffer
+	juce::MidiBuffer mBuffer;		///< I/O buffer
 
 protected:							///< static flags to keep track of driver state
 	static bool mIsInitialized; 
@@ -134,9 +134,9 @@ public:
 	int evaluate(void * arg);			///< evaluate answers the message command
 
 										/// implement inherited MidiInputCallback
-	void handleIncomingMidiMessage(MidiInput * source, const MidiMessage & message);
+	void handleIncomingMidiMessage(juce::MidiInput * source, const MidiMessage & message);
 	
-	MidiInput * mDevice;				///< my device ptr
+	juce::MidiInput * mDevice;			///< my device ptr
 	double mStartTime;					///< the time I was started
 };
 

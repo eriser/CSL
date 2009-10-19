@@ -11,6 +11,9 @@
 
 #include <juce.h>
 
+class AudioFormatReader;
+class AudioFormatWriter;
+
 namespace csl {
 
 ///
@@ -43,10 +46,10 @@ public:
 
 	void writeBuffer(Buffer &inputBuffer) throw (CException);	///< write a buffer of data into the file
 
-	AudioFormatReader * mAFReader;					///< my reader
-	AudioFormatWriter * mAFWriter;					///< and my writer
-	File * mIOFile;									///< my JUCE file
-	FileOutputStream * mOutStream;
+	juce::AudioFormatReader * mAFReader;			///< my reader
+	juce::AudioFormatWriter * mAFWriter;			///< and my writer
+	juce::File * mIOFile;							///< my JUCE file
+	juce::FileOutputStream * mOutStream;
 
 protected:
 	void initFromSndfile();							///< read SF header

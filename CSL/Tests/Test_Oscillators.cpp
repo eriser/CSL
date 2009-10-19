@@ -353,14 +353,14 @@ void runTests() {
 // test list for Juce GUI
 
 testStruct oscTestList[] = {
-	"Sweep test",				testSweep,			"Test a sine wave with swept freq and volume swell",
+	"Sweep test",				testSweep,			"Test a sine with swept freq and volume swell",
 	"Simple sines",				testSimpleSines,	"Test some simple sine oscilators",
 	"Standard waveforms",		testBasicWaves,		"Demonstrate the standard wave forms",
-	"Scaled sine",				testScaledSin,		"Play a scaled sine wave",
+	"Scaled sine",				testScaledSin,		"Play a scaled-quiet sine wave",
 	"Wavetable interpolation",	testWavetableInterpolation,		"Show truncated/interpolated wave tables",
 	"AM/FM sines",				testAMFMSin,		"Play an AM and FM sine wave",
 	"Dump AM/FM sines",			dumpAMFMSin,		"Dump the graph of the AM/FM sine",
-	"SumOfSines cached",		testSumOfSinesCached,		"Play a sum-of-sines",
+	"SumOfSines cached",		testSumOfSinesCached,		"Play a sum-of-sines additive oscillator",
 	"SumOfSines non-cached",	testSumOfSinesNonCached,	"Play an uncached inharmonic sum-of-sines", 
 	"SumOfSines build",			testSumOfSinesSteps,		"Build up a harmonic series on a sum-of-sines",
 	"SumOfSines 1/f",			testSumOfSines1F,			"Play a 1/f spectrum sum-of-sines",

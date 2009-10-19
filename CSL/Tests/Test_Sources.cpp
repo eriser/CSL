@@ -422,7 +422,7 @@ void runTests() {
 
 testStruct srcTestList[] = {
 	"Noise tests",				testNoises,			"Test noise generators",
-	"Plucked string",			testString,			"Waves of string arpeggii in stereo with reverb",
+	"Plucked string",			testString,			"Waves of string arpeggii, stereo with reverb",
 	"Mono Snd file player",		testMonoSoundFilePlayer,	"Test playing a sound file",
 	"Stereo Snd file player",	testStereoSoundFilePlayer,	"Play a stereo sound file",
 #ifdef USE_MP3	

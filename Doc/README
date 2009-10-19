@@ -60,6 +60,15 @@ newest framework; these are generally in subdirectories called "OLD" and may wel
 work with a little bit of tweaking; all the really unstable code has been removed.
 
 
+Platform Requirements
+
+MacOS X: OS x 10.5 or newer with Xcode and JUCE 1.50 (patched)
+
+Linux: Tested on Ubuntu 9.04 with X11-libs and ALSA libraries
+
+MS-windows: Tested on XP with ASIO4All and ASIO SDK
+
+
 Linking with the CSL Libraries
 
 To link CSL programs, you'll need the following packages installed on your machine:

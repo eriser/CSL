@@ -41,7 +41,9 @@ extern testStruct srcTestList[];
 extern testStruct envTestList[];
 extern testStruct effTestList[];
 extern testStruct panTestList[];
+#ifdef USE_JMIDI
 extern testStruct ctrlTestList[];
+#endif
 extern testStruct audioTestList[];
 
 testStruct * allTests[] = {
@@ -258,7 +260,9 @@ CSLComponent::CSLComponent ()
 
     //[Constructor] You can add your own custom stuff here..
 	
-					// initialise the device manager so it picks a default device to use.
+					// CSL Code starts here
+
+					// initiali[zs]e the device manager so it picks a default device to use.
 	const String error (mAudioDeviceManager.initialise (0,	/* no input */
 													   2,	/* stereo output  */
 													   0,	/* no XML defaults */
@@ -289,7 +293,7 @@ CSLComponent::CSLComponent ()
 	theIO->start();						// start IO and register callback
 	mAudioDeviceManager.addAudioCallback(this);
 
-	gCPULabel = cpuLabel;
+	gCPULabel = cpuLabel;				// component settings
 	gAudioDeviceManager = & mAudioDeviceManager;
 	playThread = 0;
 	loopThread = 0;
@@ -298,7 +302,7 @@ CSLComponent::CSLComponent ()
 	displayMode = true;
 	recrding = false;
 
-	amplitudeSlider->setValue(-0.2);
+	amplitudeSlider->setValue(-0.2);	// GUI settings
 	scaleSlider->setValue(0.1);
 	oscilloscopeL->start();
 	oscilloscopeR->start();
@@ -323,7 +327,7 @@ CSLComponent::CSLComponent ()
 		whichTest = atoi(argVals[2]);
 	if (argCnt > 1)
 		printf("Select suite %d, test %d\n", whichSuite, whichTest);
-
+									// combo menu selections
 	familyCombo->setSelectedId(whichSuite, true);
 	this->setComboLabels(whichSuite - 1);
 	testCombo->setSelectedId(whichTest, true);
@@ -335,6 +339,8 @@ CSLComponent::~CSLComponent()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
 
+	if (playing)			// CSL shut-down
+		this->startStop();
 	playing = false;
 	mAudioDeviceManager.removeAudioCallback(this);
 	if (gFileBuffer) {
@@ -691,6 +697,8 @@ void CSLComponent::timerCallback() {
 	gCPULabel->setText(msgS, true);
 }
 
+// start/stop
+
 void CSLComponent::startStop() {
 	if ( ! playing) {										// if not playing, start!
 		int which = testCombo->getSelectedId();
@@ -709,12 +717,12 @@ void CSLComponent::startStop() {
 		playThread->startThread();
 		loopThread = new LThread(playThread, this, loop);	// thread to wait and/or loop it
 		loopThread->startThread();
-//			playButton->setButtonText (T("Stop"));
-		this->startTimer(1000);
+//		playButton->setButtonText (T("Stop"));
+		this->startTimer(1000);								// 1-sec timer
 	} else {												// if playing
 		playing = false;
 		theIO->clearRoot();	
-//			this->stopTimer();
+		this->stopTimer();
 		CGestalt::setStopNow();								// set flag to clear timers
 		if (recrding)
 			recordOnOff();
@@ -725,7 +733,7 @@ void CSLComponent::startStop() {
 			playThread->stopThread(1000);					// try to kill
 		delete playThread;
 		playThread = 0;
-//			playButton->setButtonText (T("Play"));
+//		playButton->setButtonText (T("Play"));
 		CGestalt::clearStopNow();		// clear flag
 	}
 }
