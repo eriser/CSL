@@ -7,7 +7,7 @@ CSL is being developed at the Center for Research in Electronic Art Technology
 (CREATE) and the Graduate Program in Media Arts and Technology (MAT) at the 
 University of California, Santa Barbara (UCSB). It is a work in progress.
 
-This is release 5.0g, October, 2009.
+This is release 5.0h, October, 2009.
 
 The home page for CSL is http://FASTLabInc.com/CSL.
 
@@ -120,90 +120,98 @@ to the sound file I/O classes that can be grabbed from the CSL download site.
 
 Here's the JUCE demo GUI's Menu List
 
-Oscillator Tests
-		              Sweep test    Test a sine wave with swept freq and a volume swell
-		            Simple sines    Test some simple sine oscilators
-		      Standard waveforms    Demonstrate the standard wave forms
-		             Scaled sine    Play a scaled sine wave
-		 Wavetable interpolation    Show truncated and interpolated wave tables
-		             AM/FM sines    Play an AM and FM sine wave
-		        Dump AM/FM sines    Dump the graph of the AM/FM sine
-		       SumOfSines cached    Play a sum-of-sines
-		   SumOfSines non-cached    Play an uncached inharmonic sum-of-sines
-		        SumOfSines build    Build up a harmonic series
-		          SumOfSines 1/f    Play a 1/f spectrum sum-of-sines
-		     Wavetable from file    Load a wave table frmo a sound file
-		               SHARC SOS    Load and print the SHARC timbre database and play an example
-		            Vector SHARC    Show vector cross-fade of SHARC spectra
+Oscillator Tests  -  Test_Oscillators.cpp
+              Sweep test	Test a sine with swept freq and volume swell
+            Simple sines	Test some simple sine oscilators
+      Standard waveforms	Demonstrate the standard wave forms
+             Scaled sine	Play a scaled-quiet sine wave
+ Wavetable interpolation	Show truncated/interpolated wave tables
+             AM/FM sines	Play an AM and FM sine wave
+        Dump AM/FM sines	Dump the graph of the AM/FM sine
+       SumOfSines cached	Play a sum-of-sines additive oscillator
+   SumOfSines non-cached	Play an uncached inharmonic sum-of-sines
+        SumOfSines build	Build up a harmonic series on a sum-of-sines
+          SumOfSines 1/f	Play a 1/f spectrum sum-of-sines
+     Wavetable from file	Play a wave table from a sound file
+               SHARC SOS	Load/print the SHARC timbre database, play example
+            Vector SHARC	Show vector cross-fade of SHARC spectra
 
-Source Tests
-		             Noise tests    Test noise generators
-		          Plucked string    Texture of string arpeggii panned in stereo space with reverb
-		    Mono Snd file player    Test playing a sound file
-		  Stereo Snd file player    Play a stereo sound file
-		      Snd file transpose    Demonstrate transposing a sound file
-		           Snd file bank    Play a large sample bank form sound files
-		           FM instrument    Play the basic FM instrument
-		     Fancy FM instrument    Play an FM instrument with attack chiff and vibrato
-		   SumOfSines instrument    Demonstrate the SumOfSines instrument
-		     Snd file instrument    Test the sound file instrument
-		          IFFT synthesis    Make a sound with IFFT synthesis
-		             Vector IFFT    Vector synthesis with 2 IFFTs
-		   Soundfile granulation    Sound file granulation example
+Source Tests  -  Test_Sources.cpp
+             Noise tests	Test noise generators
+          Plucked string	Waves of string arpeggii, stereo with reverb
+    Mono Snd file player	Test playing a sound file
+  Stereo Snd file player	Play a stereo sound file
+      Snd file transpose	Demonstrate transposing a sound file
+        Sample file bank	Play a large sample bank from sound files
+           FM instrument	Play the basic FM instrument
+     Fancy FM instrument	FM note with attack chiff and vibrato
+   SumOfSines instrument	Demonstrate the SumOfSines instrument
+     Snd file instrument	Test the sound file instrument
+          IFFT synthesis	Make a sound with IFFT synthesis
+             Vector IFFT	Vector synthesis with 2 IFFTs
+   Soundfile granulation	Random sound file granulation example
 
-Envelope Tests
-		          Glissando test    Demonstrate a glissando function
-		     Swell on aqmplitude    Make an amplitude swell
-		      Frequency envelope    Play a note with a frequency envelope
-		                 AR sine    Play a sine with an AR (attack/release) amplitude envelope
-		         AM/FM envelopes    Test a note with AM and FM envelopes
-		                  ADSR 2    Play an ADSR (attack/decay/sustain/release) amplitude envelope
-		                 ADSR FM    Dual-envelope FM example
-		      Rand Freq envelope    Play a note with a random-walk frequency envelope
-		        50 Rand F/A envs    Test 50 of the random frequency envelope players
-		                Fancy FM    Play a fancy FM note
-		        Complex envelope    Play a note with a complex amplitude envelope
-		         Many random SOS    Layer many random SumOfSines instruments with envelopes
+Envelope Tests  -  Test_Envelopes.cpp
+          Glissando test	Demonstrate a glissando function
+     Swell on aqmplitude	Make an amplitude swell
+      Frequency envelope	Play a note with a frequency envelope
+                 AR sine	Play an AR (attack/release) amplitude envelope
+         AM/FM envelopes	Test AM and FM envelopes
+                  ADSR 2	Play an ADSR (attack/decay/sustain/release)
+                 ADSR FM	Dual-envelope FM example
+      Rand Freq envelope	Play a random-walk frequency envelope
+        50 Rand F/A envs	Test 50 random frequency envelope players
+                Fancy FM	Play a fancy FM note
+        Complex envelope	Play a note with a complex amplitude envelope
+         Many random SOS	Layer many SumOfSines instruments with envelopes
 
-Effect Tests
-		                 Clipper    Demonstrate the signal clipper
-		              FIR filter    Play an FIR band-pass filter
-		             All filters    Test different filter types
-		       Filtered snd file    Dynamic BPF on a voice track
-		          Dynamic filter    Play a dynamic BP filter on noise
-		    Many dynamic filters    Many dynamic filtered-noise instruments
-		                  Reverb    Show mono reverb on impulses
-		             Stereo-verb    Listen to the stereo freeverb
-		               Multi-tap    Play a multi-tap delay line
-		          Block up-sizer    test the block resizer on up-sizing
-		        Block down-sizer    test the block resizer on down-sizing
-		       Sample-avg filter    Test the simple sample-averager filter
+Effect Tests  -  Test_Effects.cpp
+                 Clipper	Demonstrate the signal clipper
+              FIR filter	Play an FIR band-pass filter
+             All filters	Test different filter types
+       Filtered snd file	Dynamic BPF on a voice track
+          Dynamic filter	Play a dynamic BP filter on noise
+    Many dynamic filters	Many dynamic filtered-noise instruments
+                  Reverb	Show mono reverb on impulses
+             Stereo-verb	Listen to the stereo reverb
+               Multi-tap	Play a multi-tap delay line
+          Block up-sizer	Test the block resizer on up-sizing
+        Block down-sizer	Test the block resizer on down-sizing
+       Sample-avg filter	Demo in-line sample-average-filter class
 
-Panner Tests
-		           Stereo panner    Demonstrate the stero panner
-		                   Mixer    Make a mixer with some sine inputs (slow sum-of-sines)
-		           Panning mixer    Play a panning stereo mixer
-		    Bigger panning mixer    Test a mixer with many inputs
-		                Osc bank    Mix a bank of oscillators
-		      HRTF horiz circles    Test the HRTF-based binaural panner
-		      HRTF axial circles    Play a HRTF-panner with axial circles
-		     HRTF median circles    Play a HRTF-panner with median circles
-		              Ambisonics    Test the Ambisonic-based spatial panner
+Panner Tests  -  Test_Panners.cpp
+           Stereo panner	Demonstrate the stero panner
+                   Mixer	Mixer with 4 sine inputs (slow sum-of-sines)
+           Panning mixer	Play a panning stereo mixer
+    Bigger panning mixer	Test a mixer with many inputs
+                Osc bank	Mix a bank of oscillators
+      HRTF horiz circles	Test the HRTF-based binaural panner
+      HRTF axial circles	Play a HRTF-panner with axial circles
+     HRTF median circles	Play a HRTF-panner with median circles
+              Ambisonics	Test the Ambisonic-based spatial panner
 
-Control Tests
-		              Dump ports    Dump list of MIDI ports to stdout
-		              Dump input    Dump MIDI input cmds from MIDI kbd
-		              MIDI notes    Play MIDI notes on a simple input (reads MIDI kbd input)
-		             MIDI output    Test sending MIDI output
-		           MIDI listener    Start the MIDI listener object
-		        MIDI file player    Play a simple MIDI file with an instrument library
-		       OSC client/server    OSC client/server demo with an instrument library
-		              OSC server    Start OSC server with an instrument library
+Control Tests  -  Test_Control.cpp
+              Dump ports	Dump list of MIDI ports to stdout
+              Dump input	Dump MIDI input from default device
+              MIDI notes	Play MIDI notes (reads MIDI kbd)
+             MIDI output	Test sending MIDI output
+           MIDI listener	Start the MIDI listener object
+        MIDI file player	Play a MIDI file on an instrument library
+       OSC client/server	OSC client/server on a library
+              OSC server	Start OSC server on a library
+
+Audio Tests  -  Test_Audio.cpp
+        Dump audio ports	Dump list of audio ports to stdout
+           Echo audio in	Play the microphone in
+              Audio echo	Add echo to the live input
+            Input panner	Stereo panner on the live input
+          Input listener	Demonstrate recording input listener
 
 
-The source code for all these tests is in the CSL/Tests directory (and file group 
-in the IDE); it's a good way to learn CSL to run the JUCE demo in an XCode/Eclipse 
-debugger and set breakpoints in the test functions while using the GUI.
+The source code for all these tests is in the CSL/Tests directory (and in a"Test" 
+file group in the IDE); it's a good way to learn CSL to run the JUCE demo in an 
+XCode/Eclipse/VisualStudio debugger and set breakpoints in the test functions 
+while using the GUI.
 
 
 CSL main() functions

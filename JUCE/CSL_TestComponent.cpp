@@ -70,6 +70,18 @@ char * allTestNames[] = {
 	"Audio Tests"
 };
 
+char * allTestFiles[] = {
+	"Test_Oscillators.cpp",
+	"Test_Sources.cpp",
+	"Test_Envelopes.cpp",
+	"Test_Effects.cpp",
+	"Test_Panners.cpp",
+#ifdef USE_JMIDI
+	"Test_Control.cpp",
+#endif
+	"Test_Audio.cpp"
+};
+
 testStruct * gTestList;				// global menu
 
 // Pretty-print the test menu
@@ -85,7 +97,7 @@ void dumpTestList() {
 	for (unsigned i = 0; i < numSuites; i++) {
 		gTestList = allTests[i];
 		char * testName = allTestNames[i];
-		printf("\n%s\n", testName);
+		printf("\n%s  -  %s\n", testName, allTestFiles[i]);
 //		printf("</ul>\n<li>%s</li>\n<ul>", testName);
 		for (unsigned j = 0; gTestList[j].name != NULL; j++) {
 			printf("%24s	%s\n", gTestList[j].name, gTestList[j].comment);
@@ -260,7 +272,9 @@ CSLComponent::CSLComponent ()
 
     //[Constructor] You can add your own custom stuff here..
 	
+////////////////////////////// Here we go! //////////////////////////////////////////
 					// CSL Code starts here
+	dumpTestList();					// print out the demo/test menu
 
 					// initiali[zs]e the device manager so it picks a default device to use.
 	const String error (mAudioDeviceManager.initialise (0,	/* no input */
@@ -310,8 +324,6 @@ CSLComponent::CSLComponent ()
 	VUMeterR->setChannel(1);
     loopButton->setToggleState (false, false);
 //	spectrogam->setVisible(false);
-
-//	dumpTestList();					// print out the demo/test menu
 	
 	int whichSuite = 1;				// set default suite/test
 	int whichTest = 1;

@@ -11,6 +11,12 @@
 #include "CGestalt.h"
 #include "Instrument.h"
 #include "juce.h"
+//#include "src/juce_appframework/audio/midi/juce_MidiBuffer.h"
+//#include "src/juce_appframework/audio/midi/juce_MidiFile.h"
+//#include "src/juce_appframework/audio/midi/juce_MidiMessage.h"
+//#include "src/juce_appframework/audio/midi/juce_MidiMessageSequence.h"
+//#include "src/juce_appframework/audio/devices/juce_MidiInput.h"
+//#include "src/juce_appframework/audio/devices/juce_MidiOutput.h"
 
 namespace csl {
 	
@@ -95,12 +101,12 @@ public:
 	int mDeviceID;					///< device ID which will/is opened.
 	CMIDIMessage mMsg;				///< current message (its flags determine the port state)
 	CMIDIMessage mMsg2;	
-	juce::MidiBuffer mBuffer;		///< I/O buffer
+	MidiBuffer mBuffer;		///< I/O buffer
 
 protected:							///< static flags to keep track of driver state
 	static bool mIsInitialized; 
 	
-	juce::MidiMessage * mJMsg;		///< JUCE-format message
+	MidiMessage * mJMsg;		///< JUCE-format message
 				
 	bool mIsOpen;					///< instance status indicators
 	long mBufferSize;
@@ -134,9 +140,9 @@ public:
 	int evaluate(void * arg);			///< evaluate answers the message command
 
 										/// implement inherited MidiInputCallback
-	void handleIncomingMidiMessage(juce::MidiInput * source, const MidiMessage & message);
+	void handleIncomingMidiMessage(MidiInput * source, const MidiMessage & message);
 	
-	juce::MidiInput * mDevice;			///< my device ptr
+	MidiInput * mDevice;			///< my device ptr
 	double mStartTime;					///< the time I was started
 };
 

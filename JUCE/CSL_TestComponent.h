@@ -42,7 +42,7 @@
 
 #include "CSL_Includes.h"	// CSL core
 #include "juce.h"			// JUCE core
-#include "src/juce_appframework/audio/devices/juce_AudioDeviceManager.h"
+//#include "src/juce_appframework/audio/devices/juce_AudioDeviceManager.h"
 #include "JCSL_Widgets.h"	// my custom widgets (VU meter and oscilloscope)
 
 // Support code: CSL player thread
