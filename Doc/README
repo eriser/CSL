@@ -68,7 +68,7 @@ Platform Requirements
 
 	MS-windows: Tested on XP with DirectX 9, ASIO4All, ASIO SDK
 
-	All: JUCE 1.50 (patched aufio file IO)
+	All: JUCE 1.50 (patched audio file IO)
 
 
 Linking with the CSL Libraries
