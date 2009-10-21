@@ -93,7 +93,6 @@ void dumpTestList() {
 #else
 	unsigned numSuites = 6;
 #endif
-	printf("\n\n");
 	for (unsigned i = 0; i < numSuites; i++) {
 		gTestList = allTests[i];
 		char * testName = allTestNames[i];

@@ -181,12 +181,47 @@ void testMIDIFile() {
 
 //////////////////////////////////////////////////////////////////////////////
 
-// set up an OSC client/server with an instrument library
-
 #ifdef USE_LOSC					// liblo for OSC
 
-#include "lo/lo.h"				// liblo header has to be in your path (installed in /usr/local/include)
+#include "lo/lo.h"				// liblo header has to be in your path (/usr/local/include)
 #include "OSC_support.h"
+
+// Server only (run client in a separate shell)
+
+void testOSCServer() {
+	InstrumentVector lib;
+	logMsg("Setting up instrument library");
+	Mixer mix(2);				// Create the main stereo output mixer
+								// Now add 16  instruments 
+	for (unsigned i = 0; i < 16; i++) {
+		AdditiveInstrument * in = new AdditiveInstrument;
+		lib.push_back(in);
+		mix.addInput(*in);
+	}
+	Stereoverb rev(mix);		// stereo reverb
+	rev.setRoomSize(0.8);		// medium-length reverb
+	theIO->setRoot(rev);		// plug the mixer in as the IO client
+	theIO->open();				// open the IO
+	theIO->start();				// start the IO
+
+	char pNam[CSL_WORD_LEN];	// string for port number
+	sprintf(pNam, "%d", CGestalt::outPort());
+	
+	initOSC(pNam);				// Set up OSC address space root
+	
+	setupOSCInstrLibrary(lib);	// add the instrument library OSC
+	
+	mainOSCLoop(NULL);			// Run the OSC loop function (it exits on the quit command)
+	logMsg("OSC server waiting for input\n");
+
+	sleepSec(2);				// let the reverb dieout
+	theIO->clearRoot();			// shut down
+	theIO->stop();
+	theIO->close();
+	mix.deleteInputs();
+}
+
+// set up an OSC client/server with an instrument library
 
 void testOSCClientServer() {
 	InstrumentVector lib;
@@ -242,41 +277,6 @@ done:
 	if (lo_send(ad, "/q", NULL) == -1) {
 		logMsg(kLogError, "OSC error3 %d: %s\n", lo_address_errno(ad), lo_address_errstr(ad));
 	}
-	theIO->clearRoot();			// shut down
-	theIO->stop();
-	theIO->close();
-	mix.deleteInputs();
-}
-
-// Server only (run slient in a separate shell)
-
-void testOSCServer() {
-	InstrumentVector lib;
-	logMsg("Setting up instrument library");
-	Mixer mix(2);				// Create the main stereo output mixer
-								// Now add 16  instruments 
-	for (unsigned i = 0; i < 16; i++) {
-		AdditiveInstrument * in = new AdditiveInstrument;
-		lib.push_back(in);
-		mix.addInput(*in);
-	}
-	Stereoverb rev(mix);		// stereo reverb
-	rev.setRoomSize(0.8);		// medium-length reverb
-	theIO->setRoot(rev);		// plug the mixer in as the IO client
-	theIO->open();				// open the IO
-	theIO->start();				// start the IO
-
-	char pNam[CSL_WORD_LEN];	// string for port number
-	sprintf(pNam, "%d", CGestalt::outPort());
-	
-	initOSC(pNam);				// Set up OSC address space root
-	
-	setupOSCInstrLibrary(lib);	// add the instrument library OSC
-	
-	mainOSCLoop(NULL);			// Run the OSC loop function (it exits on the quit command)
-	logMsg("OSC server waiting for input\n");
-
-	sleepSec(2);				// let the reverb dieout
 	theIO->clearRoot();			// shut down
 	theIO->stop();
 	theIO->close();

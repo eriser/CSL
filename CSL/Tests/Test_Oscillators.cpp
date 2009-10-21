@@ -166,7 +166,7 @@ void testAMFMSin() {
 	logMsg("AM sin done.\n");
 
 	Osc osc2;							// carrier to be FM'ed
-	Osc FMmod(6, 20, 220);				// FM osc: freq, scale, offset
+	Osc FMmod(4, 40, 220);				// FM osc: freq, scale, offset
 	osc2.setFrequency(FMmod);			// FM using setFrequency()
 	osc2.setScale(0.5);					// scale the osc (quieter)
 	osc2.dump();

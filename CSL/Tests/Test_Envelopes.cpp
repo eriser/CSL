@@ -136,6 +136,7 @@ void testADSR2() {
 /// FM using 2 oscs and 2 ADSRs
 
 #define BASE_FREQ 110.0
+//#define BASE_FREQ 8000.0
 
 void testADSR_FM() {
 	ADSR a_env(3, 0.1, 0.1, 0.5, 1);			// set up 2 standard ADSRs (3-sec duration)
@@ -143,6 +144,7 @@ void testADSR_FM() {
 	Osc car(BASE_FREQ);							// init the 2 oscillators (fc = fm)
 	Osc mod(BASE_FREQ);
 	i_env.setScale(BASE_FREQ);					// scale the index envelope by the mod. freq
+//	i_env.setScale(BASE_FREQ*8);
 	mod.setScale(i_env);
 	mod.setOffset(BASE_FREQ);
 	car.setFrequency(mod);
@@ -155,7 +157,7 @@ void testADSR_FM() {
 	logMsg("done.\n");
 }
 
-/// test the rand env
+/// test the rand env as the freq of a SOS
 
 void testRandFreqEnv() {
 	SumOfSines sos(kFrequency, 6,   0.2, 0.2, 0.1, 0.05, 0.02, 0.02);
@@ -220,7 +222,8 @@ void testEnvScale() {
 	logMsg("done.\n");
 }
 
-///  FM with vibrato (with AR-envelope), attack chiff (filtered noise with AR-envelope), and random freq. drift and ampl. swell envelopes
+///  FM with vibrato (with AR-envelope), attack chiff (filtered noise with AR-envelope), 
+///		and random freq. drift and ampl. swell envelopes
 
 void testFancy_FM() {
 	Osc car(BASE_FREQ);							// init the 2 oscillators (fc = fm)
@@ -353,7 +356,7 @@ testStruct envTestList[] = {
 	"ADSR FM",				testADSR_FM,			"Dual-envelope FM example",
 	"Rand Freq envelope",	testRandFreqEnv,		"Play a random-walk frequency envelope",
 	"50 Rand F/A envs",		test50RandFreqEnv,		"Test 50 random frequency envelope players",
-//	"Envelope scaling",		testEnvScale,	
+//	"Envelope scaling",		testEnvScale,			"",
 	"Fancy FM",				testFancy_FM,			"Play a fancy FM note",
 	"Complex envelope",		testComplexEnvelope,	"Play a note with a complex amplitude envelope",
 	"Many random SOS",		testManyRandSOS,		"Layer many SumOfSines instruments with envelopes",

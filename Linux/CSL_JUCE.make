@@ -18,9 +18,10 @@ ifeq ($(CONFIG),Debug)
   CXXFLAGS += $(CFLAGS)
   LDFLAGS += -L$(BINDIR) -L$(LIBDIR) -mwindows -L"/usr/X11R6/lib/" -L"/usr/local/lib/" -L"/home/stp/juce/bin/" -lfreetype -lpthread -lX11 -lGL -lGLU -lXinerama -lasound -ljuce_debug
   LDDEPS :=
-  RESFLAGS := -D "LINUX=1" -D "USE_JUCE" -D "USE_FFTREAL" -D "USE_HRTF" -D "USE_JSND" -I "../CSL/Includes" -I "../CSL/Spatializers/Binaural" -I "../CSL/Spatializers/Ambisonic" -I "../JUCE" -I "~/juce/"
+  RESFLAGS := -D "LINUX=1" -D "USE_JUCE" -D "USE_FFTREAL" -D "USE_HRTF" -D "USE_JSND" -I "../CSL/Includes" -I "../CSL/Spatializers/Binaural" -I "../CSL/Spatializers/Ambisonic" -I "../JUCE" -I "/home/stp/juce/"
   TARGET := CSL_JUCE
- BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
+  MACAPP := CSL_JUCE.app/Contents
+ BLDCMD = $(CXX) -o $(OUTDIR)/$(MACAPP)/MacOS/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
 endif
 
 ifeq ($(CONFIG),Release)
@@ -28,14 +29,15 @@ ifeq ($(CONFIG),Release)
   LIBDIR := build
   OBJDIR := build/intermediate/Release
   OUTDIR := build
-  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "USE_JUCE" -D "USE_FFTREAL" -D "USE_HRTF" -D "USE_JSND" -I "../CSL/Includes" -I "../CSL/Spatializers/Binaural" -I "../CSL/Spatializers/Ambisonic" -I "../JUCE" -I "~/juce/"
+  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "USE_JUCE" -D "USE_FFTREAL" -D "USE_HRTF" -D "USE_JSND" -I "../CSL/Includes" -I "../CSL/Spatializers/Binaural" -I "../CSL/Spatializers/Ambisonic" -I "../JUCE" -I "/home/stp/juce/"
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -O2 -O2 -w
   CXXFLAGS += $(CFLAGS)
-  LDFLAGS += -L$(BINDIR) -L$(LIBDIR) -mwindows -s -L"/usr/X11R6/lib/" -L"/usr/local/lib/" -L"~/juce/bin/" -lfreetype -lpthread -lX11 -lGL -lGLU -lXinerama -lasound -ljuce_debug
+  LDFLAGS += -L$(BINDIR) -L$(LIBDIR) -mwindows -Wl,-x -L"/usr/X11R6/lib/" -L"/usr/local/lib/" -L"/home/stp/juce/bin/" -lfreetype -lpthread -lX11 -lGL -lGLU -lXinerama -lasound -ljuce_debug
   LDDEPS :=
-  RESFLAGS := -D "LINUX=1" -D "USE_JUCE" -D "USE_FFTREAL" -D "USE_HRTF" -D "USE_JSND" -I "../CSL/Includes" -I "../CSL/Spatializers/Binaural" -I "../CSL/Spatializers/Ambisonic" -I "../JUCE" -I "~/juce/"
+  RESFLAGS := -D "LINUX=1" -D "USE_JUCE" -D "USE_FFTREAL" -D "USE_HRTF" -D "USE_JSND" -I "../CSL/Includes" -I "../CSL/Spatializers/Binaural" -I "../CSL/Spatializers/Ambisonic" -I "../JUCE" -I "/home/stp/juce/"
   TARGET := CSL_JUCE
- BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
+  MACAPP := CSL_JUCE.app/Contents
+ BLDCMD = $(CXX) -o $(OUTDIR)/$(MACAPP)/MacOS/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
 endif
 
 OBJECTS := \
@@ -70,6 +72,16 @@ OBJECTS := \
 	$(OBJDIR)/BasicFMInstrument.o \
 	$(OBJDIR)/Instrument.o \
 	$(OBJDIR)/SndFileInstrument.o \
+	$(OBJDIR)/DistanceSimulator.o \
+	$(OBJDIR)/SpatialAudio.o \
+	$(OBJDIR)/SpatialPanner.o \
+	$(OBJDIR)/SpatialSource.o \
+	$(OBJDIR)/SpeakerLayout.o \
+	$(OBJDIR)/Binaural.o \
+	$(OBJDIR)/BinauralDB.o \
+	$(OBJDIR)/Ambisonic.o \
+	$(OBJDIR)/AmbisonicPanner.o \
+	$(OBJDIR)/AmbisonicUtilities.o \
 	$(OBJDIR)/SoundFile.o \
 	$(OBJDIR)/SoundFileJ.o \
 	$(OBJDIR)/MIDIIOJ.o \
@@ -81,20 +93,9 @@ OBJECTS := \
 	$(OBJDIR)/Test_Panners.o \
 	$(OBJDIR)/Test_Sources.o \
 	$(OBJDIR)/Test_Support.o \
-	$(OBJDIR)/DistanceSimulator.o \
-	$(OBJDIR)/SpatialAudio.o \
-	$(OBJDIR)/SpatialPanner.o \
-	$(OBJDIR)/SpatialSource.o \
-	$(OBJDIR)/SpeakerLayout.o \
-	$(OBJDIR)/Binaural.o \
-	$(OBJDIR)/BinauralDB.o \
-	$(OBJDIR)/Ambisonic.o \
-	$(OBJDIR)/AmbisonicPanner.o \
-	$(OBJDIR)/AmbisonicUtilities.o \
 	$(OBJDIR)/CSL_TestComponent.o \
 	$(OBJDIR)/JCSL_Widgets.o \
-	$(OBJDIR)/Main.o 
-
+	$(OBJDIR)/Main.o \
 
 MKDIR_TYPE := msdos
 CMD := $(subst \,\\,$(ComSpec)$(COMSPEC))
@@ -118,17 +119,24 @@ endif
 
 .PHONY: clean
 
-$(OUTDIR)/$(TARGET): $(OBJECTS) $(LDDEPS) $(RESOURCES)
+all: $(OUTDIR)/$(MACAPP)/PkgInfo $(OUTDIR)/$(MACAPP)/Info.plist $(OUTDIR)/$(MACAPP)/MacOS/$(TARGET)
+
+$(OUTDIR)/$(MACAPP)/MacOS/$(TARGET): $(OBJECTS) $(LDDEPS) $(RESOURCES)
 	@echo Linking CSL_JUCE
 	-@$(CMD_MKBINDIR)
 	-@$(CMD_MKLIBDIR)
 	-@$(CMD_MKOUTDIR)
+	-@if [ ! -d $(OUTDIR)/$(MACAPP)/MacOS ]; then mkdir -p $(OUTDIR)/$(MACAPP)/MacOS; fi
 	@$(BLDCMD)
+
+$(OUTDIR)/$(MACAPP)/PkgInfo:
+
+$(OUTDIR)/$(MACAPP)/Info.plist:
 
 clean:
 	@echo Cleaning CSL_JUCE
 ifeq ($(MKDIR_TYPE),posix)
-	-@rm -f $(OUTDIR)/$(TARGET)
+	-@rm -rf $(OUTDIR)/$(TARGET).app
 	-@rm -rf $(OBJDIR)
 else
 	-@if exist $(subst /,\,$(OUTDIR)/$(TARGET)) del /q $(subst /,\,$(OUTDIR)/$(TARGET))
@@ -291,66 +299,6 @@ $(OBJDIR)/SndFileInstrument.o: ../CSL/Instruments/SndFileInstrument.cpp
 	@echo $(notdir $<)
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/SoundFile.o: ../CSL/IO/SoundFile.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/SoundFileJ.o: ../CSL/IO/SoundFileJ.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/MIDIIOJ.o: ../CSL/IO/MIDIIOJ.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/MIDIIOJ.o: ../CSL/IO/MIDIIOJ.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/Test_Audio.o: ../CSL/Tests/Test_Audio.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/Test_Control.o: ../CSL/Tests/Test_Control.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/Test_Effects.o: ../CSL/Tests/Test_Effects.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/Test_Envelopes.o: ../CSL/Tests/Test_Envelopes.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/Test_Oscillators.o: ../CSL/Tests/Test_Oscillators.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/Test_Panners.o: ../CSL/Tests/Test_Panners.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/Test_Sources.o: ../CSL/Tests/Test_Sources.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/Test_Support.o: ../CSL/Tests/Test_Support.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
 $(OBJDIR)/DistanceSimulator.o: ../CSL/Spatializers/DistanceSimulator.cpp
 	-@$(CMD_MKOBJDIR)
 	@echo $(notdir $<)
@@ -401,7 +349,57 @@ $(OBJDIR)/AmbisonicUtilities.o: ../CSL/Spatializers/Ambisonic/AmbisonicUtilities
 	@echo $(notdir $<)
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/CSL_ServerComponent.o: ../JUCE/CSL_ServerComponent.cpp
+$(OBJDIR)/SoundFile.o: ../CSL/IO/SoundFile.cpp
+	-@$(CMD_MKOBJDIR)
+	@echo $(notdir $<)
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/SoundFileJ.o: ../CSL/IO/SoundFileJ.cpp
+	-@$(CMD_MKOBJDIR)
+	@echo $(notdir $<)
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/MIDIIOJ.o: ../CSL/IO/MIDIIOJ.cpp
+	-@$(CMD_MKOBJDIR)
+	@echo $(notdir $<)
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Test_Audio.o: ../CSL/Tests/Test_Audio.cpp
+	-@$(CMD_MKOBJDIR)
+	@echo $(notdir $<)
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Test_Control.o: ../CSL/Tests/Test_Control.cpp
+	-@$(CMD_MKOBJDIR)
+	@echo $(notdir $<)
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Test_Effects.o: ../CSL/Tests/Test_Effects.cpp
+	-@$(CMD_MKOBJDIR)
+	@echo $(notdir $<)
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Test_Envelopes.o: ../CSL/Tests/Test_Envelopes.cpp
+	-@$(CMD_MKOBJDIR)
+	@echo $(notdir $<)
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Test_Oscillators.o: ../CSL/Tests/Test_Oscillators.cpp
+	-@$(CMD_MKOBJDIR)
+	@echo $(notdir $<)
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Test_Panners.o: ../CSL/Tests/Test_Panners.cpp
+	-@$(CMD_MKOBJDIR)
+	@echo $(notdir $<)
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Test_Sources.o: ../CSL/Tests/Test_Sources.cpp
+	-@$(CMD_MKOBJDIR)
+	@echo $(notdir $<)
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Test_Support.o: ../CSL/Tests/Test_Support.cpp
 	-@$(CMD_MKOBJDIR)
 	@echo $(notdir $<)
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
@@ -417,16 +415,6 @@ $(OBJDIR)/JCSL_Widgets.o: ../JUCE/JCSL_Widgets.cpp
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/Main.o: ../JUCE/Main.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/MainServer.o: ../JUCE/MainServer.cpp
-	-@$(CMD_MKOBJDIR)
-	@echo $(notdir $<)
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/SpectralProc.o: ../JUCE/SpectralProc.cpp
 	-@$(CMD_MKOBJDIR)
 	@echo $(notdir $<)
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"

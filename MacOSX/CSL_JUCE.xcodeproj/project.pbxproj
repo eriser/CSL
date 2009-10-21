@@ -173,8 +173,6 @@
 		4C3AB32410597D6A006877AE /* WaveShaper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveShaper.h; sourceTree = "<group>"; };
 		4C3AB33310597E06006877AE /* AdditiveInstrument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AdditiveInstrument.cpp; sourceTree = "<group>"; };
 		4C3AB33410597E06006877AE /* AdditiveInstrument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdditiveInstrument.h; sourceTree = "<group>"; };
-		4C3AB33510597E06006877AE /* WhiteNoiseInstrument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WhiteNoiseInstrument.cpp; sourceTree = "<group>"; };
-		4C3AB33610597E06006877AE /* WhiteNoiseInstrument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhiteNoiseInstrument.h; sourceTree = "<group>"; };
 		4C3AB33710597E40006877AE /* JackIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JackIO.cpp; path = CSL/IO/JackIO.cpp; sourceTree = "<group>"; };
 		4C3AB33810597E40006877AE /* JackIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JackIO.h; path = CSL/IO/JackIO.h; sourceTree = "<group>"; };
 		4C3AB33B10597E40006877AE /* NullIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NullIO.cpp; path = CSL/IO/NullIO.cpp; sourceTree = "<group>"; };
@@ -609,8 +607,6 @@
 				4C904F2E0CD1842900307D02 /* SndFileInstrument.cpp */,
 				4C3AB33410597E06006877AE /* AdditiveInstrument.h */,
 				4C3AB33310597E06006877AE /* AdditiveInstrument.cpp */,
-				4C3AB33610597E06006877AE /* WhiteNoiseInstrument.h */,
-				4C3AB33510597E06006877AE /* WhiteNoiseInstrument.cpp */,
 			);
 			name = Instruments;
 			path = CSL/Instruments;

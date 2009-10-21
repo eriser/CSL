@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="Z:\Code\juce;..\..\..\..\juce;..\..\..\CSL\Includes;&quot;C:\Program Files\ASIOSDK2\common&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\juce&quot;;&quot;C:\Program Files\CSL\JUCE&quot;;&quot;C:\Program Files\CSL\CSL\Includes&quot;;&quot;C:\Program Files\ASIOSDK2\common&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;USE_JUCE;USE_JTHREADS;USE_JSND;USE_FFTREAL;JUCE_ASIO"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"

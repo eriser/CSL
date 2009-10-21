@@ -27,13 +27,13 @@ package.includepaths = {
     "../CSL/Spatializers/Binaural",
     "../CSL/Spatializers/Ambisonic",
     "../JUCE",
-    "~/juce/"					# edit to taste
+    "/home/stp/juce/"				-- edit here
 }
 
 package.libpaths = { 
     "/usr/X11R6/lib/",
     "/usr/local/lib/",
-    "~/juce/bin/"				# edit to taste
+    "/home/stp/juce/bin/"			-- edit here
 }
 
 package.config["Debug"].links = { 
@@ -46,22 +46,23 @@ package.config["Release"].links = {
 
 package.linkflags = { "static-runtime" }
 
+-- source list
+
 package.files = { matchfiles (
     "../CSL/Kernel/*.cpp",
     "../CSL/Utilities/*.cpp",
     "../CSL/Sources/*.cpp",
     "../CSL/Processors/*.cpp",
     "../CSL/Instruments/*.cpp",
-    "../CSL/IO/SoundFile.cpp",
-    "../CSL/IO/SoundFileJ.cpp",
-    "../CSL/IO/MIDIIOJ.cpp",
-    "../CSL/IO/MIDIIOJ.cpp",
     "../CSL/Spatializers/*.cpp",
     "../CSL/Spatializers/Binaural/*",
     "../CSL/Spatializers/Ambisonic/*",
+    "../CSL/IO/SoundFile.cpp",
+    "../CSL/IO/SoundFileJ.cpp",
+    "../CSL/IO/MIDIIOJ.cpp",
     "../CSL/Tests/*.cpp",
-    "../JUCE/CSL_TestComponent.cpp"
-    "../JUCE/JCSL_Widgets.cpp"
+    "../JUCE/CSL_TestComponent.cpp",
+    "../JUCE/JCSL_Widgets.cpp",
     "../JUCE/Main.cpp"
     )
 }
