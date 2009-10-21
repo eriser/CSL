@@ -47,13 +47,16 @@ or
 	CSL/Tests/TestSources.cpp (or any of the other tests)
 
 To compile the sources, you will need to create the links in the CSL/Includes folder; 
-to do this, open a UNIX shell (AKA terminal) and execute the commands,
+to do this, open a UNIX shell (terminal, or DOS prompt) and execute the commands,
 
 ### change to the Includes folder
 	cd ~/Code/CSL/CSL/Includes
 
 ### make symbolic links from the include files to this folder
 	./remake
+
+### or, on windows
+	remake.bat
 
 Note that the release contains a number of files that have not been ported to the 
 newest framework; these are generally in subdirectories called "OLD" and may well 

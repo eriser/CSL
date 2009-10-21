@@ -22,25 +22,29 @@
 }
 .style11 {font-family: Arial, Helvetica, sans-serif; font-weight: bold; }
 .style13 {font-family: Arial, Helvetica, sans-serif; font-size: small; font-weight: bold; }
+.style14 {font-size: medium}
 -->
   </style>
 </head>
 <body style="background-color: rgb(255, 255, 204);">
-<div style="text-align: left;">
-<center> <img
- src="http://www.create.ucsb.edu/images/create.banner3.gif"
- alt="CREATE Logo" height="134" width="327"> </center>
-</div>
-<h2>Late-breaking news
-<a href="http://fastlabinc.com/CSL/CSL_Linux.jpg"><img
+<center>
+<table width="80%" border="0" cellspacing="4" cellpadding="12">
+  <tr>
+    <td><img  src="http://www.create.ucsb.edu/images/create.banner3.gif" alt="CREATE Logo" height="134" width="327"></td>
+    <td><img  src="http://fastlabinc.com/FLI_logo.gif" alt="FASTLab Logo"></td>
+  </tr>
+</table>
+</center>
+<h2>The CREATE Signal Library (CSL) Project Home Page</h2> 
+<h3>Late-breaking news<a href="http://fastlabinc.com/CSL/CSL_Linux.jpg"><img
  alt="CSL demo GUI" src="http://fastlabinc.com/CSL/CSL_Linux-small.jpg"
  style="border: 0px solid ; width: 432px; height: 320px;" align="right"
- hspace="8" vspace="0"></a></h2>
+ hspace="8" vspace="0"></a></h3>
 <h4>(Oct, 2009) CSL 5.1 now also on Linux</h4>
-The SVN repository now has working projects for Mac OSX 10.6, MS-Windows XP/Vista, and Ubuntu Linux.
-  <p>Prerequisites </p>
+The SVN repository now has working projects for Mac OSX 10.6, MS-Windows XP/Vista, and Ubuntu Linux 9.04.
+  <p><strong>System Requirements</strong> </p>
 <ul>
-  <li>MacOS X: OS x 10.5 or newer with Xcode 3</li>
+  <li>MacOS X: OSX 10.5 or newer with Xcode 3</li>
   <li>Linux: Tested on Ubuntu 9.04 with X11-libs, ALSA, Freetype, pthreads, openGL/GLUT</li>
   <li>MS-windows: Tested on XP with DirectX 9, ASIO4All, ASIO SDK</li>
   <li>All: JUCE 1.50 (patched audio file IO)</li>
@@ -76,14 +80,11 @@ The SVN repository now has working projects for Mac OSX 10.6, MS-Windows XP/Vist
 </blockquote>
 <p>Note that the repository does not include the <a href="./CSL_Data.zip">CSL Data directory</a> or the <a href="./juce.zip">patched JUCE library</a>.</p>
 <h4>(Sept., 2009): CSL 5.0 (JUCE) Released</h4>
-<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
- cellspacing="2">
+<table style="width: 100%; text-align: left;" border="0" cellspacing="2">
   <tbody>
     <tr>
-      
       <td height="12" valign="top" style="vertical-align: top;">
       <ul class="style3">
-        
           <li>
             <div align="left">              
               <p><a href="CSL5.0.zip">Get the CSL 5.0 Src ZIP file</a> (5.0g, 28 MB, 10/09)</p>
@@ -119,14 +120,14 @@ The SVN repository now has working projects for Mac OSX 10.6, MS-Windows XP/Vist
         
           <div align="left">
             <blockquote>
-              <p><span class="style2"><a href="CSL5_Demo1.mov" target="_top">Show 1: A Tour of CSL</a> (22 min, 108 MB)</span></p>
-              <p class="style2"><a href="CSL5_Demo2.mov" target="_top">Show 2: CSL App Slide Show</a> (4:20 min, 17 MB)</p>
-              <p class="style2"><a href="CSL5_Demo3.mov" target="_top">Show 3: CSL Internals, Programming</a> (19 min, 92 MB)</p>
+              <p><span class="style2"><span class="style14"><a href="CSL5_Demo1.mov" target="_top">Show 1: A Tour of CSL</a> (22 min, 108 MB)</span></span></p>
+              <p class="style14"><a href="CSL5_Demo2.mov" target="_top">Show 2: CSL App Slide Show</a> (4:20 min, 17 MB)</p>
+              <p class="style14"><a href="CSL5_Demo3.mov" target="_top">Show 3: CSL Internals, Programming</a> (19 min, 92 MB)</p>
             </blockquote>
           </div>
-        
-      </ul>      </td>
-      <td style="width: 500px; text-align: center; vertical-align: top;">
+      </ul>
+            </td>
+      <td style="text-align: center; vertical-align: top;">
       <a href="http://fastlabinc.com/CSL5.0-Demo.jpg"><img
  alt="CSL demo GUI" src="http://fastlabinc.com/CSL5.0-Demo2-small.jpg"
  style="border: 0px solid ; width: 432px; height: 320px;" align="middle"
@@ -134,7 +135,7 @@ The SVN repository now has working projects for Mac OSX 10.6, MS-Windows XP/Vist
     </tr>
   </tbody>
 </table>
-<h3>The CREATE Signal Library (CSL) Project
+<h3>The CREATE Signal Library (CSL)
   <img src="http://fastlabinc.com/CSL/CSL2.gif" alt="CSL classes"
  style="border: 2px solid ; width: 342px; height: 773px;" align="right"
  hspace="8" vspace="2"></h3>
@@ -231,25 +232,39 @@ project; the current source code and
 documentation can be retrieved over the Internet from
 http://FASTLabInc.com/CSL/.<br>
 <h4>What CSL is</h4>
-CSL is a simple
-yet powerful library of sound synthesis and signal processing
-functions. It is packaged as an object-oriented class hierarchy for
-standard DSP and computer music techniques, and is suitable for
-integration into existing applications, or use as a stand-alone
-synthesis/processing server. CSL is similar to the JSyn (Burke),
-CommonLispMusic (Schottstaedt), STK (Cook), and
-Cmix (Lansky) frameworks in that it is integrated as a library into a
-general-purpose
-programming language, rather than being a separate &#8220;sound compiler&#8221; as
-in
-the Music-N family of languages (Pope). CSL is designed from the ground
-up to be used in distributed systems,
-with several CSL programs running as servers on a local-area network.
-These CSL DSP servers receive control commands via the network and send
-their output sample blocks to other servers over the network. <br>
+<p>CSL is a simple
+  yet powerful library of sound synthesis and signal processing
+  functions. It is packaged as an object-oriented class hierarchy for
+  standard DSP and computer music techniques, and is suitable for
+  integration into existing applications, or use as a stand-alone
+  synthesis/processing server. CSL is similar to the JSyn (Burke),
+  CommonLispMusic (Schottstaedt), STK (Cook), and
+  Cmix (Lansky) frameworks in that it is integrated as a library into a
+  general-purpose
+  programming language, rather than being a separate &#8220;sound compiler&#8221; as
+  in
+  the Music-N family of languages (Pope). CSL is designed from the ground
+  up to be used in distributed systems,
+  with several CSL programs running as servers on a local-area network.
+  These CSL DSP servers receive control commands via the network and send
+their output sample blocks to other servers over the network. </p>
+<p>CSL supports the following synthesis/interaction techniques<img src="http://fastlabinc.com/juce-speech.gif" alt="CSLL Spectrogram" hspace="6" align="right"
+ style="width: 562px; height: 442px;"></p>
+<ul><li> Additive (sum-of-sines, vector synthesis or inverse FFT)</li>
+  <li> Subtractive (filter-based)</li>
+  <li> Non-linear (FM, wave-shaping, etc.)</li>
+  <li> Sample-based synthesis, sample playback, sample-vector synthesis</li>
+  <li> Granular synthesis (in several flavors)</li>
+  <li> Chaotic systems (attractors)</li>
+  <li> Physical models (Karplus-Strong, waveguides, etc.)</li>
+  <li> Hybrid methods</li>
+  <li> Virtual-analog (band-limited oscillators, ladder filters, etc.)</li>
+  <li> Sound spatialization using any of several methods
+   
+(binaural HRTF, Ambisonics, Wavefield synthesis)
+</ul>
 <h4>What CSL is not</h4>
-<img alt="CSLL Spectrogram" src="http://fastlabinc.com/juce-speech.gif"
- style="width: 562px; height: 442px;" align="right">
+
 CSL is not a music-specific programming language such as Music-N or
 SuperCollider (McCartney); rather, CSL programs (i.e., CSL-based
 servers) are written in C++ and compiled with the CSL library. CSL has
@@ -516,7 +531,6 @@ because of CSL's non-Windows-compatible header and code.<br>
 </p>
 <p>For more information, please contact Stephen Pope [stephen
 (at) FASTLabInc.com].</p>
-<p> </p>
 <center><img alt="line" src="http://fastlabinc.com/CSL/line.gif"
  style="width: 585px; height: 1px;"> </center>
 <br>
