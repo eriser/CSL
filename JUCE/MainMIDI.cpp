@@ -8,13 +8,13 @@ Component * createCSLComponent();					// extern function that creates the window
 
 class CSLWindow  : public DocumentWindow {
 public:
-    CSLWindow() : DocumentWindow (T("CSL 5.0 Demos"), 
+    CSLWindow() : DocumentWindow (T("CSL 5.0 MIDI"), 
 				Colours::lightgrey, DocumentWindow::allButtons, true) {
 		setContentComponent (createCSLComponent());	// create app window
 		setResizable (true, false);
 		setVisible (true);
 		setUsingNativeTitleBar(true);
-		centreWithSize (608, 424);					// top window size 8 @ 24 larger than the component
+		centreWithSize (658, 354);					// top window size 8 @ 24 larger than the component
     }
 
     ~CSLWindow() { }

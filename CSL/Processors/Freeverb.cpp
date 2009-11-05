@@ -98,7 +98,7 @@ void Freeverb::constructReverbGraph() {
 	mAllpassBuffers = new SampleBuffer[kNumAllpasses];
 	
 				// create buffers and combs
-	for (i = 0; i < kNumCombs; i++) 	{
+	for (i = 0; i < kNumCombs; i++) {
 		bufferSize = kCombBufferSizes[i];
 		bufferPtr = new sample[bufferSize];
 		for (j = 0; j < bufferSize; j++)
@@ -109,7 +109,7 @@ void Freeverb::constructReverbGraph() {
 		mCombFilters.push_back(combFilter);
 	}
 				// create buffers and allpasses	
-	for (i = 0; i < kNumAllpasses; i++) 	{
+	for (i = 0; i < kNumAllpasses; i++) {
 		bufferSize = kAllpassBufferSizes[i];
 		bufferPtr = new sample[bufferSize];
 		for (j = 0; j < bufferSize; j++)
@@ -131,8 +131,8 @@ void Freeverb::constructReverbGraph() {
 }
 
 void Freeverb::updateParameters() {
-	std::vector<Comb*>::iterator iComb = mCombFilters.begin();
-	for (; iComb != mCombFilters.end(); ++iComb) 	{
+	for (std::vector<Comb*>::iterator iComb = mCombFilters.begin();
+			iComb != mCombFilters.end(); ++iComb) {
 		(*iComb)->setFeedback(mRoomSize);
 		(*iComb)->setDamp(mDampening);
 	}
@@ -203,7 +203,7 @@ void Freeverb::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CExce
 
 //// Stereoverb ////////////////////////////////
 
-// Constructor
+// Constructor sets up splitter/joiner network
 
 Stereoverb::Stereoverb(UnitGenerator &input) {
 	split = new Splitter(input, 2);

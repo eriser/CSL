@@ -27,7 +27,6 @@
 		4C756E1910732FED00CB5EF3 /* Test_Oscillators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C904E5E0CD1808E00307D02 /* Test_Oscillators.cpp */; };
 		4C756E1A10732FEE00CB5EF3 /* Test_Envelopes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C904E600CD1808E00307D02 /* Test_Envelopes.cpp */; };
 		4C756E841073EE8300CB5EF3 /* Test_Control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C07224710704994007D4013 /* Test_Control.cpp */; };
-		4C904D960CD1794B00307D02 /* CSL_TestComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C904D940CD1794B00307D02 /* CSL_TestComponent.cpp */; };
 		4C904E4C0CD1807500307D02 /* CSL_Core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C904E450CD1807500307D02 /* CSL_Core.cpp */; };
 		4C904E4D0CD1807500307D02 /* CGestalt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C904E470CD1807500307D02 /* CGestalt.cpp */; };
 		4C904E4E0CD1807500307D02 /* Variable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C904E490CD1807500307D02 /* Variable.cpp */; };
@@ -63,6 +62,8 @@
 		4C9F346D1076DAFD00C90714 /* MIDIIOJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C9F34671076DAFD00C90714 /* MIDIIOJ.cpp */; };
 		4C9F346E1076DAFD00C90714 /* MIDIIOJ.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C9F34681076DAFD00C90714 /* MIDIIOJ.h */; };
 		4CA0B4781062ADAB008009D0 /* SoundFileJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C0BF9E610071C8F0006F064 /* SoundFileJ.cpp */; };
+		4CA225261098CB59009E113A /* JCSL_Widgets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C492E350CF62EA400C0BF2F /* JCSL_Widgets.cpp */; };
+		4CA226AB109911EC009E113A /* CSL_TestComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CA226A7109911EC009E113A /* CSL_TestComponent.cpp */; };
 		4CA75570107D7EFA0030FF80 /* AdditiveInstrument.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C3AB33310597E06006877AE /* AdditiveInstrument.cpp */; };
 		4CB183031055FD4700D35F8C /* FFTReal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C5D9936104DEDF4007CD461 /* FFTReal.cpp */; };
 		4CB5E5ED10694E38002D52D0 /* Granulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C3AB31D10597D6A006877AE /* Granulator.cpp */; };
@@ -136,6 +137,8 @@
 		4CD8736D1071BA4300AB9194 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4B942A0FAA068100B086EE /* QTKit.framework */; };
 		4CD8736E1071BA4400AB9194 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CCF1E9F0F182134004C3920 /* OpenGL.framework */; };
 		4CD873711071BA9C00AB9194 /* Binaural.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C9DA261103F06D3007025BB /* Binaural.cpp */; };
+		4CEF82FF10941CB700C24B4C /* CSL_AbstComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF82FC10941CB700C24B4C /* CSL_AbstComponent.cpp */; };
+		4CEF830010941CB700C24B4C /* CSL_AbstComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CEF82FD10941CB700C24B4C /* CSL_AbstComponent.h */; };
 		4CF108B80FF45B3900F42670 /* FileIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CF108B60FF45B3900F42670 /* FileIO.cpp */; };
 		4CF402B01048CD500023930D /* SoundFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CF402AF1048CD500023930D /* SoundFile.cpp */; };
 		4CF4068C104A60F10023930D /* FFT_Wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CF4068A104A60F10023930D /* FFT_Wrapper.cpp */; };
@@ -204,8 +207,6 @@
 		4C5DA34A10517A6D007CD461 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		4C600B220CBDAC8D009787A3 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		4C65DBC30CF7FF0A00658613 /* Test_Support.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Test_Support.h; sourceTree = "<group>"; };
-		4C904D940CD1794B00307D02 /* CSL_TestComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = CSL_TestComponent.cpp; sourceTree = "<group>"; };
-		4C904D950CD1794B00307D02 /* CSL_TestComponent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CSL_TestComponent.h; sourceTree = "<group>"; };
 		4C904E410CD1807500307D02 /* CSL_Types.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CSL_Types.h; sourceTree = "<group>"; };
 		4C904E420CD1807500307D02 /* CSL_Includes.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CSL_Includes.h; path = ../CSL/Kernel/CSL_Includes.h; sourceTree = "<group>"; };
 		4C904E430CD1807500307D02 /* CSL_Exceptions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CSL_Exceptions.h; sourceTree = "<group>"; };
@@ -289,6 +290,10 @@
 		4C9DA268103F06D3007025BB /* VBAP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VBAP.cpp; path = VBAP/VBAP.cpp; sourceTree = "<group>"; };
 		4C9F34671076DAFD00C90714 /* MIDIIOJ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MIDIIOJ.cpp; sourceTree = "<group>"; };
 		4C9F34681076DAFD00C90714 /* MIDIIOJ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MIDIIOJ.h; sourceTree = "<group>"; };
+		4CA226A7109911EC009E113A /* CSL_TestComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CSL_TestComponent.cpp; sourceTree = "<group>"; };
+		4CA226A8109911EC009E113A /* CSL_TestComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSL_TestComponent.h; sourceTree = "<group>"; };
+		4CA226A9109911EC009E113A /* CSL_TestComponent5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CSL_TestComponent5.cpp; sourceTree = "<group>"; };
+		4CA226AA109911EC009E113A /* CSL_TestComponent5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSL_TestComponent5.h; sourceTree = "<group>"; };
 		4CC43444107AB39600AE02E9 /* OSC_support.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OSC_support.cpp; sourceTree = "<group>"; };
 		4CC43445107AB39600AE02E9 /* OSC_support.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSC_support.h; sourceTree = "<group>"; };
 		4CCF1C610F1819A9004C3920 /* Spectral.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Spectral.cpp; sourceTree = "<group>"; };
@@ -301,6 +306,8 @@
 		4CD021840CD2B866003CC9F3 /* InOut.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = InOut.cpp; sourceTree = "<group>"; };
 		4CD021850CD2B866003CC9F3 /* InOut.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = InOut.h; sourceTree = "<group>"; };
 		4CD873121071B73300AB9194 /* libCSL.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libCSL.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CEF82FC10941CB700C24B4C /* CSL_AbstComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CSL_AbstComponent.cpp; sourceTree = "<group>"; };
+		4CEF82FD10941CB700C24B4C /* CSL_AbstComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSL_AbstComponent.h; sourceTree = "<group>"; };
 		4CF108B60FF45B3900F42670 /* FileIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileIO.cpp; sourceTree = "<group>"; };
 		4CF108B70FF45B3900F42670 /* FileIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileIO.h; sourceTree = "<group>"; };
 		4CF402AE1048CD340023930D /* SoundFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundFile.h; sourceTree = "<group>"; };
@@ -389,8 +396,12 @@
 		20286C2AFDCF999611CA2CEA /* JUCE */ = {
 			isa = PBXGroup;
 			children = (
-				4C904D950CD1794B00307D02 /* CSL_TestComponent.h */,
-				4C904D940CD1794B00307D02 /* CSL_TestComponent.cpp */,
+				4CA226A8109911EC009E113A /* CSL_TestComponent.h */,
+				4CA226A7109911EC009E113A /* CSL_TestComponent.cpp */,
+				4CA226AA109911EC009E113A /* CSL_TestComponent5.h */,
+				4CA226A9109911EC009E113A /* CSL_TestComponent5.cpp */,
+				4CEF82FD10941CB700C24B4C /* CSL_AbstComponent.h */,
+				4CEF82FC10941CB700C24B4C /* CSL_AbstComponent.cpp */,
 				4C492E360CF62EA400C0BF2F /* JCSL_Widgets.h */,
 				4C492E350CF62EA400C0BF2F /* JCSL_Widgets.cpp */,
 				84F30CD008FEAAA20087E26C /* Main.cpp */,
@@ -715,6 +726,7 @@
 			files = (
 				4C9F346E1076DAFD00C90714 /* MIDIIOJ.h in Headers */,
 				4CC43448107AB39700AE02E9 /* OSC_support.h in Headers */,
+				4CEF830010941CB700C24B4C /* CSL_AbstComponent.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -837,6 +849,8 @@
 				4CD873711071BA9C00AB9194 /* Binaural.cpp in Sources */,
 				4C9F346D1076DAFD00C90714 /* MIDIIOJ.cpp in Sources */,
 				4CC43447107AB39700AE02E9 /* OSC_support.cpp in Sources */,
+				4CEF82FF10941CB700C24B4C /* CSL_AbstComponent.cpp in Sources */,
+				4CA225261098CB59009E113A /* JCSL_Widgets.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -883,7 +897,6 @@
 				4C9DA271103F06D3007025BB /* Ambisonic.cpp in Sources */,
 				4C9DA272103F06D3007025BB /* AmbisonicPanner.cpp in Sources */,
 				4C9DA273103F06D3007025BB /* AmbisonicUtilities.cpp in Sources */,
-				4C904D960CD1794B00307D02 /* CSL_TestComponent.cpp in Sources */,
 				4C492E370CF62EA400C0BF2F /* JCSL_Widgets.cpp in Sources */,
 				84F30CD108FEAAA20087E26C /* Main.cpp in Sources */,
 				4C45F0C1105A53AA00E1999C /* BinauralDB.cpp in Sources */,
@@ -901,6 +914,7 @@
 				4CA75570107D7EFA0030FF80 /* AdditiveInstrument.cpp in Sources */,
 				4C029C32108A757C00AC8EFB /* Test_Audio.cpp in Sources */,
 				4C040BF5108ED49C009F30E0 /* WaveShaper.cpp in Sources */,
+				4CA226AB109911EC009E113A /* CSL_TestComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -987,7 +1001,7 @@
 				GCC_FEEDBACK_DIRECTED_OPTIMIZATION = Off;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					USE_JUCE,
 					USE_JSND,
@@ -1022,6 +1036,7 @@
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../juce/bin/UninstalledProducts\"";
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = CSL_Juce;
 				USER_HEADER_SEARCH_PATHS = "../CSL/Includes ~/Code/juce";

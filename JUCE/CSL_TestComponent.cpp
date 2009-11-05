@@ -34,7 +34,7 @@ using namespace csl;
 
 // These are structs that are declared in the individual CSL test suite files
 //		struct testStruct { char * name;   void (* fcn)();  };
-//	Each test suite has a list of its functions
+// Each test suite has a list of its functions
 
 extern testStruct oscTestList[];
 extern testStruct srcTestList[];
@@ -116,8 +116,8 @@ void dumpTestList() {
 extern IO * theIO;							// global IO object accessed by other threads
 Label* gCPULabel;							// CPU % label...
 AudioDeviceManager * gAudioDeviceManager;	// global JUCE audio device mgr
-extern unsigned argCnt;						// globals for argc/v from cmd-line
-extern char **argVals;
+unsigned argCnt;							// globals for argc/v from cmd-line
+char **argVals;
 
 #define WRITE_TO_FILE						// support file recording
 #ifdef WRITE_TO_FILE
@@ -255,12 +255,12 @@ CSLComponent::CSLComponent ()
 #ifdef USE_JMIDI
     familyCombo->addItem (T("Controls"), 6);
 #endif
+	familyCombo->addItem (T("Audio"), 7);
     familyCombo->addListener (this);
 
     addAndMakeVisible (recordButton = new ToggleButton (T("new toggle button")));
     recordButton->setButtonText (T("Record"));
-    recordButton->addButtonListener (this);
-
+    recordButton->addButtonListener (this);=
 
     //[UserPreSize]
 	oscilloscopeL->initialise(0, 20, 2, true);		// channel, rate, window, zeroX

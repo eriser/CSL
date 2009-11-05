@@ -12,37 +12,33 @@ using namespace csl;
 // JSoundFile implementation
 //
 
-JSoundFile::JSoundFile(string tpath, bool load /* , int tstart, int tstop */ ) 
-	: Abst_SoundFile(tpath /* , tstart, tstop */),
+JSoundFile::JSoundFile(string tpath, int tstart, int tstop) 
+	: Abst_SoundFile(tpath, tstart, tstop),
 		mAFReader(0),
 		mAFWriter(0),
 		mIOFile(0),
 		mOutStream(0) {
-	if (load) {									// load file
-		try {
-			openForRead();						// read and cache whole file
-			setToEnd();
-		} catch (CException & e) {
-			logMsg(kLogError, "File open exception caught: %s", e.mMessage.c_str());
-			return;
-		}
+	try {
+		openForRead();						// read and cache whole file
+		setToEnd();
+	} catch (CException & e) {
+		logMsg(kLogError, "File open exception caught: %s", e.mMessage.c_str());
+		return;
 	}
 }
 
-JSoundFile::JSoundFile(string folder, string tpath, bool load)
-	: Abst_SoundFile(folder, tpath /* , start, stop */ ),
+JSoundFile::JSoundFile(string folder, string tpath, int tstart, int tstop)
+	: Abst_SoundFile(folder, tpath, tstart, tstop),
 		mAFReader(0),
 		mAFWriter(0),
 		mIOFile(0),
 		mOutStream(0) {
-	if (load) {									// load file
-		try {
-			openForRead();						// read and cache whole file
-			setToEnd();
-		} catch (CException & e) {
-			logMsg(kLogError, "File open exception caught: %s", e.mMessage.c_str());
-			return;
-		}
+	try {
+		openForRead();						// read and cache whole file
+		setToEnd();
+	} catch (CException & e) {
+		logMsg(kLogError, "File open exception caught: %s", e.mMessage.c_str());
+		return;
 	}
 }
 
@@ -110,9 +106,7 @@ void JSoundFile::openForRead() throw (CException) {
 		logMsg(kLogError, "Cannot find sound file \"%s\"", mPath.c_str());
 		return;
 	}
-//	mInStream = mIOFile->createInputStream();
-												// get a format manager 
-	AudioFormatManager formatManager;
+	AudioFormatManager formatManager;			// get a format manager 
 	formatManager.registerBasicFormats();		// set it up with the basic types (wav and aiff).
 	mAFReader = formatManager.createReaderFor(*mIOFile);
 
@@ -122,15 +116,13 @@ void JSoundFile::openForRead() throw (CException) {
 		return;
 	}
 	if (mNumFrames <= CGestalt::maxSndFileFrames()) {		// read file if size < global max
-//		logMsg("Open/read sound file \"%s\" %d frames %g sec %d channels", 
+//		logMsg("Read sound file \"%s\" %d frames %g sec %d channels", 
 //				mPath.c_str(), duration(), durationInSecs(), channels());
 		unsigned numFrames = mAFReader->lengthInSamples;
 
 		this->readBufferFromFile(numFrames);					// read entire file
 
 		mCurrentFrame = mStart;
-//		this->setWaveform(mWavetable);							// set up oscillator pointers
-//		mWavetable.mDidIAllocateBuffers = true;
 	}
 }
 
@@ -194,7 +186,7 @@ void JSoundFile::readBufferFromFile(unsigned numFrames) {
 			while (numFramesRead < numFrames) {
 				currentFrame = seekTo(0, kPositionStart);
 															// call JUCE read function
-				mAFReader->read (mWavetable.mBuffers, myChannels, mCurrentFrame, numFrames, false);
+				mAFReader->read(mWavetable.mBuffers, myChannels, mCurrentFrame, numFrames, false);
 				currentFrame += numFramesRead;
 			}
 		} else {

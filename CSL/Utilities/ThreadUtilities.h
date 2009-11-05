@@ -41,8 +41,8 @@ public:
 	virtual ~CThread() { };
 	static CThread * MakeThread();	///< factory method
 
-	virtual int createThread(VOIDFCNPTR * func, void * args) = 0;
-//	virtual int createRealtimeThread(VOIDFCNPTR * func, void * args) = 0;
+	virtual int createThread(VoidFcnPtr * func, void * args) = 0;
+//	virtual int createRealtimeThread(VoidFcnPtr * func, void * args) = 0;
 };
 
 /// Sync is a cross-thread synchronization object
@@ -87,8 +87,8 @@ public:
 	pthread_t mThread;
 	pthread_attr_t mAttributes;
 
-	int createThread(VOIDFCNPTR * func, void* args);	
-//	int createRealtimeThread(VOIDFCNPTR * func, void* args);	
+	int createThread(VoidFcnPtr * func, void* args);	
+//	int createRealtimeThread(VoidFcnPtr * func, void* args);	
 };
 
 #endif

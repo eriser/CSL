@@ -9,7 +9,7 @@
 
 #include "CSL_Core.h"
 
-#define undenormalise(sample) if (((*(unsigned int*)&sample)&0x7f800000)==0) sample=0.0f
+#define undenormalise(samplev) if (((*(unsigned int*)&samplev)&0x7f800000) == 0) samplev = 0.0f
 
 namespace csl {
 

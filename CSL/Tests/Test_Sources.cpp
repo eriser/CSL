@@ -39,7 +39,7 @@ void testNoises() {
 #include "KarplusString.h"
 
 void testString() {
-	KarplusString pluck(fRandM(80, 1024));	// freq range
+	KarplusString pluck(fRandM(80, 1024));	// rand freq range
 	pluck.setScale(0.6);					// quiet
 	pluck.trigger();						// srart it
 	logMsg("playing plucked string...");
@@ -117,40 +117,33 @@ done:
 
 /// Test the sound file player - mono, stereo input files
 
-void testMonoSoundFilePlayer() {
+void testMonoFilePlayer() {
 	SoundFile sfile(CGestalt::dataFolder(), "Piano_A5_mf_mono.aiff");	// open a piano note file
 //	SoundFile sfile(CGestalt::dataFolder(), "Piano_A5_mf.caf");			// play a piano note
-//	MP3File sfile(CGestalt::dataFolder(), "B4-096.mp3");				// convert and play an MP3 file
-	try {
-		sfile.openForRead();											// read and cache whole file
-	} catch (CException & e) {
-		logMsg(kLogError, "File open exception caught: %s", e.mMessage.c_str());
-		return;
-	}
-//	Panner pan(sfile, 0.0);												// a panner
 	sfile.dump();														// print snd file info
 
-//	float * left = sfile.mWavetable.monoBuffer(0);						// dump the first 1000 samples
-//	for (unsigned j = 0; j < 1000; j += 4)
+//	float * left = sfile.mWavetable.monoBuffer(0);						// dump the first few samples
+//	for (unsigned j = 0; j < 1000; j += 4)								// 0 to 1000 by 4
 //		printf("\t\t%5.3f\n", left[j]);
 
 	logMsg("Playing sound file...");
+	sfile.trigger();
 	runTest(sfile);
 //	runTest(pan);
 	logMsg("done.");
 }
 
-void testStereoSoundFilePlayer() {
-	SoundFile sfile(CGestalt::dataFolder(), "piano-tones.aiff", true);	// load a piano note
-
+void testStereoFilePlayer() {
+	SoundFile sfile(CGestalt::dataFolder(), "piano-tones.aiff");		// load a piano note
 	sfile.dump();														// print snd file info
 
-//	float * left = sfile.mSampleBuffer.monoBuffer(0);					// dump the first 1000 samples
+//	float * left = sfile.mSampleBuffer.monoBuffer(0);					// dump the first few samples
 //	float * rite = sfile.mSampleBuffer.monoBuffer(1);
 //	for (unsigned j = 0; j < 1000; j++)
 //		printf("\t\t%5.3f : %5.3f\n", *left++, *rite++);
 
 	logMsg("Playing sound file...");
+	sfile.trigger();
 	runTest(sfile);
 	logMsg("done.");
 }
@@ -190,6 +183,32 @@ void testSoundFileTranspose() {
 	theIO->clearRoot();						// make some silence
 	logMsg("done.");
 	delete sfile;
+}
+
+/// Test the WaveShaper
+
+void testWaveShaper() {
+	WaveShaper wvs(110, 0);					// wave-shape 1 = clipping
+	ADSR adsr(3.0, 1, 1, 0.7, 1);
+	wvs.setScale(adsr);
+	logMsg("Playing WaveShaper 1");
+	adsr.trigger();
+	runTest(wvs, 3);
+	logMsg("done.");
+	WaveShaper wv2(110, 2);					// wave-shape 1 = clipping
+	ADSR ads2(3.0, 1, 1, 0.7, 1);
+	wv2.setScale(ads2);
+	logMsg("Playing WaveShaper 2");
+	ads2.trigger();
+	runTest(wv2, 3);
+	logMsg("done.");
+	WaveShaper wv3(110, 1);					// wave-shape 1 = clipping
+	ADSR ads3(3.0, 1, 1, 0.7, 1);
+	wv3.setScale(ads3);
+	logMsg("Playing WaveShaper 3");
+	ads3.trigger();
+	runTest(wv3, 3);
+	logMsg("done.");
 }
 
 ///////////////// Instrument tests ////////
@@ -421,12 +440,13 @@ void runTests() {
 // test list for Juce GUI
 
 testStruct srcTestList[] = {
-	"Noise tests",				testNoises,			"Test noise generators",
-	"Plucked string",			testString,			"Waves of string arpeggii, stereo with reverb",
-	"Mono Snd file player",		testMonoSoundFilePlayer,	"Test playing a sound file",
-	"Stereo Snd file player",	testStereoSoundFilePlayer,	"Play a stereo sound file",
+	"Noise tests",				testNoises,				"Test noise generators",
+	"Plucked string",			testString,				"Waves of string arpeggii, stereo with reverb",
+	"String melodies",			testStringChorus,		"Many random string arpeggii",
+	"Mono snd file player",		testMonoFilePlayer,		"Test playing a sound file",
+	"Stereo snd file player",	testStereoFilePlayer,	"Play a stereo sound file",
 #ifdef USE_MP3	
-	"MP3 Snd file player",		testMP3FilePlayer,	"Play an MP3 file",
+	"MP3 Snd file player",		testMP3FilePlayer,		"Play an MP3 file",
 #endif
 	"Snd file transpose",		testSoundFileTranspose,	"Demonstrate transposing a sound file",
 	"Sample file bank",			testSndFileBank,		"Play a large sample bank from sound files",
@@ -434,6 +454,7 @@ testStruct srcTestList[] = {
 	"Fancy FM instrument",		testFancyFMInstrument,	"FM note with attack chiff and vibrato",
 	"SumOfSines instrument",	testSOSInstrument,		"Demonstrate the SumOfSines instrument",
 	"Snd file instrument",		testSndFileInstrument,	"Test the sound file instrument",
+	"WaveShaping synthesis",	testWaveShaper,			"Play 2 wave-shaper notes with envelopes",
 	"IFFT synthesis",			test_ifft,				"Make a sound with IFFT synthesis",
 	"Vector IFFT",				test_vector_ifft,		"Vector synthesis with 2 IFFTs",
 	"Soundfile granulation",	testGrainCloud,			"Random sound file granulation example",

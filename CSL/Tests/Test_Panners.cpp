@@ -18,6 +18,7 @@
 #ifdef USE_CONVOLVER
 #include "Convolver.h"				// FFT-based convolver
 #endif
+
 /////////////////////// Here are the actual unit tests ////////////////////
 
 /// Pan a sine to stereo
@@ -196,7 +197,6 @@ void testConvolver2() {
 	float * samp = buf.monoBuffer(0);
 	for (unsigned i = 0; i < IRLEN; i += 5000)
 		samp[i] = 1 / (1 + (sqrt(i) / 5000));
-	
 									// Create convolver; FFT size will be block size * 2
 	Convolver cv(buf);
 	cv.setInput(nois);
@@ -409,25 +409,25 @@ void runTests() {
 // test list for Juce GUI
 
 testStruct panTestList[] = {
-	"Stereo panner",			testPan,		"Demonstrate the stero panner",
-//	"N2M panner",				testN2MPan,	
-	"Mixer",					testSineMixer,	"Mixer with 4 sine inputs (slow sum-of-sines)",
-	"Panning mixer",			testPanMix,		"Play a panning stereo mixer",
-	"Bigger panning mixer",		testBigPanMix,	"Test a mixer with many inputs",
+	"Stereo panner",		testPan,				"Demonstrate the stero panner",
+//	"N2M panner",			testN2MPan,	
+	"Mixer",				testSineMixer,			"Mixer with 4 sine inputs (slow sum-of-sines)",
+	"Panning mixer",		testPanMix,				"Play a panning stereo mixer",
+	"Bigger panning mixer",	testBigPanMix,			"Test a mixer with many inputs",
 #ifdef USE_CONVOLVER
-	"Test convolver",			testConvolver,
-	"Test convolver 2",			testConvolver2,
-	"Test convolver 3",			testConvolver3,
+	"Test convolver",		testConvolver,			"Test a convolver",
+	"Test convolver 2",		testConvolver2,			"Test a convolver",
+	"Test convolver 3",		testConvolver3,			"Test a convolver",
 #endif
-	"Osc bank",					testOscBank,	"Mix a bank of oscillators",
-//	"-CMap IO",					testCMapIO,
+	"Osc bank",				testOscBank,			"Mix a bank of oscillators",
+	"Channel-mapped IO",	testCMapIO,				"Demonstrate channel-mapped IO",
 #ifndef CSL_WINDOWS
-	"HRTF horiz circles",		test_Binaural_horiz,	"Test the HRTF-based binaural panner",
-	"HRTF axial circles",		test_Binaural_vertAxial,	"Play a HRTF-panner with axial circles",
-	"HRTF median circles",		test_Binaural_vertMedian,	"Play a HRTF-panner with median circles",
-	"Ambisonics",				test_Ambi_horiz,			"Test the Ambisonic-based spatial panner",
-//	"VBAP",						test_VBAP_horiz,			"Test the VBAP-based spatial panner",
+	"HRTF horiz circles",	test_Binaural_horiz,	"Test the HRTF-based binaural panner",
+	"HRTF axial circles",	test_Binaural_vertAxial,"Play a HRTF-panner with axial circles",
+	"HRTF median circles",	test_Binaural_vertMedian,"Play a HRTF-panner with median circles",
 #endif
+	"Ambisonics",			test_Ambi_horiz,		"Test the Ambisonic-based spatial panner",
+	"VBAP",					test_VBAP_horiz,		"Test the VBAP-based spatial panner",
 NULL,						NULL,			NULL
 };
 

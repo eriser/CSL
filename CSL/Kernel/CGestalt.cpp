@@ -26,7 +26,7 @@ using namespace juce;
 /// The actual start-up values are defined in CSL_Types.h
 ///
 
-static unsigned mNumInChannels = 0;								///< no inputs by default
+static unsigned mNumInChannels = 2;								///< stereo inputs by default
 static unsigned mNumOutChannels = 2;							///< stereo outputs
 
 static unsigned mFrameRate = CSL_mFrameRate;					///< default sample rate (tested up to 96000)
@@ -39,7 +39,7 @@ static unsigned mVerbosity = CSL_mVerbosity;					///< very verbose
 static unsigned mLoggingPeriod = CSL_mLoggingPeriod;			///< log CPU every 15 sec
 static unsigned mOutPort = CSL_mOutPort;						///< RFS output port
 static std::string mDataFolder = CSL_DATA_DIR;					///< User's CSL data folder ()
-static bool mStopNow;											///< flag to stop threads and timers
+static bool mStopNow = false;									///< flag to stop threads and timers
 
 /// CGestalt Accessors for system constants
 
@@ -471,6 +471,9 @@ void Model::detachObserver (Observer * o) {
 		mObservers.erase(mObservers.begin() + i);
 	if (mObservers.size() == 0)
 		mHasObservers = false;
+//	if (o->mKey != 0) {					// if the observer has an update filter key
+//		mObsMap[o->mKey].delete(o);
+//	}		
 #ifdef CSL_DEBUG
 	logMsg("Model::detachObserver");
 #endif

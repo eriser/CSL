@@ -135,16 +135,19 @@ void testADSR2() {
 
 /// FM using 2 oscs and 2 ADSRs
 
-#define BASE_FREQ 110.0
+#define BASE_FREQ 440.0
 //#define BASE_FREQ 8000.0
 
 void testADSR_FM() {
 	ADSR a_env(3, 0.1, 0.1, 0.5, 1);			// set up 2 standard ADSRs (3-sec duration)
-	ADSR i_env(3, 1.0, 0, 1, 1.4);
+	ADSR i_env(3, 1.5, 0, 1, 0.4);
+				// percussive envelopes
+//	ADSR a_env(3, 0.02, 0.1, 0.05, 2);			// set up 2 standard ADSRs (3-sec duration)
+//	ADSR i_env(3, 0.0001, 0.1, 0, 0);
 	Osc car(BASE_FREQ);							// init the 2 oscillators (fc = fm)
-	Osc mod(BASE_FREQ);
-	i_env.setScale(BASE_FREQ);					// scale the index envelope by the mod. freq
-//	i_env.setScale(BASE_FREQ*8);
+	Osc mod(BASE_FREQ*1.414);
+//	i_env.setScale(BASE_FREQ);				// scale the index envelope by the mod. freq
+	i_env.setScale(BASE_FREQ);
 	mod.setScale(i_env);
 	mod.setOffset(BASE_FREQ);
 	car.setFrequency(mod);

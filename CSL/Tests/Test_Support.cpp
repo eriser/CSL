@@ -21,12 +21,12 @@
 //		-u				print usage message and exit
 //
 
-#include "Test_Support.h"
+#include "Test_Support.h"				// include my stuff
 #include <stdlib.h>
 
 using namespace csl;
 
-IO_CLASS * theIO;						// global IO instance
+IO_CLASS * theIO = 0;					// Here's the global IO instance
 
 #ifdef USE_TEST_MAIN					// use the generic main() function here
 

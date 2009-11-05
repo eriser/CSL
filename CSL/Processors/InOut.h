@@ -37,16 +37,16 @@ typedef enum {
 class InOut : public Effect {
 public:
 						/// Constructor with IO, number of channels in & out, and processing
-	InOut(IO * anIO, unsigned inChan, unsigned outChan, InOutFlags f );
-	InOut(IO * anIO, unsigned inChan, unsigned outChan, InOutFlags f, ...);
-	InOut(UnitGenerator & myInput, unsigned inChan, unsigned outChan, InOutFlags f);
-	InOut(UnitGenerator & myInput, unsigned inChan, unsigned outChan, InOutFlags, ...);
+	InOut(IO * anIO, unsigned inChans, unsigned outChans, InOutFlags f = kNoProc);
+	InOut(IO * anIO, unsigned inChans, unsigned outChans, InOutFlags f, ...);
+	InOut(UnitGenerator & myInput, unsigned inChans, unsigned outChans, InOutFlags f = kNoProc);
+	InOut(UnitGenerator & myInput, unsigned inChans, unsigned outChans, InOutFlags, ...);
 	~InOut();
 
-	void setInChan(unsigned chan) { mInChan= chan; };			///< set # in/out chans
-	void setOutChan(unsigned chan) { mOutChan= chan; };
-	unsigned getInChan(void) { return mInChan; };					///< get # in/out chans
-	unsigned getOutChan(void) { return mOutChan; };	
+	void setInChan(unsigned chan) { mInChans = chan; };			///< set # in/out chans
+	void setOutChan(unsigned chan) { mOutChans = chan; };
+	unsigned getInChan(void) { return mInChans; };					///< get # in/out chans
+	unsigned getOutChan(void) { return mOutChans; };	
 
 	void setChanMap(unsigned * chans);				///< set channel map
 	void setChanGains(float * values);				///< set gain array
@@ -57,8 +57,8 @@ public:
 private:
 	IO * mIO;				///< The (Singleton) IO pointer (or NULL, to act as an effect)
 	BufferCMap mMap;		///< the mapped buffer pointers for the output channels
-	unsigned mInChan;		///< # in chans
-	unsigned mOutChan;		///< # out chans
+	unsigned mInChans;		///< # in chans
+	unsigned mOutChans;		///< # out chans
 	InOutFlags mFlags;		//< copy/process flag
 	float *mGains;			///< amplitude scales
 };

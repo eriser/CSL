@@ -97,7 +97,7 @@ ThreadPthread::~ThreadPthread() {
 
 #endif
 
-int ThreadPthread::createThread(VOIDFCNPTR * func, void * args) {
+int ThreadPthread::createThread(VoidFcnPtr * func, void * args) {
 	pthread_attr_setdetachstate(&mAttributes, PTHREAD_CREATE_DETACHED);
 	pthread_attr_setscope(&mAttributes, PTHREAD_SCOPE_SYSTEM);
 	return pthread_create(&mThread, &mAttributes, func, args);

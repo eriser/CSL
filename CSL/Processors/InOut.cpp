@@ -14,42 +14,44 @@ using namespace csl;
 
 // Arguments passed to the constructor are optional. Defaults to 2 channels in and out.
 
-InOut::InOut(IO * anIO, unsigned inChan, unsigned outChan, InOutFlags f) 
-		: mIO(anIO), mMap(outChan,  CGestalt::blockSize()),
-			mInChan(inChan), mOutChan(outChan), 
+InOut::InOut(IO * anIO, unsigned inChans, unsigned outChans, InOutFlags f) 
+		: mIO(anIO), mMap(outChans,  CGestalt::blockSize()),
+			mInChans(inChans), mOutChans(outChans), 
 			mFlags(f) {
-	mGains = (float *) malloc(mOutChan * sizeof(float));
+	anIO->mInterleaved = false;
+	mGains = (float *) malloc(mOutChans * sizeof(float));
 }
 
-InOut::InOut(IO * anIO, unsigned inChan, unsigned outChan, InOutFlags f, ...) 
-		: mIO(anIO), mMap(outChan,  CGestalt::blockSize()),
-			mInChan(inChan), mOutChan(outChan), 
+InOut::InOut(IO * anIO, unsigned inChans, unsigned outChans, InOutFlags f, ...) 
+		: mIO(anIO), mMap(outChans,  CGestalt::blockSize()),
+			mInChans(inChans), mOutChans(outChans), 
 			mFlags(f) {
-	mGains = (float *) malloc(mOutChan * sizeof(float));
+	anIO->mInterleaved = false;
+	mGains = (float *) malloc(mOutChans * sizeof(float));
 	va_list ap;
 	va_start(ap, f);
-	for (unsigned i = 0; i < outChan; i++) 
-		mMap.mChannelMap[i] = va_arg(ap, unsigned);
+	for (unsigned i = 0; i < outChans; i++) 
+		mMap.mChannelMap.push_back(va_arg(ap, unsigned));
 	va_end(ap);
 }
 
-InOut::InOut(UnitGenerator & myInput, unsigned inChan, unsigned outChan, InOutFlags f)
-		: mIO(NULL), mMap(outChan, CGestalt::blockSize()), 
-			mInChan(inChan), mOutChan(outChan), 
+InOut::InOut(UnitGenerator & myInput, unsigned inChans, unsigned outChans, InOutFlags f)
+		: mIO(NULL), mMap(outChans, CGestalt::blockSize()), 
+			mInChans(inChans), mOutChans(outChans), 
 			mFlags(f) {
 	this->addInput(CSL_INPUT, myInput);
-	mGains = (float *) malloc(mOutChan * sizeof(float));
+	mGains = (float *) malloc(mOutChans * sizeof(float));
 }
 
-InOut::InOut(UnitGenerator & myInput, unsigned inChan, unsigned outChan, InOutFlags f, ...)
-		: mIO(NULL), mMap(outChan,  CGestalt::blockSize()),
-			mInChan(inChan), mOutChan(outChan), 
+InOut::InOut(UnitGenerator & myInput, unsigned inChans, unsigned outChans, InOutFlags f, ...)
+		: mIO(NULL), mMap(outChans,  CGestalt::blockSize()),
+			mInChans(inChans), mOutChans(outChans), 
 			mFlags(f) {
 	this->addInput(CSL_INPUT, myInput);
-	mGains = (float *) malloc(mOutChan * sizeof(float));
+	mGains = (float *) malloc(mOutChans * sizeof(float));
 	va_list ap;
 	va_start(ap, f);
-	for (unsigned i = 0; i < outChan; i++) 
+	for (unsigned i = 0; i < outChans; i++) 
 		mMap.mChannelMap[i] = va_arg(ap, unsigned);
 	va_end(ap);
 }
@@ -57,12 +59,12 @@ InOut::InOut(UnitGenerator & myInput, unsigned inChan, unsigned outChan, InOutFl
 InOut::~InOut() { }
 
 void InOut::setChanMap(unsigned * chans) {					///< set channel map
-	for (unsigned i = 0; i < mOutChan; i++)
+	for (unsigned i = 0; i < mOutChans; i++)
 		mMap.mChannelMap[i] = chans[i];
 }
 
 void InOut::setChanGains(float * values) {					///< set gain array
-	for (unsigned i = 0; i < mOutChan; i++)
+	for (unsigned i = 0; i < mOutChans; i++)
 		mGains[i] = values[i];
 }
 
@@ -74,14 +76,12 @@ void InOut::setGain(unsigned index, float tvalue) {			///< set gain value at ind
 
 void InOut::nextBuffer(Buffer & outputBuffer) throw (CException) {
 	unsigned numFrames = outputBuffer.mNumFrames;
-//	unsigned numOut = outputBuffer.mNumChannels;
-	unsigned monoBufferByteSize = outputBuffer.mMonoBufferByteSize;
 	SampleBufferVector outBuffers = outputBuffer.mBuffers;
 	SampleBufferVector inBuffers;
 
 	if (mIO) {						// either grab the mic input, or my effect in chain
-		Buffer & theInput = mIO->getInput(outputBuffer.mNumFrames, outputBuffer.mNumChannels);
-		inBuffers = theInput.mBuffers;
+		mIO->getInput(outputBuffer.mNumFrames, outputBuffer.mNumChannels);
+		inBuffers = mIO->mInputBuffer.mBuffers;
 	} else {
 		Effect::pullInput(numFrames);
 		Port * tinPort = mInputs[CSL_INPUT];
@@ -90,14 +90,14 @@ void InOut::nextBuffer(Buffer & outputBuffer) throw (CException) {
 
 	switch (mFlags) {
 		case kNoProc:
-			for (unsigned i = 0; i < mOutChan; i++)
-				memcpy(outBuffers[i], inBuffers[i%mInChan], monoBufferByteSize);
+			for (unsigned i = 0; i < mOutChans; i++)
+				memcpy(outBuffers[i], inBuffers[i % mInChans], outputBuffer.mMonoBufferByteSize);
 			break;
 		case kLR2M:
-			for (unsigned i = 0; i < mOutChan; i++) {
+			for (unsigned i = 0; i < mOutChans; i++) {
 				sample * outPtr =  outBuffers[i];
-				sample * inPtr1 =  inBuffers[i%mInChan];
-				sample * inPtr2 =  inBuffers[(i+1)%mInChan];
+				sample * inPtr1 =  inBuffers[i % mInChans];
+				sample * inPtr2 =  inBuffers[(i+1) % mInChans];
 				for (unsigned j = 0; j < numFrames; j++)
 					*outPtr++ = (*inPtr1++ * mGains[i]) + (*inPtr2++* mGains[i]);
 			}
@@ -106,7 +106,7 @@ void InOut::nextBuffer(Buffer & outputBuffer) throw (CException) {
 		case kR2M:
 			break;
 		case kN2M:					// N-to-M-channel mapping with bufferCMap
-			for (unsigned i = 0; i < mOutChan; i++) {
+			for (unsigned i = 0; i < mOutChans; i++) {
 				sample * outPtr =  outBuffers[i];
 				int which = mMap.mChannelMap[i];
 				if (which < 0) continue;

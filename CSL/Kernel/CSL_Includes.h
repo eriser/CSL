@@ -19,6 +19,7 @@
 #include "Window.h"				/// Signal processing windows
 #include "Oscillator.h"			/// All the oscillator classes
 #include "Noise.h"				/// Noise generators
+#include "WaveShaper.h"			/// WaveShaper oscillator
 
 // Effects
 

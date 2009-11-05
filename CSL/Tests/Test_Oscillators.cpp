@@ -357,17 +357,17 @@ testStruct oscTestList[] = {
 	"Simple sines",				testSimpleSines,	"Test some simple sine oscilators",
 	"Standard waveforms",		testBasicWaves,		"Demonstrate the standard wave forms",
 	"Scaled sine",				testScaledSin,		"Play a scaled-quiet sine wave",
-	"Wavetable interpolation",	testWavetableInterpolation,		"Show truncated/interpolated wave tables",
-	"AM/FM sines",				testAMFMSin,		"Play an AM and FM sine wave",
-	"Dump AM/FM sines",			dumpAMFMSin,		"Dump the graph of the AM/FM sine",
+	"Wavetable interpolation",	testWavetableInterpolation,	"Show truncated/interpolated wave tables",
+	"AM/FM sines",				testAMFMSin,				"Play an AM and FM sine wave",
+	"Dump AM/FM sines",			dumpAMFMSin,				"Dump the graph of the AM/FM sine",
 	"SumOfSines cached",		testSumOfSinesCached,		"Play a sum-of-sines additive oscillator",
 	"SumOfSines non-cached",	testSumOfSinesNonCached,	"Play an uncached inharmonic sum-of-sines", 
 	"SumOfSines build",			testSumOfSinesSteps,		"Build up a harmonic series on a sum-of-sines",
 	"SumOfSines 1/f",			testSumOfSines1F,			"Play a 1/f spectrum sum-of-sines",
 	"Wavetable from file",		testWaveTableFromFile,		"Play a wave table from a sound file",
 #ifndef CSL_WINDOWS
-	"SHARC SOS",				test_SHARC,			"Load/print the SHARC timbre database, play example",
-	"Vector SHARC",				test_SHARC2,		"Show vector cross-fade of SHARC spectra",
+	"SHARC SOS",				test_SHARC,					"Load/print the SHARC timbre database, play example",
+	"Vector SHARC",				test_SHARC2,				"Show vector cross-fade of SHARC spectra",
 #endif
 	NULL,						NULL,				NULL
 };

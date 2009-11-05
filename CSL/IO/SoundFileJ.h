@@ -21,10 +21,8 @@ namespace csl {
 
 class JSoundFile : public Abst_SoundFile {
 public:
-	JSoundFile(string path, bool load = false);
-	JSoundFile(string folder, string path, bool load = false);
-//	JSoundFile(string path, int start = -1, int stop = -1);
-//	JSoundFile(string folder, string path, int start = -1, int stop = -1);
+	JSoundFile(string path, int start = -1, int stop = -1);
+	JSoundFile(string folder, string path, int start = -1, int stop = -1);
 	JSoundFile(JSoundFile & otherSndFile);			///< Copy constructor -- shares sample buffer
 	~JSoundFile();
 

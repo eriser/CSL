@@ -49,6 +49,7 @@ public:
 	
 	bool isNoteOn();					///< bool flags for events
 	bool isNoteOff();
+	bool isNoteOnOff();
 	bool isPolyTouch();
 	bool isControlChange();
 	bool isProgramChange();

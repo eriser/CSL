@@ -42,7 +42,7 @@
 ///
 ///	CORE CSL Types
 ///		sample(float), Sample, SampleBuffer, SampleBufferVector, SampleComplex, SampleComplexVector
-///		PortMap, UGenVector, UGenMap, IODeviceVector, Timestamp, VOIDFCNPTR
+///		PortMap, UGenVector, UGenMap, IODeviceVector, Timestamp, VoidFcnPtr
 ///
 ///	Constants
 ///		CSL_PI, CSL_TWOPI, CSL_PIHALF, CSL_SQRT_TWO, CSL_SPEED_OF_SOUND, 
@@ -106,6 +106,7 @@
 #define CSL_mOSCPort 54321					///< OSC input port
 
 #define CSL_WORD_LEN 32						///< default short string length 
+#define CSL_DEF_LEN 128						///< default medium string length 
 #define CSL_NAME_LEN 256					///< default string length 
 #define CSL_LINE_LEN 512					///< default line length
 #define CSL_STR_LEN 1024					///< default long string length
@@ -139,10 +140,12 @@
 //// (define here or choose with a compiler option, e.g., -DUSE_PMIDI)
 
 #define USE_JMIDI
+#define DEFAULT_MIDI_IN 3
+#define DEFAULT_MIDI_OUT 3
 
 //// Use an OSC API?
 
-#ifdef CSL_MACOSX
+#ifndef CSL_WINDOWS					// works on Mac & Linux
 #define USE_LOSC					// liblo for OSC
 #endif
 
@@ -151,7 +154,7 @@
 #define Osc WavetableOscillator				// default "Osc" -- or use Sine?
 
 
-// Which FFT wrapper class to use? (choose with a compiler option, -DUSE_FFTW)
+// Which FFT wrapper class to use? (choose with a compiler option, -DUSE_FFTREAL)
 
 //#define USE_FFTW							// use FFTW (faster but complicated to build)
 //#define USE_FFTREAL						// use FFTReal (smaller and simpler)
@@ -192,7 +195,8 @@ typedef SampleComplex* SampleComplexPtr;		///< complex pointer
 class CPoint;									///< Forward declaration
 typedef std::vector <CPoint *> PointVector;		///< A vector of points
 
-typedef void * VOIDFCNPTR(void * arg) ;			///< the generic void fcn pointer
+typedef void * VoidFcnPtr(void * arg);			///< the generic void fcn pointer
+typedef void VoidFcnPtrN();						///< the truly void fcn pointer
 
 //// I/O and control port map types
 
@@ -217,6 +221,21 @@ typedef std::vector <Instrument *> InstrumentVector;
 typedef std::map <int, InstrumentVector> InstrumentLibrary;
 typedef std::map <std::string, Instrument *> InstrumentMap;
 
+/// Timestamp type: we assume that we can get the host's best guess at the IO word clock
+///  (normally passed into the audio IO callback function). call timeNow() to get the time
+/// We also support float-time in fTimeNow()
+
+typedef unsigned long Timestamp;
+
+//// struct used for the JUCE pop-up menu of tests (see the test files)
+
+typedef struct {
+	char * name;			// test name (menu item)
+	VoidFcnPtrN * fcn;		// test void fcn ptr
+	char * comment;			// test comment
+} testStruct;
+
+
 //// Hashmap keys for the default I/O ports (could be strings or int indeces)
 
 #define CSL_SCALE 1
@@ -233,20 +252,6 @@ typedef std::map <std::string, Instrument *> InstrumentMap;
 #define	CSL_FILTER_AMOUNT 11
 #define CSL_RATE 12
 
-///
-/// Timestamp type: we assume that we can get the host's best guess at the IO word clock
-///  (normally passed into the audio IO callback function). call timeNow() to get the time
-/// We also support float-time in fTimeNow()
-
-typedef unsigned long Timestamp;
-
-//// struct used for the JUCE pop-up menu of tests (see the test files)
-
-typedef struct {
-	char * name;			// test name (menu item)
-	void (* fcn)();			// test void fcn ptr
-	char * comment;			// test comment
-} testStruct;
 
 ////
 //// Min/max, Boolean, statistics macros

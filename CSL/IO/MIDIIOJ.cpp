@@ -16,14 +16,16 @@ CMIDIMessage::CMIDIMessage()
 	: message(kNone),			// init to no event
 	  channel(0), data1(0), data2(0), time(0) { }
 
-bool CMIDIMessage::isNoteOn()			{ return (message == kNoteOn); }
-bool CMIDIMessage::isNoteOff()			{ return (message == kNoteOff); }
-bool CMIDIMessage::isPolyTouch()		{ return (message == kPolyTouch); }
-bool CMIDIMessage::isControlChange()	{ return (message == kControlChange); }
-bool CMIDIMessage::isProgramChange()	{ return (message == kProgramChange); }
-bool CMIDIMessage::isAftertouch()		{ return (message == kAftertouch); }
-bool CMIDIMessage::isPitchWheel()		{ return (message == kPitchWheel); }
-bool CMIDIMessage::isSysEX()			{ return (message == kSysEX); }
+bool CMIDIMessage::isNoteOn()			{ return (command == kNoteOn); }
+bool CMIDIMessage::isNoteOff()			{ return (command == kNoteOff); }
+bool CMIDIMessage::isNoteOnOff()		{ return ((command == kNoteOff) || (command == kNoteOn)); }
+
+bool CMIDIMessage::isPolyTouch()		{ return (command == kPolyTouch); }
+bool CMIDIMessage::isControlChange()	{ return (command == kControlChange); }
+bool CMIDIMessage::isProgramChange()	{ return (command == kProgramChange); }
+bool CMIDIMessage::isAftertouch()		{ return (command == kAftertouch); }
+bool CMIDIMessage::isPitchWheel()		{ return (command == kPitchWheel); }
+bool CMIDIMessage::isSysEX()			{ return (command == kSysEX); }
 
 unsigned CMIDIMessage::getCommand()					{ return (unsigned) command; }
 unsigned CMIDIMessage::getNote()					{ return (unsigned) data1; }
@@ -142,7 +144,9 @@ void MIDIIO::copyMessage(const MidiMessage& source, CMIDIMessage& dest) {
 				CCOPY_MSG;				
 			case kControlChange:
 				dest.message = kControlChange;
-				CCOPY_MSG;
+				dest.channel = source.getChannel();	
+				dest.data1 = source.getControllerNumber();
+				dest.data2 = source.getControllerValue();
 				break;
 			case kProgramChange:
 				dest.message = kProgramChange;
@@ -219,7 +223,8 @@ void MIDIIn::open(int deviceID) {
 		return;
 	}
 	logMsg("Open midi input %s", mDevice->getName().toUTF8());
-	gAudioDeviceManager->setMidiInputEnabled(mDevice->getName(), true);
+	if (gAudioDeviceManager)
+		gAudioDeviceManager->setMidiInputEnabled(mDevice->getName(), true);
 	mIsOpen = true;
 }
 
@@ -274,7 +279,7 @@ void MIDIIn::nextEvent() {
 }
 
 void MIDIIn::dumpMessage() {
-	printf("\tMIDIIn  \t");
+	printf("\tMIDIIn  ");
 	switch(mMsg.message) {
 		case kNone:
 			printf("kNone");
@@ -289,7 +294,7 @@ void MIDIIn::dumpMessage() {
 			printf("kPolyTouch");
 			break;
 		case kControlChange:
-			printf("kControlChange");
+			printf("ControlChange");
 			break;
 		case kProgramChange:
 			printf("kProgramChange");
@@ -306,7 +311,7 @@ void MIDIIn::dumpMessage() {
 		default:
 			printf("unknown");
 	}
-	printf("  \tch: %2d d1: %2d d2: %2d t: %5.3f\n", mMsg.channel, mMsg.data1, mMsg.data2, mMsg.time);
+	printf("  \tch: %2d  d1: %2d  d2: %2d  t: %5.3f\n", mMsg.channel, mMsg.data1, mMsg.data2, mMsg.time);
 }
 
 // evaluate answers the midi command

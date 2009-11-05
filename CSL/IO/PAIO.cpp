@@ -58,7 +58,7 @@ static int pa_callback (const void * inputPointer, void * outputPointer,
 	paio->mNumFramesPlayed += framesPerBuffer;
 	if (paio->mNumInChannels > 0) {
 		paio->mInputPointer = (float *) inputPointer;		// get the I/O buffer pointers
-		paio->mInputBuffer.mNumFrames = framesPerBuffer;
+		paio->mInputBuffer.mNumFrames = framesPerBuffer;	// interleaved
 	}
 	paio->pullInput(*outBuffer, out);
 	return 0;	

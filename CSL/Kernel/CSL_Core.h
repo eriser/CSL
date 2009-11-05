@@ -85,7 +85,7 @@ typedef enum {
 
 class Buffer {
 public:									/// Constructors: default is mono and default-size
-	Buffer(unsigned numChannels = 1, unsigned numFrames = CGestalt::blockSize()); 
+	Buffer(unsigned numChannels = 1, unsigned numFrames = CSL_mBlockSize); 
 	~Buffer();							///< Destructor
 	
 									// public data members	
@@ -661,11 +661,11 @@ typedef enum {
 /// All this is public because it's used by static call-back functions.
 ///
 
-class IO : public Model  {									// superclass = Model
+class IO : public Model  {											/// superclass = Model
 public:
-	IO(unsigned s_rate = 44100, unsigned b_size = CGestalt::blockSize(),
+	IO(unsigned s_rate = 44100, unsigned b_size = CSL_mBlockSize,
 		int in_device = -1, int out_device = -1,
-		unsigned in_chans = 0, unsigned out_chans = 2);				/// default is stereo output
+		unsigned in_chans = 2, unsigned out_chans = 2);				/// default is stereo input & output
 	virtual ~IO() { };
 							// Control methods
 	virtual void open() throw(CException) { mStatus = kIOOpen; };	///< open/close start/stop methods

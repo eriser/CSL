@@ -157,13 +157,14 @@ void testDynamicVoice() {
 	SoundFile sfile(CGestalt::dataFolder(), "sns.aiff", true);		// open a speak'n'spell file
 	Butter butter(sfile, BW_BAND_PASS, center, bw);	// Butterworth BP filter
 	logMsg("playing filtered snd file...");
+	sfile.trigger();
 	runTest(butter, dur);
 	logMsg("done.");
 }
 
 /// Pan and mix many sines
 
-void testManyDynamicFilters() {
+void testNDynamicFilters() {
 	int num = 20;							// # of layers
 	float scale = 3.0f / (float) num;		// ampl scale
 	Mixer mix(2);							// stereo mixer
@@ -213,7 +214,7 @@ void testReverb() {
 void testStereoverb() {
 	ADSR mEnv(1, 0.005, 0.01, 0.0, 1.5);		// attack-chiff envelope
 	WhiteNoise mChiff;							// attack-chiff noise source
-	float ctrFrq = fRandB(2000, 500);			// filter center freq
+	float ctrFrq = fRandB(3000, 1000);			// filter center freq
 	Butter mFilter(mChiff, BW_BAND_PASS, ctrFrq, 500.0f);	// BP filter
 	mEnv.setScale(10);							// scale chiff envelope
 	mFilter.setScale(mEnv);						// apply chiff envelope
@@ -226,16 +227,16 @@ void testStereoverb() {
 #ifndef CSL_WINDOWS
 	srand(getpid());							// seed the rand generator -- UNIX SPECIFIC CODE HERE
 #endif
-	float nap = 1.0f;
+	float nap = 1.0f;							// sleep time between noise bursts
 	logMsg("playing Stereoverb test\n");
 	for (unsigned i = 0; i < 10; i++) {			// play a loop of notes
 		mPanner.setPosition(fRand1());			// select a random stereo position
 		mEnv.trigger();							// trigger the burst envelope
 		sleepSec(nap);							// sleep a few seconds
-		nap *= 1.15f;							// slow down
+		nap *= 1.25f;							// slow down
 		mFilter.setFrequency(fRandB(2000, 1000));	// pick a new frequency, 2k +- 1k
 	}	
-	sleepSec(1);								// sleep at the end to let it die out
+	sleepSec(2);								// sleep at the end to let it die out
 	theIO->clearRoot();	
 	logMsg("done.\n");
 }
@@ -313,7 +314,7 @@ void testBlockDownsizer() {
 }
 
 
-// Simple sample average filter class - an example of a custom UnitGenerator definition
+// Simple sample-average filter class - an example of a custom UnitGenerator definition
 // This implements nextBuffer() with its own DSP routine: a scaled past-sample averager (lo-pass filter)
 
 class SAFliter : public Effect {				// It's an Effect/UnitGenerator
@@ -325,7 +326,7 @@ public:											// created with an input UGen &scale coeff
 		unsigned numFrames = outputBuffer.mNumFrames;			// get buffer length
 		csl::SampleBuffer out = outputBuffer.monoBuffer(outBufNum);	// get ptr to output channel
 		
-		Effect::pullInput(numFrames);				// get some input
+		Effect::pullInput(numFrames);				// get my input buffer
 		csl::SampleBuffer inPtr = mInputPtr;		// get a pointer to the input samples
 		
 		float val;
@@ -374,7 +375,7 @@ testStruct effTestList[] = {
 	"All filters",			testFilters,		"Test different filter types",
 	"Filtered snd file",	testDynamicVoice,	"Dynamic BPF on a voice track",
 	"Dynamic filter",		testDynamicFilters,	"Play a dynamic BP filter on noise",
-	"Many dynamic filters",	testManyDynamicFilters,	"Many dynamic filtered-noise instruments",
+	"Many dynamic filters",	testNDynamicFilters, "Many dynamic filtered-noise instruments",
 	"Reverb",				testReverb,			"Show mono reverb on impulses",
 	"Stereo-verb",			testStereoverb,		"Listen to the stereo reverb",
 	"Multi-tap",			testMultiTap,		"Play a multi-tap delay line",

@@ -34,9 +34,6 @@ void IO_test() {
 
 // Run the IO_test, then edit these
 
-#define DEFAULT_MIDI_IN 3
-#define DEFAULT_MIDI_OUT 3
-
 void input_test() {
 	MIDIIn in;
 	in.open(DEFAULT_MIDI_IN);
