@@ -140,8 +140,14 @@ bool sleepSec(float dur);
 Timestamp timeNow();						///< high-accuracy system or IO time in ticks
 float fTimeNow();							///< system or IO time in seconds
 
+/// Which kind of accurate timer to use?
 
+// #define C_TIME		Time::getHighResolutionTicks()
+#define C_TIME		Time::getMillisecondCounter()
+
+///
 /// A variety of useful random-number functions
+///
 
 float fRandZ(void);							///<  0 - 1			(name: zero)
 float fRand1(void);							///< -1 - 1			(one)
@@ -163,7 +169,7 @@ bool coin();								///< Answer true or false
 bool coin(float bias);						///< Answer with a bias (1 --> always true)
 
 
-// MIDI Conversions
+/// MIDI Conversions
 
 ///  keyToFreq -- converts from MIDI key numbers (1 - 127) to frequency in Hz.
 
@@ -176,7 +182,8 @@ unsigned freqToKey(float frequency);
 
 /////////////////////////////////////////////////////////////////////////
 ///
-/// MVC Observer/Subject or dependency pattern, minimal version
+/// MVC Observer/Subject or dependency pattern
+///		Advanced version with filtered observer updates
 ///
 
 class Observer;								///< Forward declaration

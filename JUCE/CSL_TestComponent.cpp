@@ -260,7 +260,7 @@ CSLComponent::CSLComponent ()
 
     addAndMakeVisible (recordButton = new ToggleButton (T("new toggle button")));
     recordButton->setButtonText (T("Record"));
-    recordButton->addButtonListener (this);=
+    recordButton->addButtonListener (this);
 
     //[UserPreSize]
 	oscilloscopeL->initialise(0, 20, 2, true);		// channel, rate, window, zeroX
@@ -273,7 +273,7 @@ CSLComponent::CSLComponent ()
 	
 ////////////////////////////// Here we go! //////////////////////////////////////////
 					// CSL Code starts here
-	dumpTestList();					// print out the demo/test menu
+//	dumpTestList();					// print out the demo/test menu
 
 					// initiali[zs]e the device manager so it picks a default device to use.
 	const String error (mAudioDeviceManager.initialise (0,	/* no input */

@@ -936,6 +936,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_STYLE = Debug;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -970,6 +971,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_STYLE = Release;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
@@ -990,6 +992,7 @@
 		84F30CC008FEAA620087E26C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_STYLE = Debug;
 				COPY_PHASE_STRIP = NO;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -1047,6 +1050,7 @@
 		84F30CC108FEAA620087E26C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_STYLE = Release;
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -1075,6 +1079,7 @@
 		84F30CC408FEAA620087E26C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_STYLE = Debug;
 				COPY_PHASE_STRIP = NO;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_CW_ASM_SYNTAX = NO;
@@ -1101,6 +1106,7 @@
 		84F30CC508FEAA620087E26C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_STYLE = Release;
 				COPY_PHASE_STRIP = NO;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_CW_ASM_SYNTAX = NO;

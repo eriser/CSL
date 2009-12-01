@@ -355,6 +355,8 @@ void testGrainCloud() {
 	GrainPlayer player(& cloud);			// grain player
 											// open and read in a file for granulation
 	SoundFile sndFile(CGestalt::dataFolder(), "MKG1a1b.aiff", true);
+	sndFile.openForRead();
+	sndFile.dump();
 	
 	cloud.mSamples = sndFile.mWavetable.mBuffers[0];
 	cloud.numSamples = sndFile.duration();
@@ -377,7 +379,7 @@ void testGrainCloud() {
 	runTest(player, 15);
 	logMsg("done.");
 	cloud.isPlaying = false;
-	sleepSec(0.1);
+	sleepSec(0.5);
 }
 
 ///////////////// IFFT tests ////////

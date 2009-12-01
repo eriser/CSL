@@ -14,10 +14,11 @@
 #include "juce.h"
 #include "CSL_Types.h"
 
-// Note that this requires a change to the privacy of class Slider's members;
+// Note that defining RANGE_SLIDER requires a change to the privacy of class Slider's members;
 // comment out line 705 of ~/Code/juce/src/juce_appframework/gui/components/controls/juce_Slider.h
+// (This line says "private:")
 
-// #define RANGE_SLIDER
+#define RANGE_SLIDER
 
 //////////////////////////////////////////////////////////////////////////
 //

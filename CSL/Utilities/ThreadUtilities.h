@@ -22,12 +22,12 @@ public:
 	virtual ~CThread() { };
 	static CThread * MakeThread();	///< factory method
 
-	int createThread(VOIDFCNPTR * func, void * args);
+	int createThread(VoidFcnPtr * func, void * args);
 //	int createRealtimeThread(VOIDFCNPTR * func, void * args);
 	void run();
 
 protected:
-	VOIDFCNPTR * mFunc;
+	VoidFcnPtr * mFunc;
 	void * mArgs;
 };
 

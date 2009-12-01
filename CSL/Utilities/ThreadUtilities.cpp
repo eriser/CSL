@@ -16,7 +16,7 @@ CThread * CThread::MakeThread() {
 	return new CThread(); 
 }
 
-int CThread::createThread(VOIDFCNPTR * func, void * args) {
+int CThread::createThread(VoidFcnPtr * func, void * args) {
 	(*func)(args);				// call my function
 	return 0;
 }
@@ -144,7 +144,7 @@ unsigned GetThreadBasePriority (pthread_t inThread) {
 	return 0;
 }
 
-int ThreadPthread::createRealtimeThread(VOIDFCNPTR * func, void* args) {
+int ThreadPthread::createRealtimeThread(VoidFcnPtr * func, void* args) {
 				// first create a thread
 	int value = createThread(func, args);
 	int result;

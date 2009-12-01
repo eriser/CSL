@@ -253,12 +253,12 @@ CSLComponent::CSLComponent ()
 			// set slider defaults
 	rateSlider->setBaseValue(1.0);
 	rateSlider->setRangeValue(0.02);
-	offsetSlider->setBaseValue(0.1);
-	offsetSlider->setRangeValue(0.0);
+	offsetSlider->setBaseValue(0.4);
+	offsetSlider->setRangeValue(0.3);
 	durationSlider->setBaseValue(0.1);
 	durationSlider->setRangeValue(0.0);
 	densitySlider->setBaseValue(8);
-	densitySlider->setRangeValue(0.0);
+	densitySlider->setRangeValue(2.0);
 	widthSlider->setBaseValue(0.5);
 	widthSlider->setRangeValue(0.1);
 	volumeSlider->setBaseValue(8.0);
@@ -285,7 +285,7 @@ CSLComponent::CSLComponent ()
 	((Stereoverb *)source)->setRoomSize(reverbSlider->getValue());
 #endif
 					// Create the MIDI mapper: pass it the MIDI device index and base controller channel
-	theMapper = new MIDIControllerMapper(this, 3, 48);
+//	theMapper = new MIDIControllerMapper(this, 3, 48);
 
 //////////////////////////////////////////////////////////////////
     //[/Constructor]
@@ -517,8 +517,9 @@ void CSLComponent::audioDeviceIOCallback (const float** inputChannelData,
 		outBuffer.setSize(totalNumOutputChannels, numSamples);
 		for (unsigned i = 0; i < totalNumOutputChannels; i++)
 			outBuffer.mBuffers[i] = outputChannelData[i];
-		try {	
-			source->nextBuffer(outBuffer);		// Get a buffer from the CSL graph
+			
+		try {		// Fill the buffer from the CSL graph
+			source->nextBuffer(outBuffer);
 		} catch (CException e) {
 			printf("Error running CSL graph\n");
 		}
@@ -555,11 +556,11 @@ void CSLComponent::loadFile() {
 	if (myChooser.browseForFileToOpen()) {
 		File fil = myChooser.getResult();
 		String nam = fil.getFullPathName();
-		SoundFile sndFile(nam.toUTF8());
+		SoundFile * sndFile = new SoundFile(nam.toUTF8());
 										// open and read in the file
-		sndFile.openForRead();
-		cloud->mSamples = sndFile.mWavetable.mBuffers[0];
-		cloud->numSamples = sndFile.duration();
+		sndFile->openForRead();
+		cloud->mSamples = sndFile->mWavetable.mBuffers[0];
+		cloud->numSamples = sndFile->duration();
 	}
 }
 
