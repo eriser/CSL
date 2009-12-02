@@ -303,8 +303,8 @@ bool csl::sleepUsec(float dur_in_usec) {
 		interval = (int) (TIMER_INTERVAL * 1000000.0f);		// or dur_in_usec / periods;
 	}
 	int count = periods;
-	while (count && ( ! CGestalt::stopNow())) {		// timers count short loops of 0.1 sec or so
-		usleep(interval);
+	while (count && ( ! CGestalt::stopNow())) {		// timers count short loops of 0.25 sec or so
+		usleep(interval);							// micro-sleep
 		count--;
 	}												// check global flag in timer loop
 	if (CGestalt::stopNow()) return true;

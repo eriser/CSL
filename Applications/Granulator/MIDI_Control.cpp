@@ -1,11 +1,7 @@
-/*
- *  MIDI_Control.cpp
- *  Granulator
- *
- *  Created by Stephen  Pope on 11/21/07.
- *  Copyright 2007 __MyCompanyName__. All rights reserved.
- *
- */
+//
+//  MIDI_Control.h -- Controls granular synthesis app with MIDI sliders
+//	See the copyright notice and acknowledgment of authors in the file COPYRIGHT
+//
 
 #include "MIDI_Control.h"
 #include "JGranulator.h"

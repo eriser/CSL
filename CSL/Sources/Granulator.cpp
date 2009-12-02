@@ -43,6 +43,7 @@ void GrainPlayer::nextBuffer(Buffer & outputBuffer) throw (CException) {
 		out1 = outputBuffer.mBuffers[0];							// assume stereo output
 		out2 = outputBuffer.mBuffers[1];
 		length = curGrain->numSamples;
+		sample * sPtr = curGrain->samples;
 		for (unsigned i = 0; i < numFrames; i++) {					// sample loop
 			if (curGrain->time >= curGrain->duration)				// if grain has ended already
 				break;
@@ -55,7 +56,7 @@ void GrainPlayer::nextBuffer(Buffer & outputBuffer) throw (CException) {
 				index += length;
 			while (index >= length)
 				index -= length;
-			samp = curGrain->samples[index];						// get sample value (should interpolate samples)
+			samp = sPtr[index];										// get sample value (should interpolate samples)
 			durHalf = curGrain->duration * curGrain->env;			// really cheap triangle envelope
 			if (curGrain->time < durHalf)							// if before middle
 				env = (float) curGrain->time / durHalf;	
@@ -73,6 +74,7 @@ void GrainPlayer::nextBuffer(Buffer & outputBuffer) throw (CException) {
 	}
 	mCloud->gNow = C_TIME;											// increment time
 	mCloud->gState = kFree;											// release lock
+//	printf("\n");
 }
 
 // GrainCloud implementation -- grain mgmnt loops are forked as a separate threads
@@ -220,6 +222,9 @@ void GrainCloud::startThreads() {
 	logMsg("Starting grain creation/culling threads (%d)", C_TIME);
 	spawnerThread->createThread(createGrains, this);
 	reaperThread->createThread(reapGrains, this);
+	csl::sleepMsec(100);						// sleep for a bit
+	logMsg("Grain threads running");
+
 }
 
 // reset the list of grains to be all silent

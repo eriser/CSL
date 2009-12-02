@@ -285,7 +285,7 @@ CSLComponent::CSLComponent ()
 	((Stereoverb *)source)->setRoomSize(reverbSlider->getValue());
 #endif
 					// Create the MIDI mapper: pass it the MIDI device index and base controller channel
-//	theMapper = new MIDIControllerMapper(this, 3, 48);
+	theMapper = new MIDIControllerMapper(this, 0, 48);
 
 //////////////////////////////////////////////////////////////////
     //[/Constructor]
@@ -557,8 +557,6 @@ void CSLComponent::loadFile() {
 		File fil = myChooser.getResult();
 		String nam = fil.getFullPathName();
 		SoundFile * sndFile = new SoundFile(nam.toUTF8());
-										// open and read in the file
-		sndFile->openForRead();
 		cloud->mSamples = sndFile->mWavetable.mBuffers[0];
 		cloud->numSamples = sndFile->duration();
 	}

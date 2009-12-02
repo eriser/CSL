@@ -140,8 +140,8 @@
 //// (define here or choose with a compiler option, e.g., -DUSE_PMIDI)
 
 #define USE_JMIDI
-#define DEFAULT_MIDI_IN 3
-#define DEFAULT_MIDI_OUT 3
+#define DEFAULT_MIDI_IN 0
+#define DEFAULT_MIDI_OUT 0
 
 //// Use an OSC API?
 

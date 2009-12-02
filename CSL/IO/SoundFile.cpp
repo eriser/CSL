@@ -9,7 +9,7 @@ using namespace csl;
 
 // Abst_SoundFile Constructors
 
-Abst_SoundFile::Abst_SoundFile(string tpath, bool load, int tstart, int tstop) : 
+Abst_SoundFile::Abst_SoundFile(string tpath, int tstart, int tstop) : 
 			WavetableOscillator(), Writeable(), Seekable(), 
 			mPath(string(tpath)), 
 			mIsValid(false), 
@@ -22,7 +22,7 @@ Abst_SoundFile::Abst_SoundFile(string tpath, bool load, int tstart, int tstop) :
 //	logMsg("Opened sound file \"%s\"", mPath.c_str());
 }
 
-Abst_SoundFile::Abst_SoundFile(string folder, string tpath, bool load, int tstart, int tstop) : 
+Abst_SoundFile::Abst_SoundFile(string folder, string tpath, int tstart, int tstop) : 
 			WavetableOscillator(), Writeable(), Seekable(), 
 			mPath(folder + tpath), 
 			mIsValid(false), 

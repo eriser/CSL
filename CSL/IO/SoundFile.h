@@ -58,8 +58,8 @@ typedef enum {					/// File format
 
 class Abst_SoundFile : public WavetableOscillator, public Writeable, public Seekable {
 public:									/// Constructor. Values not passed default to null.
-	Abst_SoundFile(string path, bool load = false, int start = -1, int stop = -1);
-	Abst_SoundFile(string folder, string path, bool load = false, int start = -1, int stop = -1);
+	Abst_SoundFile(string path, int start = -1, int stop = -1);
+	Abst_SoundFile(string folder, string path, int start = -1, int stop = -1);
 	Abst_SoundFile(Abst_SoundFile & otherSndFile);	///< Copy constructor -- shares sample buffer
 	~Abst_SoundFile();
 										/// accessors

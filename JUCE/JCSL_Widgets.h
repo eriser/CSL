@@ -111,7 +111,6 @@ protected:		// work methods
 	void mouseDrag (const MouseEvent& e);
 				// data members
 	double baseValue, rangeValue;
-	
 };
 
 #endif

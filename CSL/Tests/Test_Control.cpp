@@ -35,6 +35,9 @@ void IO_test() {
 // Run the IO_test, then edit these
 
 void input_test() {
+	logMsg("MIDI test");
+	logMsg("Default MIDI in = %d", MidiInput::getDefaultDeviceIndex());
+	logMsg("Default MIDI out = %d", MidiOutput::getDefaultDeviceIndex());
 	MIDIIn in;
 	in.open(DEFAULT_MIDI_IN);
 	in.start();

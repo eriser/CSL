@@ -118,7 +118,8 @@ done:
 /// Test the sound file player - mono, stereo input files
 
 void testMonoFilePlayer() {
-	SoundFile sfile(CGestalt::dataFolder(), "Piano_A5_mf_mono.aiff");	// open a piano note file
+//	SoundFile sfile(CGestalt::dataFolder(), "Piano_A5_mf_mono.aiff");	// open a piano note file
+	SoundFile sfile(CGestalt::dataFolder(), "MKG1a1b.aiff");
 //	SoundFile sfile(CGestalt::dataFolder(), "Piano_A5_mf.caf");			// play a piano note
 	sfile.dump();														// print snd file info
 
@@ -354,10 +355,9 @@ void testGrainCloud() {
 	GrainCloud cloud;						// grain cloud
 	GrainPlayer player(& cloud);			// grain player
 											// open and read in a file for granulation
-	SoundFile sndFile(CGestalt::dataFolder(), "MKG1a1b.aiff", true);
-	sndFile.openForRead();
+	SoundFile sndFile(CGestalt::dataFolder(), "MKG1a1b.aiff");
 	sndFile.dump();
-	
+
 	cloud.mSamples = sndFile.mWavetable.mBuffers[0];
 	cloud.numSamples = sndFile.duration();
 	cloud.mRateBase = 1.0f;					// set the grain cloud parameters
