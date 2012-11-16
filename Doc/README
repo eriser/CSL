@@ -14,8 +14,8 @@ The home page for CSL is http://FASTLabInc.com/CSL.
 CSL is known to work on Mac OSX, many flavors of UNIX/Linux, iPhones, and (with 
 limited features) on MS-Windows. To get started quickly, build the JUCE demo app
 and use the combo boxes at the bottom to select among the tests, whose source code
-is all in the Tests folder. For the Mac, use the XCode project in the JUCE folder; 
-for Linux, use the premake script in the Linux folder. Both assume JUCE 1.50 is 
+is all in the Tests folder. For the Mac, use the XCode project in the CSL_JUCE folder; 
+for Linux, use the premake script in the Linux folder. Both assume JUCE 2.0 is 
 already installed and compiled.
 
 About CSL
