@@ -163,7 +163,7 @@
         <FILE id="LQFRPL" name="SoundFileJ.h" compile="0" resource="0" file="../CSL/IO/SoundFileJ.h"/>
         <FILE id="Yiw93N" name="SoundFileJ.cpp" compile="0" resource="0" file="../CSL/IO/SoundFileJ.cpp"/>
         <FILE id="GfmqSP" name="SoundFileMP3.h" compile="0" resource="0" file="../CSL/IO/SoundFileMP3.h"/>
-        <FILE id="cGUxrD" name="SoundFileMP3.cpp" compile="1" resource="0"
+        <FILE id="cGUxrD" name="SoundFileMP3.cpp" compile="0" resource="0"
               file="../CSL/IO/SoundFileMP3.cpp"/>
         <FILE id="jTac6I" name="MIDIIOJ.h" compile="0" resource="0" file="../CSL/IO/MIDIIOJ.h"/>
         <FILE id="GpN96F" name="MIDIIOJ.cpp" compile="0" resource="0" file="../CSL/IO/MIDIIOJ.cpp"/>
@@ -247,7 +247,7 @@
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" juceFolder="/Volumes/Content/Code/juce2/modules"
                extraDefs="USE_JUCE USE_VBAP USE_HRTF USE_AMBISONIC USE_FFTREAL USE_LSND"
-               extraLinkerFlags="-lfaad -lmp4ff -lsamplerate -llo -lmad -ltag -lsndfile">
+               extraLinkerFlags="-lsndfile">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="64BitIntel"
                        isDebug="1" optimisation="1" targetName="CSL_Demo" headerPath="/usr/local/include;../../../CSL/Includes"

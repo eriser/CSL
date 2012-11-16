@@ -14,8 +14,8 @@
 #include <sndfile.h>			// libsndfile header file
 								// NB: set these as compile-time flags now
 #ifndef WIN32
-#define USE_libMAD				// Support MP3 file reading using libMAD
-//#define USE_libFAAD			// Support AAC/MP4 file reading using libFAAD
+// #define USE_libMAD			// Support MP3 file reading using libMAD
+// #define USE_libFAAD			// Support AAC/MP4 file reading using libFAAD
 #endif
 
 #include <sndfile.h>			// libsndfile header file

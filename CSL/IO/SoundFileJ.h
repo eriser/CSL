@@ -10,8 +10,6 @@
 #include "SoundFile.h"
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "src/audio/audio_file_formats/juce_AudioFormatReader.h"
-#include "src/audio/audio_file_formats/juce_AudioFormatWriter.h"
 
 namespace csl {
 

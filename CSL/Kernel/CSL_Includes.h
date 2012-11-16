@@ -46,14 +46,17 @@
 
 #ifdef USE_JSND
 	#include "SoundFileJ.h"
+	#define SoundFile JSoundFile			// JUCE snd file class
 #endif
 
 #ifdef USE_LSND
 	#include "SoundFileL.h"
+	#define SoundFile LSoundFile			// JUCE snd file class
 #endif
 
 #ifdef USE_CASND
 	#include "SoundFileCA.h"
+	#define SoundFile CASoundFile			// JUCE snd file class
 #endif
 
 // MIDI

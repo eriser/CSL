@@ -473,12 +473,24 @@ void SoundCue::trigger(void) {
 // SoundFileBuffer implementation
 //
 
-#include "SoundFileL.h"			// abstract class header
+#ifdef USE_JSND
+	#include "SoundFileJ.h"
+	#define SoundFile JSoundFile			// JUCE snd file class
+#endif
 
+#ifdef USE_LSND
+	#include "SoundFileL.h"
+	#define SoundFile LSoundFile			// JUCE snd file class
+#endif
+
+#ifdef USE_CASND
+	#include "SoundFileCA.h"
+	#define SoundFile CASoundFile			// JUCE snd file class
+#endif
 
 SoundFileBuffer::SoundFileBuffer(string path, unsigned numFrames) 
 		: Buffer(CGestalt::numOutChannels(), numFrames) {
-	mFile = (Abst_SoundFile * ) (new LSoundFile(path));
+	mFile = (Abst_SoundFile * ) (new SoundFile(path));
 	mFile->openForRead(false);
 	mFile->readBufferFromFile(CGestalt::sndFileFrames());
 	mNumChannels = mFile->channels();

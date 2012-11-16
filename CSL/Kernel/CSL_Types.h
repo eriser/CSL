@@ -150,7 +150,7 @@
 //// Use an OSC API?
 
 #ifndef CSL_WINDOWS					// works on Mac & Linux
-#define USE_LOSC					// liblo for OSC
+// #define USE_LOSC					// liblo for OSC
 #endif
 
 //// Which default "Osc" class to use -- WavetableOscillator (table-lookup) or Sine (computed)?

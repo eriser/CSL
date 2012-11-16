@@ -28,7 +28,7 @@
 #define CSL_SndFile_Instrument_H
 
 #include "Instrument.h"
-#include "SoundFileL.h"
+#include "SoundFile.h"
 
 namespace csl  {
 
@@ -52,7 +52,7 @@ public:
 	void playMIDI(int chan, int key, int vel);	
 
 								///< These are the UGens of the DSP graph (i.e., the sndfile player instrument)
-	LSoundFile mPlayer;					///< sample player
+	SoundFile mPlayer;					///< sample player
 	AR mEnvelope;						///< AR envelope
 	Panner mPanner;						///< stereo panner
 	StaticVariable mRate;				///< plugs playback rate (ignored for now)
@@ -84,7 +84,7 @@ public:
 	SampleBankInstrument();
 	~SampleBankInstrument();
 
-	void addSample(LSoundFile & sndFile, unsigned midi = 0, double freq = 0.0, double minRatio = 0.75);
+	void addSample(SoundFile & sndFile, unsigned midi = 0, double freq = 0.0, double minRatio = 0.75);
 
 	void play();		
 	void playOSC(int argc, void **argv, const char *types);		

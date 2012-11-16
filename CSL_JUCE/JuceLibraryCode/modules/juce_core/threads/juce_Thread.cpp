@@ -189,7 +189,7 @@ void Thread::stopThread (const int timeOutMilliseconds)
         {
             // very bad karma if this point is reached, as there are bound to be
             // locks and events left in silly states when a thread is killed by force..
- //           jassertfalse;			// STP change
+            jassertfalse;
             Logger::writeToLog ("!! killing thread by force !!");
 
             killThread();

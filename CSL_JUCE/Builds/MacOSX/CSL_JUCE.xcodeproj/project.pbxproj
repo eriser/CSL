@@ -11,7 +11,6 @@
 		049A4F080C0E76F8D6EF062C /* BlockResizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 454135CB83FE76998C7A8A32 /* BlockResizer.cpp */; };
 		086F676C548455135434D29F /* CPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FD27723F538BAF43FFF207 /* CPoint.cpp */; };
 		0C083DE946B630BA19739208 /* SimplePanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DA2EF822AF9BAFDB5AB20C83 /* SimplePanner.cpp */; };
-		12F2988B4EAB9C8EDF739BC2 /* SoundFileMP3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35490661AAF8F09892407F1A /* SoundFileMP3.cpp */; };
 		13264C75FFD4D9BDEE544CF7 /* Ambisonic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DF7EE55EDAE7890CA77A496 /* Ambisonic.cpp */; };
 		204AA4079E3944C0E8610997 /* Clipper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F6696BA512E43ACFF10EFD8 /* Clipper.cpp */; };
 		2283F55BB923F0D27202FB28 /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 78454CC340A428DFD6CDE8C2 /* RecentFilesMenuTemplate.nib */; };
@@ -2964,7 +2963,6 @@
 				91A4DBC42A57B8AA2DB037FD /* FileIO.cpp in Sources */,
 				F023E8998AC7314BD8C42A87 /* SoundFile.cpp in Sources */,
 				4FEAFEECA785B5E242CBF9EC /* SoundFileL.cpp in Sources */,
-				12F2988B4EAB9C8EDF739BC2 /* SoundFileMP3.cpp in Sources */,
 				F2E0CBFE2068B9B4657B2441 /* OSC_support.cpp in Sources */,
 				592D79E2B7C12C1C43924356 /* Test_Support.cpp in Sources */,
 				A8DABD83E90C32D0B47A4DEC /* Test_Oscillators.cpp in Sources */,
@@ -3029,15 +3027,7 @@
 					"\"/usr/local/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = (
-					"-lfaad",
-					"-lmp4ff",
-					"-lsamplerate",
-					"-llo",
-					"-lmad",
-					"-ltag",
-					"-lsndfile",
-				);
+				OTHER_LDFLAGS = "-lsndfile";
 				SDKROOT_ppc = macosx10.5;
 			};
 			name = Debug;
@@ -3096,15 +3086,7 @@
 					"\"/usr/local/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = (
-					"-lfaad",
-					"-lmp4ff",
-					"-lsamplerate",
-					"-llo",
-					"-lmad",
-					"-ltag",
-					"-lsndfile",
-				);
+				OTHER_LDFLAGS = "-lsndfile";
 				SDKROOT_ppc = macosx10.5;
 			};
 			name = Release;

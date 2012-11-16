@@ -216,7 +216,7 @@ HRTFDatabase::HRTFDatabase(const char * folder) {
 					strcat(realFolder, &folder[1]);
 			} else
 				strcpy(realFolder, folder);
-//			logMsg("Loading HRTF data from %s", realFolder);
+			logMsg("Loading HRTF data from %s", realFolder);
 
 			this->loadFromFolder(realFolder);	// load the folder
 			
