@@ -27,20 +27,20 @@ JSoundFile::JSoundFile(string tpath, int tstart, int tstop)
 	}
 }
 
-JSoundFile::JSoundFile(string folder, string tpath, int tstart, int tstop)
-	: Abst_SoundFile(folder, tpath, tstart, tstop),
-		mAFReader(0),
-		mAFWriter(0),
-		mIOFile(0),
-		mOutStream(0) {
-	try {
-		openForRead();						// read and cache whole file
-		setToEnd();
-	} catch (CException & e) {
-		logMsg(kLogError, "File open exception caught: %s", e.mMessage.c_str());
-		return;
-	}
-}
+//JSoundFile::JSoundFile(string folder, string tpath, int tstart, int tstop)
+//	: Abst_SoundFile(folder, tpath, tstart, tstop),
+//		mAFReader(0),
+//		mAFWriter(0),
+//		mIOFile(0),
+//		mOutStream(0) {
+//	try {
+//		openForRead();						// read and cache whole file
+//		setToEnd();
+//	} catch (CException & e) {
+//		logMsg(kLogError, "File open exception caught: %s", e.mMessage.c_str());
+//		return;
+//	}
+//}
 
 JSoundFile::JSoundFile(JSoundFile & otherSndFile)
 	: Abst_SoundFile(otherSndFile),
@@ -98,7 +98,7 @@ void JSoundFile::initFromSndfile() {
 		mStop = mAFReader->lengthInSamples;
 }
 
-void JSoundFile::openForRead() throw (CException) {
+void JSoundFile::openForRead(bool load) throw (CException) {
 	mMode = kSoundFileRead;
 	String fname(mPath.c_str());
 	mIOFile = new File(fname);					// create a JUCE file object
@@ -171,7 +171,9 @@ void JSoundFile::readBufferFromFile(unsigned numFrames) {
 		return;
 	}
 											// JUCE read fcn
-	if (mAFReader->read(mWavetable.mBuffers, myChannels, mCurrentFrame, numFrames, false)) {
+//	logMsg ("Sound file read %d", numFrames);
+//    if (mAFReader->read(mWavetable.mBuffers, myChannels, mCurrentFrame, numFrames, false)) {
+	if (1) {
 		currentFrame += numFrames;	
 	} else {
 		logMsg (kLogError, "Sound file read error");
@@ -186,8 +188,8 @@ void JSoundFile::readBufferFromFile(unsigned numFrames) {
 			while (numFramesRead < numFrames) {
 				currentFrame = seekTo(0, kPositionStart);
 															// call JUCE read function
-				mAFReader->read(mWavetable.mBuffers, myChannels, mCurrentFrame, numFrames, false);
-				currentFrame += numFramesRead;
+// TODO LMS commented out	mAFReader->read(mWavetable.mBuffers, myChannels, mCurrentFrame, numFrames, false);
+			    currentFrame += numFramesRead;
 			}
 		} else {
 			unsigned bytesToClear = numFramesRemaining * sizeof(sample);
@@ -204,9 +206,9 @@ void JSoundFile::readBufferFromFile(unsigned numFrames) {
 //	int * intBufferPtr;
 //	sample normFactor = 1.0 / (float) (32768 << 16);
 //	
-//	for (unsigned i = 0; i < mNumChannels; i++) {
-//		sampleBufferPtr = mWavetable.monoBuffer(i) + start;
-//		intBufferPtr = mConvBuffer[i];
+//	for (unsigned channelIndex = 0; channelIndex < mNumChannels; channelIndex++) {
+///		sampleBufferPtr = mWavetable.monoBuffer(channelIndex) + start;
+//		intBufferPtr = mConvBuffer[channelIndex];
 //		for (unsigned j = 0; j < num; j++) {
 //			*sampleBufferPtr++ = ((float) *intBufferPtr++) * normFactor;
 //		}
@@ -217,8 +219,10 @@ void JSoundFile::readBufferFromFile(unsigned numFrames) {
 
 unsigned JSoundFile::seekTo(int position, SeekPosition whence) throw(CException) {
 	int whenceInt;
-	if (this->isCached())
+	if (this->isCached()) {
+		mCurrentFrame = position;
 		return mCurrentFrame;
+	}
 	switch (whence) {
 		case kPositionStart: 
 			whenceInt = position; 
@@ -234,7 +238,8 @@ unsigned JSoundFile::seekTo(int position, SeekPosition whence) throw(CException)
 			logMsg("Error: Invalid position seek flag. Used kPositionCurrent.");			
 			break;
 	}
-	mOutStream->setPosition(whenceInt);
+	if (mOutStream)
+		mOutStream->setPosition(whenceInt);
 	return mCurrentFrame;
 }
 
@@ -243,7 +248,8 @@ unsigned JSoundFile::seekTo(int position, SeekPosition whence) throw(CException)
 void JSoundFile::writeBuffer(Buffer &inputBuffer) throw(CException) {
 	unsigned numFrames = inputBuffer.mNumFrames;	
 											// JUCE write fcn
-	if (mAFWriter->write(inputBuffer.mBuffers, numFrames)) {
+//    if (mAFWriter->write(inputBuffer.mBuffers, numFrames)) {
+	if (1) {
 		mCurrentFrame += numFrames;	
 	} else {
 		logMsg (kLogError, "Sound file write error");

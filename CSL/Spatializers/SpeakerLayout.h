@@ -45,7 +45,7 @@ public:
 									/// Reads the speaker listing file according to the specification 
 	void readSpeakerFile(const char *filePath);
 
-									/// Returns a pointer to the defalut layout. If not default exists, it creates one.
+									/// Returns a pointer to the default layout. If no default exists, it creates one.
 	static SpeakerLayout *defaultSpeakerLayout();
 									/// Use it to set a layout as default. Clients (e.g. a Panner) can then make use of this layout.
 	static void setDefaultSpeakerLayout(SpeakerLayout *defaultLayout);
@@ -86,6 +86,13 @@ public:
 class StereoSpeakerLayout : public SpeakerLayout {
 public:
 	StereoSpeakerLayout();
+};
+
+/// "Headphone  Layout", where two phones are positioned 90¼ left, 90¼ right and no elevation (0¼). 
+
+class HeadphoneSpeakerLayout : public SpeakerLayout {
+public:
+	HeadphoneSpeakerLayout();
 };
 
 

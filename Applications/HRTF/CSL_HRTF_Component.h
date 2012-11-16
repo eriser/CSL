@@ -37,11 +37,11 @@ class CSLComponent;
 
 // Support classes
 
-/// CThread takes a CSL test function and runs it
+/// HThread takes a CSL test function and runs it
 
-class CThread : public Thread {
+class HThread : public Thread {
 public:								/// create with fcn ptr
-	CThread(ThreadFunc afcn) : Thread(T("CSL Thread")), fcn(afcn) { };
+	HThread(ThreadFunc afcn) : Thread(T("CSL Thread")), fcn(afcn) { };
 	void * (*fcn)(void *);			///< my function
 
 	void run() {					///< run the fcn
@@ -49,14 +49,14 @@ public:								/// create with fcn ptr
 	};
 };
 
-/// LThread loops a CThread
+/// LThread loops a HThread
 
 //class LThread : public Thread {
 //public:
-//	LThread(CThread * athr, CSLComponent * acomp)
+//	LThread(HThread * athr, CSLComponent * acomp)
 //			: Thread(T("CSL Thread")),
 //			  thr(athr), comp(acomp) { };
-//	CThread * thr;
+//	HThread * thr;
 //	CSLComponent * comp;
 //
 //	void run();
@@ -114,7 +114,7 @@ public:
 
 	AudioDeviceManager mAudioDeviceManager;		// JUCE audio
 	csl::Buffer outBuffer;						// main CSL buffer
-	CThread * playThread;						// test play thread
+	HThread * playThread;						// test play thread
 	float amplValue;							// amp scale
 	bool playing;								// state flag
 

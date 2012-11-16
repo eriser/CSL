@@ -93,18 +93,18 @@ HRTF::HRTF(char * filename, FFTWrapper & fft) {
 												// Load in HRIR file and convert it to HRTF buffers
 	for (unsigned i = 0; i < mNumFFTBlocks; i++) {
 		mInBuf.zeroBuffers();					// clear buffer (no zero-padding needed this way)
-		memcpy(mInBuf.mBuffers[0], 				// copy samples from file to buffer
+		memcpy(mInBuf.buffer(0), 				// copy samples from file to buffer
 				(hrirFile.mWavetable.monoBuffer(0)) + (i * framesPerBlock), 
 				(framesPerBlock * sizeof(sample)));
-		mOutBuf.mBuffers[0] = (SampleBuffer) mHrtfL[i];
+		mOutBuf.setBuffer(0, (SampleBuffer) mHrtfL[i]);
 
 		fft.nextBuffer(mInBuf, mOutBuf);		// execute Left FFT
 
 		mInBuf.zeroBuffers();
-		memcpy(mInBuf.mBuffers[0], 
+		memcpy(mInBuf.buffer(0), 
 				(hrirFile.mWavetable.monoBuffer(1)) + (i * framesPerBlock), 
 				(framesPerBlock * sizeof(sample)));
-		mOutBuf.mBuffers[0] = (SampleBuffer) mHrtfR[i];
+		mOutBuf.setBuffer(0, (SampleBuffer) mHrtfR[i]);
 
 		fft.nextBuffer(mInBuf, mOutBuf);		// execute Right FFT
 	}

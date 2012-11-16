@@ -39,6 +39,14 @@ void SpatialPanner::setSpeakerLayout(SpeakerLayout *aLayout) {
 // add a source and create a cache object
 
 void SpatialPanner::addSource(SpatialSource &soundSource) {
+//	unsigned which = mSources.size();
+//	for (unsigned i = 0; i < which; i++) {
+//		if (mSources[i] == NULL) {
+//			which = i;
+//			break;
+//		}
+//	}
+//	mSources[which] = &soundSource;
 	mSources.push_back(&soundSource);
 	mCache.push_back(this->cache());
 }
@@ -46,11 +54,12 @@ void SpatialPanner::addSource(SpatialSource &soundSource) {
 // delete from the list, shifting if necessary
 
 void SpatialPanner::removeSource(SpatialSource &soundSource) {
-
-	unsigned count = mSources.size();
-	for (unsigned i = 0; i < count; i++) {
+//	unsigned count = mSources.size();
+	for (unsigned i = 0; i < mSources.size(); i++) {
 		if (mSources[i] == &soundSource) {
+//			mSources[i] = NULL;
 			mSources.erase(mSources.begin() + i);
+			mCache.erase(mCache.begin() + i);
 			break;
 		}
 	}
@@ -58,6 +67,10 @@ void SpatialPanner::removeSource(SpatialSource &soundSource) {
 	logMsg("Panner::removeSource");
 #endif
 	return;
+}
+
+void *SpatialPanner::cache() {
+	return (void *)new float; // Returns a pointer to an alocated cache data for its own use.
 }
 
 /** 

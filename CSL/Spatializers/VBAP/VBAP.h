@@ -19,20 +19,23 @@
 ///////////////// used for matrix.h //////////////////
 #define _NO_EXCEPTION
 
-#include "matrix.h"
+#include "matrix.hpp"
+//#include <cmatrix>
 
 #ifndef _NO_NAMESPACE
-  using namespace std;
-  using namespace math;
-#  define STD std
+	using namespace std;
+	using namespace math;
+//  using namespace techsoft;
+	#define STD std
 #else
-#  define STD
+	#define STD
 #endif
 
-#  define TRYBEGIN()
-#  define CATCHERROR()
+#define TRYBEGIN()
+#define CATCHERROR()
 
 typedef matrix<double> CSLMatrix;
+
 ///////////////// end used for matrix.h //////////////////
 
 namespace csl {
@@ -64,6 +67,7 @@ public:
 	virtual ~VBAP();
 	
 	/// Just as any Effect in CSL, this method gets called at runtime by the audio driver. Here is where the actual processing happens.
+	void nextBuffer(Buffer &outputBuffer) throw (CException);
 	void nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException);
 
 	void dump() { }; ///< Prints useful information about this VBAP instance.

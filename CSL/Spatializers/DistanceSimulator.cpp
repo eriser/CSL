@@ -65,7 +65,7 @@ void IntensityAttenuationCue::compute(float distance) {
 }
 	
 void IntensityAttenuationCue::process(Buffer &aBuffer) {
-	SampleBuffer outputPtr = aBuffer.mBuffers[0];
+	SampleBuffer outputPtr = aBuffer.buffer(0);
 	unsigned numFrames = aBuffer.mNumFrames;
 	
 	for (unsigned k = 0; k < numFrames; k++)	// k loops through sample buffers
@@ -97,7 +97,7 @@ void AirAbsorptionCue::compute(float distance) {
 
 
 void AirAbsorptionCue::process(Buffer &aBuffer) {
-	SampleBuffer outputPtr = aBuffer.mBuffers[0];
+	SampleBuffer outputPtr = aBuffer.buffer(0);
 	unsigned numFrames = aBuffer.mNumFrames;
 	
 	for (unsigned i = 0; i < numFrames; i++) {
@@ -138,7 +138,7 @@ void AirAbsorptionCue::process(Buffer &aBuffer) {
 //
 //
 //void AirAbsorptionCue::process(Buffer &aBuffer) {
-//	SampleBuffer outputPtr = aBuffer.mBuffers[0];
+//	SampleBuffer outputPtr = aBuffer.buffer(0];
 //	unsigned numFrames = aBuffer.mNumFrames;
 //	float *prevOuts = mPrevOutputs;
 //	float *prevIns = mPrevInputs;

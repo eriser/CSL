@@ -55,7 +55,7 @@ void LineSegment::nextBuffer(Buffer &outputBuffer, unsigned outBufNum, Port * sc
 	unsigned i;
 	float rate = (float) mFrameRate;
 	unsigned numFrames =  outputBuffer.mNumFrames;
-	SampleBuffer outPtr = outputBuffer.mBuffers[outBufNum];
+	SampleBuffer outPtr = outputBuffer.buffer(outBufNum);
 	float scaleValue = 1, offsetValue = 0;			// used for dynamic input;
 
 	/// calculate the increment for the linear interpolation, the number of frames to calculate
@@ -107,14 +107,14 @@ void LineSegment::nextBuffer(Buffer &outputBuffer, unsigned outBufNum, Port * sc
 		mCurrentFrame += numFrames;			///< if we're not already at the end increment my internal counters
 		mCurrentValue = currentValue;
 	}
-//	printf(" _%5.3f_ ", (currentValue * scaleValue) + offsetValue);
+//	fprintf(stderr, " _%5.3f_ ", (currentValue * scaleValue) + offsetValue);
 }
 
 /// Envelope class
 
 /// Lots of useful constructors
 
-Envelope ::	Envelope(LineMode mode, float t, float x1, float y1, float x2, float y2, float x3, float y3,
+Envelope::Envelope(LineMode mode, float t, float x1, float y1, float x2, float y2, float x3, float y3,
 						float x4, float y4, float x5, float y5, float x6, float y6) 
 				: UnitGenerator(), Scalable(1, 0), mDuration(t) {
 	mSegmentMap[x1] = new LineSegment(0, 0, y1, mode);
@@ -133,7 +133,7 @@ Envelope::Envelope(LineMode mode, float t, unsigned int size, float x[], float y
 	this->createSegments();
 }
 
-Envelope ::	Envelope(float t, float x1, float y1, float x2, float y2, float x3, float y3,
+Envelope::Envelope(float t, float x1, float y1, float x2, float y2, float x3, float y3,
 						float x4, float y4, float x5, float y5, float x6, float y6) 
 				: UnitGenerator(), Scalable(1.0f, 0.0f), mDuration(t) {
 	mSegmentMap[x1] = new LineSegment(0, 0, y1);
@@ -211,7 +211,7 @@ void Envelope::setMode(LineMode mode) {
 bool Envelope::isActive() {
 //	float diff = mCurrentMark - mDuration;
 //	if ((diff > 0.0) && (diff < 0.1))
-//		printf("   %5.4f = %s\n", diff, (mCurrentMark < mDuration) ? "true" : "false");
+//		fprintf(stderr, "   %5.4f = %s\n", diff, (mCurrentMark < mDuration) ? "true" : "false");
 	return (mCurrentMark < mDuration);
 }
 
@@ -290,7 +290,7 @@ void Envelope::trigger() {
 //
 
 void Envelope::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException) {
-	SampleBuffer outPtr = outputBuffer.mBuffers[outBufNum];
+	SampleBuffer outPtr = outputBuffer.buffer(outBufNum);
 	unsigned numFrames = outputBuffer.mNumFrames;
 	unsigned  i, tempFrames;
 	float rate = mFrameRate;
@@ -319,7 +319,7 @@ void Envelope::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CExce
 			if (endMark < x) {				// if the current next_buffer request all falls into one line segment
 				mSegments[i]->nextBuffer(outputBuffer, outBufNum, scalePort, offsetPort);
 				mCurrentMark +=  ((float) (numFrames + 1) / rate);
-			//	printf("E: %5.3f", *outPtr);
+			//	fprintf(stderr, "E: %5.3f", *outPtr);
 				return;
 			} else {						// if the current next_buffer request spans line segments, go
 											// to the end of this line segment and call nextBuffer again
@@ -335,13 +335,13 @@ void Envelope::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CExce
 
 										// update pointers
 				mCurrentMark += ((float) (numFrames + 1) / rate);
-				outputBuffer.mBuffers[outBufNum] += tempFrames;
+				outputBuffer.setBuffer(outBufNum, outputBuffer.buffer(outBufNum) + tempFrames);
 				outputBuffer.mNumFrames = numFrames - tempFrames;
 										// call myself recursively
 				this->nextBuffer(outputBuffer, outBufNum);
 										// clean up
 				mCurrentMark += ((float) (numFrames + 1) / rate);
-				outputBuffer.mBuffers[outBufNum] = outPtr;
+				outputBuffer.setBuffer(outBufNum, outPtr);
 				outputBuffer.mNumFrames = numFrames;
 				if (i == (mSize - 1)) {
 #ifdef CSL_DEBUG
@@ -567,7 +567,7 @@ void RandEnvelope::initSegment() {
 // To choose the next segment
 
 void RandEnvelope::nextSegment() { 
-	float next, randVal;
+	float next = 0.0f, randVal;
 	mSegment.setStart(mSegment.end());
 	if ( ! mWalk) {				// pick a new random and constrain it to the proper range
 		randVal = (fRandZ() * 2.0 - 1.0) * (mStep / mAmplitude);
@@ -592,7 +592,7 @@ void RandEnvelope::nextSegment() {
 // NextBuffer for rand
 
 void RandEnvelope::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException) {
-	SampleBuffer outPtr = outputBuffer.mBuffers[outBufNum];
+	SampleBuffer outPtr = outputBuffer.buffer(outBufNum);
 	unsigned numFrames = outputBuffer.mNumFrames;
 	unsigned endMark = mCurrentIndex + numFrames;
 	DECLARE_SCALABLE_CONTROLS;	// declare the scale/offset buffers and values
@@ -609,13 +609,13 @@ void RandEnvelope::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (C
 	mSegment.nextBuffer(outputBuffer, outBufNum, scalePort, offsetPort);
 					// update pointers
 	nextSegment();
-	outputBuffer.mBuffers[outBufNum] += tempFrames;
+	outputBuffer.setBuffer(outBufNum, outputBuffer.buffer(outBufNum) + tempFrames);
 	outputBuffer.mNumFrames = numFrames - tempFrames;
 					// call the next line segment (must be long enough to fill the buffer)
 	mSegment.nextBuffer(outputBuffer, outBufNum, scalePort, offsetPort);
 					// clean up
 	mCurrentIndex = numFrames - tempFrames;
-	outputBuffer.mBuffers[outBufNum] = outPtr;
+	outputBuffer.setBuffer(outBufNum, outPtr);
 	outputBuffer.mNumFrames = numFrames;
 	return;
 }

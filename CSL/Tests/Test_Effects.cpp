@@ -137,8 +137,8 @@ void testFilters() {
 void testDynamicFilters() {
 	float dur = 6.0f;								// seconds to play each test for
 	WhiteNoise white(1.0);							// noise
-	RandEnvelope center(3, 1000, 2000, 900);		// center/bw freq random walk
-	RandEnvelope bw(3, 100, 160, 80);				// (frq, amp, offset)
+	RandEnvelope center(3, 1000, 2000, 600);		// center/bw freq random walk
+	RandEnvelope bw(3, 100, 100, 40);				// (frq, amp, offset)
 	Butter butter(white, BW_BAND_PASS, center, bw);	// Butterworth BP filter
 	logMsg("playing dynamic Butterworth band-passed white noise...");
 //	butter.dump();
@@ -154,7 +154,7 @@ void testDynamicVoice() {
 	float dur = 6.0f;								// seconds to play each test for
 	RandEnvelope center(4, 1400, 1800, 600);		// center/bw freq random walk
 	RandEnvelope bw(5, 60, 160, 40);				// (frq, amp, offset, step)
-	SoundFile sfile(CGestalt::dataFolder(), "sns.aiff", true);		// open a speak'n'spell file
+	SoundFile sfile(CGestalt::dataFolder() + "sns.aiff");		// open a speak'n'spell file
 	Butter butter(sfile, BW_BAND_PASS, center, bw);	// Butterworth BP filter
 	logMsg("playing filtered snd file...");
 	sfile.trigger();
@@ -171,7 +171,7 @@ void testNDynamicFilters() {
 	for (int i = 0; i < num; i++) {			// loop to add a panning, LFO-controlled osc to the mix
 											// (frq, amp, offset, step)
 		RandEnvelope * center = new RandEnvelope(3, 1800, fRandM(2000, 4000), 200);
-		RandEnvelope * bw = new RandEnvelope(3, 200, 400, 100);
+		RandEnvelope * bw = new RandEnvelope(3, 200, 400, 40);
 		WhiteNoise * white = new WhiteNoise(1.0);		// noise
 		Butter * butter = new Butter(*white, BW_BAND_PASS, *center, *bw);
 		MulOp * mul = new MulOp(*butter, scale);
@@ -181,7 +181,7 @@ void testNDynamicFilters() {
 	}
 	logMsg("playing mix of %d Butterworth band-passed white noise layers...", num);
 //	srand(getpid());						// seed the rand generator -- UNIX SPECIFIC CODE HERE
-	runTest(mix);
+	runTest(mix, 8.0f);
 	logMsg("done.\n");
 	mix.deleteInputs();						// clean up
 }
@@ -288,7 +288,6 @@ void testBlockUpsizer() {
 	RandEnvelope f_env(3, 80, 200, 40);			// freq env = random walk
 	vox.setFrequency(f_env);					// set the carrier's frequency
 	vox.setScale(a_env);						// multiply index envelope by mod freq
-//	f_env.trigger();							// reset the envelopes to time 0
 	a_env.trigger();	
 	BlockResizer blocker(vox, 300);				// small buffer, not a divisor of CSL's block size
 	logMsg("playing random gliss in a block up-sizer...");
@@ -305,7 +304,6 @@ void testBlockDownsizer() {
 	RandEnvelope f_env(3, 80, 200, 40);			// freq env = random walk
 	vox.setFrequency(f_env);					// set the carrier's frequency
 	vox.setScale(a_env);						// multiply index envelope by mod freq
-//	f_env.trigger();							// reset the envelopes to time 0
 	a_env.trigger();	
 	BlockResizer blocker(vox, 1100);			// large buffer, not a multiple of CSL's block size
 	logMsg("playing random gliss in a block down-sizer...");
@@ -313,6 +311,168 @@ void testBlockDownsizer() {
 	logMsg("done.");
 }
 
+/// Test a Split/Join with a cross-over filter pair LPF to left, HPF to the right
+
+void testSplitJoin1() {
+	float dur = 6.0f;							// seconds to play each test for
+	SumOfSines sos1(16, 0.5);					// create a cmoplex sum-of-sines
+	sos1.createCache();							// make the cached wavetable
+	AR a_env(6, 1, 1);							// dur, att, rel
+	RandEnvelope f_env(3, 180, 300, 40);		// freq env = random walk
+	sos1.setFrequency(f_env);					// set the carrier's frequency
+	sos1.setScale(a_env);						// multiply index envelope by mod freq
+	a_env.trigger();							// start the envelope
+	Panner pan(sos1, 0);						// stereo panner, center
+
+	Splitter split(pan);						// stereo-to-mono splitter
+	Butter lpf(split, BW_LOW_PASS, 500.0, 333.3);	// lo-pass with Q of 3
+	Butter hpf(split, BW_HIGH_PASS, 500.0, 333.3);	// hi-pass with Q of 3
+	Joiner join(lpf, hpf);						// mono-to-stereo joiner
+
+	logMsg("playing splitter/joiner/mixer-based crossover filter...");
+	runTest(join, dur);							// run test
+	logMsg("done.");
+}
+
+/// Test a Split/Join with a cross-over filter pair LPF to left, HPF to the right
+/// mixer added in just for show
+
+void testSplitJoin2() {
+	float dur = 6.0f;							// seconds to play each test for
+	SumOfSines sos1(16, 0.5);					// create a cmoplex sum-of-sines
+	sos1.createCache();							// make the cached wavetable
+	AR a_env(6, 1, 1);							// dur, att, rel
+	RandEnvelope f_env(3, 180, 300, 40);		// freq env = random walk
+	sos1.setFrequency(f_env);					// set the carrier's frequency
+	sos1.setScale(a_env);						// multiply index envelope by mod freq
+	a_env.trigger();							// start the envelope
+	Panner pan(sos1, 0);						// stereo panner, center
+	Mixer mix1(2);								// stereo mixer, fixed
+	mix1.addInput(pan);
+
+	Splitter split(mix1);						// stereo-to-mono splitter
+	Butter lpf(split, BW_LOW_PASS, 500.0, 333.3);	// lo-pass with Q of 3
+	Butter hpf(split, BW_HIGH_PASS, 500.0, 333.3);	// hi-pass with Q of 3
+	Joiner join(lpf, hpf);						// mono-to-stereo joiner
+	Mixer mix2(2);								// stereo mixer, fixed
+	mix2.addInput(join);
+
+	logMsg("playing splitter/joiner/mixer-based crossover filter...");
+	runTest(mix2, dur);							// run test
+	logMsg("done.");
+}
+
+/// Test a fan-out + mixer using UnitGenerator's built-in fan-out
+
+void testFanMix1() {
+	float dur = 6.0f;							// seconds to play each test for
+	Osc vox;									// declare an oscillator
+	AR a_env(6, 1, 1);							// dur, att, rel
+	RandEnvelope f_env(3, 80, 200, 40);			// freq env = random walk
+	vox.setFrequency(f_env);					// set the carrier's frequency
+	a_env.setScale(0.5);						// multiply index envelope by mod freq
+	vox.setScale(a_env);						// multiply index envelope by mod freq
+	a_env.trigger();							// start the envelope
+	Panner pan(vox, fRand1());					// stereo panner
+
+	Mixer mix(2);								// stereo mixer, fixed
+	mix.addInput(pan);							// add panner twice
+	mix.addInput(pan);
+
+	logMsg("playing fan-out + mixer 1...");
+	runTest(mix, dur);							// run test
+	logMsg("done.");
+}
+
+/// Test a real fan-out + mixer
+
+void testFanMix2() {
+	float dur = 6.0f;							// seconds to play each test for
+	Osc vox;									// declare an oscillator
+	AR a_env(6, 1, 1);							// dur, att, rel
+	RandEnvelope f_env(3, 80, 200, 40);			// freq env = random walk
+	vox.setFrequency(f_env);					// set the carrier's frequency
+	a_env.setScale(0.5);						// multiply index envelope by mod freq
+	vox.setScale(a_env);						// multiply index envelope by mod freq
+	a_env.trigger();							// start the envelope
+	Panner pan(vox, fRand1());					// stereo panner
+
+	FanOut fan(pan, 2);							// send the panner to 2 mixer ins
+	Mixer mix(2);								// stereo mixer, fixed
+	mix.addInput(fan);							// add fan-out twice
+	mix.addInput(fan);
+
+	logMsg("playing fan-out + mixer 2...");
+	runTest(mix, dur);							// run test
+	logMsg("done.");
+}
+
+/// Function to create and answer a RandFreqEnv UGen patch
+/// this is in test envelopes
+
+UnitGenerator * createRandFreqEnvPatch(float dur);
+
+/// Mix a few sources, adding/dropping graphs
+
+void testDynamicMixer() {
+	float duration = 4.0f;					// seg dur
+	float pauset = 0.5f;					// pause dur
+	float scale = 8.0f;						// ampl scale
+	Mixer mix(2);							// stereo mixer
+	
+	UGenVector insts;
+	
+	for (unsigned i = 0; i < 4; i++) {		// loop to add 4 srcs to the mix
+		UnitGenerator * pan = createRandFreqEnvPatch(duration);
+		mix.addInput(*pan);
+		mix.scaleInput(*pan, scale);
+		insts.push_back(pan);
+	}
+	logMsg("playing mix of 4 sweep layers...");
+//	srand(getpid());						// seed the rand generator -- UNIX SPECIFIC CODE HERE
+	runTest(mix, duration);
+	sleepSec(pauset);						// wait some
+
+	UGenVector * ins = mix.getInputs();
+	for (unsigned i = 0; i < 2; i++)		// remove 2 inputs
+		mix.removeInput(insts[i]);
+	logMsg("removed 2");
+	runTest(mix, duration);
+	sleepSec(pauset);						// wait some
+
+	for (unsigned i = 0; i < 4; i++) {		// add 4 more
+		UnitGenerator * pan = createRandFreqEnvPatch(duration);
+		mix.addInput(*pan);
+		mix.scaleInput(*pan, scale);
+	}
+	logMsg("added 4");
+	runTest(mix, duration);
+	sleepSec(pauset);						// wait some
+
+	ins = mix.getInputs();
+	for (unsigned i = 2; i < 5; i++)		// remove 3
+		mix.removeInput((*ins)[i]);
+	logMsg("removed 3");
+	runTest(mix, duration);
+	sleepSec(pauset);						// wait some
+
+	for (unsigned i = 0; i < 2; i++) {		// add 2 more
+		mix.addInput(insts[i]);
+		mix.scaleInput(*insts[i], scale);
+	}
+	logMsg("added 2");
+	runTest(mix, duration);
+	sleepSec(pauset);						// wait some
+
+	ins = mix.getInputs();
+	for (unsigned i = 0; i < 6; i++)		// remove all but one
+		mix.removeInput((*ins)[i]);
+	logMsg("removed all but one");
+	runTest(mix, duration);
+
+	logMsg("done.\n");
+	mix.deleteInputs();						// clean up
+}
 
 // Simple sample-average filter class - an example of a custom UnitGenerator definition
 // This implements nextBuffer() with its own DSP routine: a scaled past-sample averager (lo-pass filter)
@@ -323,7 +483,7 @@ public:											// created with an input UGen &scale coeff
 	~SAFliter() { };
 													// nextBuffer() gets input and operates on it
 	void nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-		unsigned numFrames = outputBuffer.mNumFrames;			// get buffer length
+		unsigned numFrames = outputBuffer.mNumFrames;				// get buffer length
 		csl::SampleBuffer out = outputBuffer.monoBuffer(outBufNum);	// get ptr to output channel
 		
 		Effect::pullInput(numFrames);				// get my input buffer
@@ -343,7 +503,7 @@ protected:											// class' data members
 // test it
 
 void testSAFilter() {
-	SoundFile sfile(CGestalt::dataFolder(), "sns.aiff", true);	// open a speak'n'spell file
+	SoundFile sfile(CGestalt::dataFolder() + "sns.aiff");	// open a speak'n'spell file
 	
 	SAFliter averager(sfile);							// s-a filter
 	logMsg("playing filtered snd file...");
@@ -378,7 +538,12 @@ testStruct effTestList[] = {
 	"Many dynamic filters",	testNDynamicFilters, "Many dynamic filtered-noise instruments",
 	"Reverb",				testReverb,			"Show mono reverb on impulses",
 	"Stereo-verb",			testStereoverb,		"Listen to the stereo reverb",
-	"Multi-tap",			testMultiTap,		"Play a multi-tap delay line",
+	"Multi-tap delay",		testMultiTap,		"Play a multi-tap delay line",
+	"Split/Join filter",	testSplitJoin1,		"Play a splitter/joiner cross-over filter",
+	"Split/Join/Mix filter", testSplitJoin2,	"Play a splitter/joiner/mixer cross-over filter",
+	"FanOut + Mixer 1",		testFanMix1,		"Play a sound through fan-out + mixer",
+	"FanOut + Mixer 2",		testFanMix2,		"Play a sound through fan-out + mixer",
+	"Dynamic Mixer",		testDynamicMixer,	"Mix adding/dropping sources",
 	"Block up-sizer",		testBlockUpsizer,	"Test the block resizer on up-sizing",
 	"Block down-sizer",		testBlockDownsizer,	"Test the block resizer on down-sizing",
 	"Sample-avg filter",	testSAFilter,		"Demo in-line sample-average-filter class",

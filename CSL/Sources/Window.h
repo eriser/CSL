@@ -36,7 +36,7 @@ public:				// Constructors:
 
 	void setSize(unsigned windowSize);	///< Set the number of samples the window spans.
 	void setGain(float gain);				///< Set the gain to which the window should be normalized.
-	SampleBuffer window() { return mWindowBuffer.mBuffers[0]; }; ///< Returns a pointer to the window data.
+	SampleBuffer window() { return mWindowBuffer.buffer(0); }; ///< Returns a pointer to the window data.
 
 	void nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException);
 	void dump();		///< Print some info about the window.
@@ -58,6 +58,19 @@ public:
 	RectangularWindow(unsigned windowSize) : Window(windowSize) { }
 	RectangularWindow(unsigned windowSize, float gain) : Window(windowSize, gain) { }
 	~RectangularWindow() { }
+	
+protected:
+	void fillWindow();
+};
+
+/// TriangularWindow:A triangularWindow window.
+
+class TriangularWindow : public Window {
+public:
+	TriangularWindow() : Window() { }
+	TriangularWindow(unsigned windowSize) : Window(windowSize) { }
+	TriangularWindow(unsigned windowSize, float gain) : Window(windowSize, gain) { }
+	~TriangularWindow() { }
 	
 protected:
 	void fillWindow();

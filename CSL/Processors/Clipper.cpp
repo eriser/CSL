@@ -25,7 +25,7 @@ void Clipper::dump() {
 void Clipper::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException) {
 
 	float tempSample;
-	sample * outp = outputBuffer.mBuffers[outBufNum];
+	sample * outp = outputBuffer.buffer(outBufNum);
 	unsigned numFrames = outputBuffer.mNumFrames;
 
 	pullInput(outputBuffer);

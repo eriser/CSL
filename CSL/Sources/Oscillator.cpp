@@ -4,7 +4,7 @@
 //
 
 #include "Oscillator.h"
-#include "SHARC.h"
+//#include "SHARC.h"
 #include <math.h>
 
 using namespace csl;
@@ -65,13 +65,23 @@ WavetableOscillator::WavetableOscillator(Buffer & wave) : Oscillator() {
 	setWaveform(wave);	
 }
 
+///< Destructor
+
+WavetableOscillator::~WavetableOscillator() {
+	mWavetable.freeBuffers();
+}
+
 // Plug in a waveform from a buffer or a simple sample array
 
-void WavetableOscillator::setWaveform(Buffer & wave) {
-	mWavetable.freeBuffers();
+void WavetableOscillator::setWaveform(Buffer & wave, bool freBufs) {
+	if (freBufs)
+		mWavetable.freeBuffers();
 	mWavetable.mNumChannels = wave.mNumChannels;
 	mWavetable.mNumFrames = wave.mNumFrames;
-	mWavetable.mBuffers[0] = wave.mBuffers[0];
+	if (mWavetable.buffers() == NULL)
+		mWavetable.setBuffers(new SampleBuffer[mNumChannels]);
+	for (unsigned i = 0; i < mWavetable.mNumChannels; i++)
+		mWavetable.setBuffer(i, wave.buffer(i));
 	mWavetable.mMonoBufferByteSize = wave.mMonoBufferByteSize;
 	mWavetable.mIsPopulated = wave.mIsPopulated;
 	mWavetable.mAreBuffersZero = wave.mAreBuffersZero;
@@ -82,7 +92,7 @@ void WavetableOscillator::setWaveform(Buffer & wave) {
 //void WavetableOscillator::setWaveform(SampleBuffer samps, unsigned size) {
 //	mWavetable.freeBuffers();
 //	mWavetable.setSize(1, size);
-//	mWavetable.mBuffers[0] = samps;
+//	mWavetable.setBuffer(0, samps);
 //	mWavetable.mMonoBufferByteSize = size * sizeof(sample);
 //	mWavetable.mIsPopulated = true;
 //	mWavetable.mAreBuffersZero = false;
@@ -109,7 +119,7 @@ void WavetableOscillator::fillSine() {
 		}
 	}
 	mWavetable.setSize(1, DEFAULT_WTABLE_SIZE);
-	mWavetable.mBuffers[0] = sSineTable->monoBuffer(0);		// point to the shared sine waveform
+	mWavetable.setBuffer(0, sSineTable->monoBuffer(0));		// point to the shared sine waveform
 	mWavetable.mAreBuffersAllocated = true;					// fib a bit
 	mWavetable.mDidIAllocateBuffers = false;
 }
@@ -134,7 +144,7 @@ void WavetableOscillator::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) 
 		return;
 	LOAD_PHASED_CONTROLS;									// load the freqC from the constant or dynamic value
 	LOAD_SCALABLE_CONTROLS;									// load the scaleC and offsetC from the constant or dynamic value
-	int index;
+	unsigned int index;
 	sample samp1, samp2;
 	float fraction;
 	switch (mInterpolate) {
@@ -144,7 +154,7 @@ void WavetableOscillator::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) 
 				phase -= tableLength;
 			while (phase < 0)					// wrap-around phase
 				phase += tableLength;
-			index = (int) floorf(phase);					// truncate phase to an integer
+			index = (unsigned int) floorf(phase);					// truncate phase to an integer
 			samp1 = waveform[index];						//// WAVE TABLE ACCESS ////
 			*buffer++ = (samp1 * scaleValue) + offsetValue;	// get and scale the table item (truncating look-up)
 			phase += (freqValue * rateRecip);
@@ -154,7 +164,7 @@ void WavetableOscillator::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) 
 		break;
 	case kLinear:
 		for (unsigned i = 0; i < numFrames; i++) {			// sample loop
-			index = (int) floorf(phase);
+			index = (unsigned int) floorf(phase);
 			fraction = phase - (float) index;
 			samp1 = waveform[index];						// get sample
 			if (index < (tableLength - 1))
@@ -225,7 +235,7 @@ void Sine::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CExcepti
 	LOAD_PHASED_CONTROLS;									// load the freqC from the constant or dynamic value
 	LOAD_SCALABLE_CONTROLS;									// load the scaleC and offsetC from the constant or dynamic value
 
-//	printf(" :%d: %5.3f", numFrames, scaleValue);
+//	fprintf(stderr, " :%d: %5.3f", numFrames, scaleValue);
 	for (unsigned i = 0; i < numFrames; i++) {					// sample loop
 		*buffer++ = (sinf(phase) * scaleValue) + offsetValue;	// compute and store (scaled and offset) sine value
 		phase += (freqValue * rateRecip);						// increment phase
@@ -259,7 +269,7 @@ void FSine::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CExcept
 	LOAD_PHASED_CONTROLS;									// load the freqC from the constant or dynamic value
 	LOAD_SCALABLE_CONTROLS;									// load the scaleC and offsetC from the constant or dynamic value
 
-//	printf(" :%d: %5.3f", numFrames, scaleValue);
+//	fprintf(stderr, " :%d: %5.3f", numFrames, scaleValue);
 	for (unsigned i = 0; i < numFrames; i++) {					// sample loop
 		*buffer++ = (sinf(phase) * scaleValue) + offsetValue;	// compute and store (scaled and offset) sine value
 		phase += (freqValue * rateRecip);						// increment phase
@@ -420,12 +430,13 @@ SumOfSines::SumOfSines(PartialDescriptionMode format, unsigned partialCount, ...
 }
 
 // given a SHARC spectrum
+#include "SHARC.h"
 
 SumOfSines::SumOfSines(SHARCSpectrum & spect) {
 	Partial * harm;	
 	for (unsigned i = 0; i < spect._num_partials; i++) {
 		harm = spect._partials[i];
-//		printf("\t%g  @ %.5f @ %.5f\n", harm->number, harm->amplitude, harm->phase);
+//		fprintf(stderr, "\t%g  @ %.5f @ %.5f\n", harm->number, harm->amplitude, harm->phase);
 		this->addPartial(harm->number, harm->amplitude, harm->phase);
 	}
 	this->createCache();							// make the cached wavetable
@@ -437,7 +448,7 @@ SumOfSines::SumOfSines(unsigned numHarms, float noise) {
 	for (unsigned i = 0; i < numHarms; i++) {
 		float ampl = fRandV(noise) / (float) (i + 2);
 		float phas = fRandV(CSL_PI);
-//		printf("\t%d  @ %.5f @ %.5f\n", i, ampl, phas);
+//		fprintf(stderr, "\t%d  @ %.5f @ %.5f\n", i, ampl, phas);
 		this->addPartial(i, ampl, phas);
 	}
 	this->createCache();							// make the cached wavetable
@@ -517,7 +528,7 @@ void SumOfSines::nextWaveInto(SampleBuffer dest, unsigned count, bool oneHz) {
 		phase = p->phase;
 		t_incr = incr * p->number;
 		ampl = p->amplitude;
-//		printf("\t\tp%d = i %g : a %g : p %g\n", i, t_incr, ampl, phase);
+//		fprintf(stderr, "\t\tp%d = i %g : a %g : p %g\n", i, t_incr, ampl, phase);
 		if (oneHz) {
 			for (unsigned j = 0; j < numFrames; j++) {	// sample loop
 				*out_ptr++ += (sinf(phase) * ampl);
@@ -529,7 +540,7 @@ void SumOfSines::nextWaveInto(SampleBuffer dest, unsigned count, bool oneHz) {
 				phase += (t_incr * freqValue);
 				UPDATE_PHASED_CONTROLS;					// update the dynamic frequency
 				UPDATE_SCALABLE_CONTROLS;				// update the dynamic scale/offset
-//				if (j == 1) printf("\t\t\t%g : %g : %g\n", freqValue, scaleValue, offsetValue);
+//				if (j == 1) fprintf(stderr, "\t\t\t%g : %g : %g\n", freqValue, scaleValue, offsetValue);
 			}
 		}
 		if ( ! oneHz) {
@@ -550,6 +561,6 @@ void SumOfSines::dump() {
 	unsigned siz = mPartials.size();
 	logMsg("a SumOfSines: %d partials", siz);
 	for (unsigned i = 0; i < siz; i++)
-		printf("\tP: %g, %g, %g\n", mPartials[i]->number, mPartials[i]->amplitude, mPartials[i]->phase); 
+		fprintf(stderr, "\tP: %g, %g, %g\n", mPartials[i]->number, mPartials[i]->amplitude, mPartials[i]->phase); 
 	Scalable::dump();
 }

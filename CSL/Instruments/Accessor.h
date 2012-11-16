@@ -22,7 +22,8 @@ namespace csl  {
 class Accessor {
 public:
 						/// Convenient constructor
-	Accessor(string na, unsigned sel, unsigned typ) : mName(na), mSelector(sel), mType(typ) { };
+	Accessor(string na, unsigned sel, unsigned typ) 
+		: mName(na), mSelector(sel), mType(typ) { };
 	
 						// public members
 	string mName;			///< name

@@ -131,7 +131,8 @@ inline float FAllpass::process(float input) {
 }
 
 ///
-// Stereoverb is a simple wrapper around 2 freeverbs with splitter/joiners for handling stereo inputs
+// Stereoverb is a simple wrapper around 2 freeverbs with splitter/joiners 
+// for handling stereo inputs - note the overrides of isActive() and numchannels()
 ///
 
 class Stereoverb : public Effect {
@@ -145,6 +146,8 @@ public:
 	void setWetLevel(float level);
 	void setDryLevel(float level);
 	void setWidth(float width);
+	bool isActive();
+	unsigned numChannels() { return 2; };		///< I'm stereo
 
 	void nextBuffer(Buffer &outputBuffer) throw (CException);
 

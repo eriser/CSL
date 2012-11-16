@@ -381,11 +381,14 @@ COORD_TYPE CPoint::distance2(CPoint & Q) {     // squared distance (more efficie
 // Polar operations -- answer the magnitude and angle of a point
 
 COORD_TYPE CPoint::theta() {
-	if (x == 0.0)
-		if (y >= 0.0)
+    if (x == 0.0) {
+	    if (y >= 0.0) {
 			return CSL_PI * 0.5;
-		else
+	    }
+	    else {
 			return CSL_PI * 1.5;
+	    }
+    }
 	COORD_TYPE tan = atanf(y / x);
 	if (x < 0)
 		return (tan + CSL_PI);

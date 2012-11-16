@@ -119,8 +119,10 @@ done:
 
 void testMonoFilePlayer() {
 //	SoundFile sfile(CGestalt::dataFolder(), "Piano_A5_mf_mono.aiff");	// open a piano note file
-	SoundFile sfile(CGestalt::dataFolder(), "MKG1a1b.aiff");
+	SoundFile sfile(CGestalt::dataFolder() + "MKG1a1b.aiff");
 //	SoundFile sfile(CGestalt::dataFolder(), "Piano_A5_mf.caf");			// play a piano note
+//	SoundFile sfile(CGestalt::dataFolder(), "splash_mono.aiff");
+
 	sfile.dump();														// print snd file info
 
 //	float * left = sfile.mWavetable.monoBuffer(0);						// dump the first few samples
@@ -135,7 +137,7 @@ void testMonoFilePlayer() {
 }
 
 void testStereoFilePlayer() {
-	SoundFile sfile(CGestalt::dataFolder(), "piano-tones.aiff");		// load a piano note
+	SoundFile sfile(CGestalt::dataFolder() + "piano-tones.aiff");		// load a piano note
 	sfile.dump();														// print snd file info
 
 //	float * left = sfile.mSampleBuffer.monoBuffer(0);					// dump the first few samples
@@ -168,7 +170,7 @@ void testMP3FilePlayer() {
 /// Test the sound file player with rate shift
 
 void testSoundFileTranspose() {
-	SoundFile * sfile = new SoundFile(CGestalt::dataFolder(), "whistle_mono.aiff", true);
+	SoundFile * sfile = new SoundFile(CGestalt::dataFolder() + "whistle_mono.aiff");
 	sfile->dump();							// print snd file info
 	Panner pan(*sfile, 0.0);				// a panner
 	logMsg("playing sound file...");
@@ -287,7 +289,7 @@ void testSndFileInstrument() {
 // Add a sound file to the given UGenVector and Mixer, add a panner on it to the panner UGenVector
 
 void addSndtoBank(char * nam, UGenVector &snds, UGenVector &pans, Mixer &mix) {
-	SoundFile * sfile = new SoundFile(CGestalt::dataFolder(), nam, true);
+	SoundFile * sfile = new SoundFile(CGestalt::dataFolder() + nam);
 	snds.push_back(sfile);						// add strings to the vector of strings
 	Panner * pan = new Panner(*sfile);			// create stereo panners on the strings
 	pans.push_back(pan);						// add panners to the vector
@@ -314,8 +316,8 @@ void testSndFileBank() {
 	theIO->setRoot(reverb);					// send mix to IO
 	logMsg("playing sound file forest...");
 	
-	while(1) {								// loop for string arpeggio phrases
-		int numN = iRandM(3, 6);			// pick # notes to play
+	while (1) {								// loop for snd files
+		int numN = iRandM(3, 8);			// pick # notes to play
 		int which = iRandM(0, 4);			// pick which snd
 		int base = which * numSounds / 4;
 											// pick start point
@@ -326,15 +328,13 @@ void testSndFileBank() {
 
 		logMsg("n: %d  s: %d  fr: %d  \tdu: %d", numN, which, startp, dur);
 											// note loop
-		for (int i = 0; i < numN; i++) {	// loop to create string gliss
-											// set freq to MIDI pitch
+		for (int i = 0; i < numN; i++) {	// loop to create snd file "stutter"
 			snd = ((SoundFile *)snds[which + numN]);
 			snd->setStart(startp);
 			snd->setStop(startp + dur);
-											// set pan
+											// set pan to rand
 			((Panner *)pans[which + numN])->setPosition(fRand1());
-											// trigger
-			snd->trigger();
+			snd->trigger();					// trigger
 			if (sleepSec(dela))				// sleep
 				goto done;					// exit if sleep was interrupted
 		}
@@ -355,10 +355,10 @@ void testGrainCloud() {
 	GrainCloud cloud;						// grain cloud
 	GrainPlayer player(& cloud);			// grain player
 											// open and read in a file for granulation
-	SoundFile sndFile(CGestalt::dataFolder(), "MKG1a1b.aiff");
+	SoundFile sndFile(CGestalt::dataFolder() + "MKG1a1b.aiff");
 	sndFile.dump();
 
-	cloud.mSamples = sndFile.mWavetable.mBuffers[0];
+	cloud.mSamples = sndFile.mWavetable.buffer(0);
 	cloud.numSamples = sndFile.duration();
 	cloud.mRateBase = 1.0f;					// set the grain cloud parameters
 	cloud.mRateRange = 0.8f;

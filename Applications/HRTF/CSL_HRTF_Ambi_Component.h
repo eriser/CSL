@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  27 Aug 2009 3:11:01 pm
+  Creation date:  28 Feb 2010 8:49:58 pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,8 +19,8 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_CSLCOMPONENT_CSLHRTFAMBICOMPONENT_C2B36255__
-#define __JUCER_HEADER_CSLCOMPONENT_CSLHRTFAMBICOMPONENT_C2B36255__
+#ifndef __JUCER_HEADER_CSLCOMPONENT_CSLHRTFAMBICOMPONENT_3340DB__
+#define __JUCER_HEADER_CSLCOMPONENT_CSLHRTFAMBICOMPONENT_3340DB__
 
 //[Headers]     -- You can add your own extra header files here --
 
@@ -37,11 +37,11 @@ class CSLComponent;
 
 // Support classes
 
-/// CThread takes a CSL test function and runs it
+/// HThread takes a CSL test function and runs it
 
-class CThread : public Thread {
+class HThread : public Thread {
 public:								/// create with fcn ptr
-	CThread(ThreadFunc afcn) : Thread(T("CSL Thread")), fcn(afcn) { };
+	HThread(ThreadFunc afcn) : Thread(T("CSL Thread")), fcn(afcn) { };
 	void * (*fcn)(void *);			///< my function
 
 	void run() {					///< run the fcn
@@ -101,7 +101,7 @@ public:
 
 	AudioDeviceManager mAudioDeviceManager;		// JUCE audio
 	csl::Buffer outBuffer;						// main CSL buffer
-	CThread * playThread;						// test play thread
+	HThread * playThread;						// test play thread
 	float amplValue;							// amp scale
 	bool playing;								// state flag
 
@@ -151,4 +151,4 @@ public:
 };
 
 
-#endif   // __JUCER_HEADER_CSLCOMPONENT_CSLHRTFAMBICOMPONENT_C2B36255__
+#endif   // __JUCER_HEADER_CSLCOMPONENT_CSLHRTFAMBICOMPONENT_3340DB__

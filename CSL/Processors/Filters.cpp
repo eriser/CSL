@@ -106,10 +106,11 @@ void Filter::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CExcep
 #ifdef CSL_DEBUG
 	logMsg("Filter nextBuffer");
 #endif	
-	SampleBuffer 	out = outputBuffer.monoBuffer(outBufNum);	// get ptr to output channel
+	SampleBuffer out = outputBuffer.monoBuffer(outBufNum);		// get ptr to output channel
 	unsigned numFrames = outputBuffer.mNumFrames;				// get buffer length
-	SampleBuffer 	prevOuts = mPrevOutputs->monoBuffer(0);
-	SampleBuffer 	prevIns = mPrevInputs->monoBuffer(0);	
+	SampleBuffer prevOuts = mPrevOutputs->monoBuffer(0);
+	SampleBuffer prevIns = mPrevInputs->monoBuffer(0);	
+	SampleBuffer inputPtr;
 
 	DECLARE_SCALABLE_CONTROLS;						// declare the scale/offset buffers and values
 	DECLARE_FILTER_CONTROLS;						// declare the freq/bw buffers and values
@@ -120,25 +121,31 @@ void Filter::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CExcep
 	if ((freqPort && ( ! freqPort->isFixed())) || (bwPort && ( ! bwPort->isFixed())))
 		isDynamic = true;
 
-	Effect::pullInput(numFrames);					// get some input
-	SampleBuffer inputPtr = mInputPtr;				// get a pointer to the input samples
+	if (! isInline) {
+		Effect::pullInput(numFrames);				// get some input
+		inputPtr = mInputPtr;						// get a pointer to the input samples
+	} else
+		inputPtr = out;
 
+	SampleBuffer prevOPtr = prevOuts;
+	SampleBuffer prevIPtr = prevIns;
+		
 	for (unsigned i = 0; i < numFrames; i++) {		// here's the canonical N-quad filter loop
 		if (isDynamic)
 			this->setupCoeffs();					// calculate new coefficients for next sample
-		prevOuts[0] = 0.f;
-		prevIns[0] = scaleValue * *inputPtr++ + offsetValue;	// get next input sample, scale & offset
+		*prevOPtr = 0.f;
+		*prevIPtr = scaleValue * *inputPtr++ + offsetValue;		// get next input sample, scale & offset
 		for (unsigned j = mBNum - 1; j > 0; j--) {
-			prevOuts[0] += mBCoeff[j] * prevIns[j];				// prevIns or prevOuts?
+			*prevOPtr += mBCoeff[j] * prevIns[j];				// prevIns or prevOuts?
 			prevIns[j] = prevIns[j-1];
 		}
-		prevOuts[0] += mBCoeff[0] * prevIns[0];
+		*prevOPtr += mBCoeff[0] * prevIns[0];
 		for (unsigned j = mANum - 1; j > 0; j--) {
-			prevOuts[0] += -mACoeff[j] * prevOuts[j];
+			*prevOPtr += -mACoeff[j] * prevOuts[j];
 			prevOuts[j] = prevOuts[j-1];
 		}
 													// put current output in the buffer and increment
-		*out++ = (prevOuts[0] * scaleValue) + offsetValue;	
+		*out++ = (*prevOPtr * scaleValue) + offsetValue;	
 
 		UPDATE_SCALABLE_CONTROLS;					// update the dynamic scale/offset
 	} 
@@ -164,16 +171,16 @@ void Filter::dump() {
 	Scalable::dump();
 	UnitGenerator::dump();
 	
-	printf("A coefficients ");
+	fprintf(stderr, "A coefficients ");
 	for (unsigned i=0;i<mANum;i++) {
-		printf("%.2f, ",mACoeff[i]);
+		fprintf(stderr, "%.2f, ",mACoeff[i]);
 	}
-	printf("\n");
-	printf("B coefficients ");
+	fprintf(stderr, "\n");
+	fprintf(stderr, "B coefficients ");
 	for (unsigned i=0;i<mBNum;i++) {
-		printf("%.2f, ",mBCoeff[i]);
+		fprintf(stderr, "%.2f, ",mBCoeff[i]);
 	}
-	printf("\n");
+	fprintf(stderr, "\n");
 }
 
 /// Butterworth IIR (2nd order recursive) filter.
@@ -410,7 +417,7 @@ void Moog::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CExcepti
 #endif	
 	sample* out = outputBuffer.monoBuffer(outBufNum);	// get ptr to output channel
 	unsigned numFrames = outputBuffer.mNumFrames;		// get buffer length
-	SampleBuffer inputPtr = mInputs[CSL_INPUT]->mBuffer->mBuffers[outBufNum];
+	SampleBuffer inputPtr = mInputs[CSL_INPUT]->mBuffer->buffer(outBufNum);
 	DECLARE_SCALABLE_CONTROLS;							// declare the scale/offset buffers and values
 	DECLARE_FILTER_CONTROLS;							// declare the freq/bw buffers and values
 	LOAD_SCALABLE_CONTROLS;

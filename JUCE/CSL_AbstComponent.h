@@ -41,7 +41,7 @@
 ///
 
 #include "CSL_Includes.h"	// CSL core
-#include "juce.h"			// JUCE core
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "JCSL_Widgets.h"	// my custom widgets (VU meter and oscilloscope)
 
 // Support code: CSL player thread
@@ -56,7 +56,7 @@ typedef void* (*ThreadFunc)(void*);		// Thread function signature
 
 class GThread : public juce::Thread {
 public:
-	GThread(ThreadFunc afcn) : Thread(T("CSL Thread")), fcn(afcn) { };
+	GThread(ThreadFunc afcn) : Thread("CSL Thread"), fcn(afcn) { };
 	void * (*fcn)(void *);
 
 	void run() {
@@ -72,7 +72,7 @@ class CSLAbstComponent;						// forward decl
 class LThread : public juce::Thread {
 public:
 	LThread(GThread * athr, CSLAbstComponent * acomp, bool looper)
-			: Thread(T("CSL Thread")),
+			: Thread("CSL Thread"),
 			  thr(athr), comp(acomp), loop(looper) { };
 	GThread * thr;
 	CSLAbstComponent * comp;

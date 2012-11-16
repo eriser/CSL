@@ -387,6 +387,10 @@ void *VBAP::cache() {
 	return (void *)new VBAPSourceCache(); // Returns a pointer to an alocated cache data for its own use.
 }
 
+void VBAP::nextBuffer(Buffer &outputBuffer) throw(CException) {
+	this->nextBuffer(outputBuffer, 0);
+}
+
 void VBAP::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw(CException) {
 	unsigned numFrames = outputBuffer.mNumFrames;
 	unsigned numTriplets = mSpeakerSetLayout->mNumTriplets;
@@ -436,8 +440,8 @@ void VBAP::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw(CException
 			source->nextBuffer(mTempBuffer); // Ask the source to fill the buffer with the data to be processed
 
 			for (unsigned j = 0; j < mMode; j++) {
-				SampleBuffer out1 = outputBuffer.mBuffers[currentTriplet->nodes[j]]; // get a pointer to the buffer of the speaker that needds some gain applied.
-				SampleBuffer opp1 = mTempBuffer.mBuffers[0]; // this buffer has the data of the input source. Only mono for now. TO BE FIXED AND EXTENDED TO ... 
+				SampleBuffer out1 = outputBuffer.buffer(currentTriplet->nodes[j]); // get a pointer to the buffer of the speaker that needds some gain applied.
+				SampleBuffer opp1 = mTempBuffer.buffer(0); // this buffer has the data of the input source. Only mono for now. TO BE FIXED AND EXTENDED TO ... 
 				
 				for (unsigned k = 0; k < numFrames; k++) {	// k loops through sample buffers
 					*out1++ += tcache->gains[j] * (*opp1++);

@@ -242,14 +242,12 @@ void testConvolver3() {
 
 void test_Binaural_horiz() {
 				// Open a mono soundfile
-	SoundFile sndfile(CGestalt::dataFolder(), "splash_mono.aiff");
-	sndfile.openForRead();
+	SoundFile sndfile(CGestalt::dataFolder() + "splash_mono.aiff");
 	sndfile.dump();
-	sndfile.setToEnd();
 
 	char folder[CSL_NAME_LEN];						// create HRTF data location
 	strcpy(folder, CGestalt::dataFolder().c_str());	// CSL data folder location
-	strcat(folder, "IRCAM_HRTF/IRC_1047_R/");		// HRTF data location
+	strcat(folder, "IRCAM_HRTF/512_DB/HRTF_1047.dat");	// HRTF data location
 	HRTFDatabase::Reload(folder);					// Load the HRTF data
 	HRTFDatabase::Database()->dump();
 
@@ -278,10 +276,8 @@ void test_Binaural_horiz() {
 
 void test_Binaural_vertAxial() {
 				// Open a mono soundfile
-	SoundFile sndfile(CGestalt::dataFolder(), "guanno_mono.aiff");
-	sndfile.openForRead();
+	SoundFile sndfile(CGestalt::dataFolder() + "guanno_mono.aiff");
 	sndfile.dump();
-	sndfile.setToEnd();
 				// make the sound "Positionable"
 	SpatialSource source(sndfile);
 				// Create a spatializer.
@@ -306,7 +302,7 @@ void test_Binaural_vertAxial() {
 
 void test_Binaural_vertMedian() {
 				// Open a mono soundfile
-	SoundFile sndfile(CGestalt::dataFolder(), "triangle_mono.aiff");
+	SoundFile sndfile(CGestalt::dataFolder() + "triangle_mono.aiff");
 	sndfile.openForRead();
 	sndfile.dump();
 	sndfile.setToEnd();
@@ -333,11 +329,9 @@ void test_Binaural_vertMedian() {
 
 void test_Ambi_horiz() {
 				// Open a mono soundfile
-	SoundFile sndfile(CGestalt::dataFolder(), "splash_mono.aiff");
-	sndfile.openForRead();
+	SoundFile sndfile(CGestalt::dataFolder() + "triangle_mono.aiff");
 	sndfile.dump();
-	sndfile.setToEnd();
-				// make the sound "Positionable"
+					// make the sound "Positionable"
 	SpatialSource source(sndfile);
 				// Create a spatializer.
 	Spatializer panner(kAmbisonic);
@@ -345,7 +339,7 @@ void test_Ambi_horiz() {
 	panner.addSource(source);
 				// loop to play transpositions
 	logMsg("playing Ambisonic-spatialized rotating sound source (horizontal plane)...");
-	theIO->setRoot(panner);							// make some sound
+	theIO->setRoot(panner);					// make some sound
 	for (int i = 0; i < 30; i++) {
 		source.setPosition('s', (float) (i * 24), 0.0f, 2.0f);	// rotate in small steps
 		source.dump();
@@ -356,11 +350,39 @@ void test_Ambi_horiz() {
 	logMsg("done.");
 }
 
+/// Spatializer with simple panners & filters and/or reverb
+
+void test_SimpleP() {
+				// Open a mono soundfile
+	SoundFile sndfile(CGestalt::dataFolder() + "Piano_A5_mf_mono.aiff");
+	sndfile.dump();
+				// make the sound "Positionable"
+	SpatialSource source(sndfile);
+				// Create a "simple" spatializer.
+	Spatializer panner(kSimple);
+				// Add the sound source to it
+	panner.addSource(source);
+				// loop to play transpositions
+	logMsg("playing simply spatialized rotating sound source...");
+	Mixer mix(2);
+	mix.addInput(panner);
+	theIO->setRoot(mix);					// make some sound
+	for (int i = 0; i < 30; i++) {
+				// rotate in small steps, getting farther away
+		source.setPosition('s', (float) (i * 24.0f), 0.0f, (2.0f + (i * 0.15f)));
+		source.dump();
+		sndfile.trigger();
+		sleepSec(0.9);
+	}
+	theIO->clearRoot();
+	logMsg("done.");
+}
+
 /// Spatializer with VBAP
 
 void test_VBAP_horiz() {
 				// Open a mono soundfile
-	SoundFile sndfile(CGestalt::dataFolder(), "triangle_mono.aiff");
+	SoundFile sndfile(CGestalt::dataFolder() + "triangle_mono.aiff");
 	sndfile.openForRead();
 	sndfile.dump();
 	sndfile.setToEnd();
@@ -427,6 +449,7 @@ testStruct panTestList[] = {
 	"HRTF median circles",	test_Binaural_vertMedian,"Play a HRTF-panner with median circles",
 #endif
 	"Ambisonics",			test_Ambi_horiz,		"Test the Ambisonic-based spatial panner",
+	"Simple",				test_SimpleP,			"Test the simple spatial panner",
 	"VBAP",					test_VBAP_horiz,		"Test the VBAP-based spatial panner",
 NULL,						NULL,			NULL
 };

@@ -113,8 +113,8 @@ protected:
 	float mACoeff[FILTER_MAX_COEFFICIENTS];			///< array of denominator coeffs
 	unsigned mBNum;									///< number of coeffs in b
 	unsigned mANum;									///< number of coeffs in a
-	Buffer *	mPrevInputs;						///< arrays of past input and output samples
-	Buffer * 	mPrevOutputs;
+	Buffer * mPrevInputs;							///< arrays of past input and output samples
+	Buffer * mPrevOutputs;
 	float mFrame;									///< to keep hold of sample rate for calculating coeffs
 };
 

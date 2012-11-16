@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  27 Aug 2009 3:11:01 pm
+  Creation date:  28 Feb 2010 8:49:58 pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -39,7 +39,9 @@ Label* gCPULabel;						// CPU usage field
 AudioDeviceManager * gAudioDeviceManager;
 SoundFile * gSndfile = 0;				// snd file
 CSLComponent * gComp = 0;				// the component
-bool gMethod = false;					// hrtf/ambi switch
+int gMethod = 0;						// hrtf/ambi/simple switch
+unsigned argCnt;						// globals for argc/v
+char **argVals;
 
 //#define WRITE_TO_FILE					// write 20 sec of snd to a file for testing
 #ifdef WRITE_TO_FILE
@@ -78,6 +80,8 @@ void playNextSound(SpatialSource & source, int * napTime) {
 			fRandB(gElev, gComp->eRandSlider->getValue()),
 			fRandB(gDist, gComp->dRandSlider->getValue()));
 	source.dump();						// print the position
+	
+	gSndfile->trigger();				// start the file playing
 
 	char msg[10];						// print the CPU usage
 	float usg = (float) gAudioDeviceManager->getCpuUsage();
@@ -95,30 +99,43 @@ void playNextSound(SpatialSource & source, int * napTime) {
 void * hrtf_player(void *) {
 	int napTime;			// time to sleep
 	PannerType panMode = kAutomatic;
-	if (gMethod)
+	switch (gMethod) {
+	case 0:
 		panMode = kBinaural;
-	else
+		break;
+	case 1:
 		panMode = kAmbisonic;
+		break;
+	case 2:
+		panMode = kSimple;
+	}
 							// make the sound file "Positionable"
 	SpatialSource * source = new SpatialSource(*gSndfile);
 							// Create a spatializer.
-	Spatializer * panner = new Spatializer(kBinaural);
+	Spatializer * panner = new Spatializer(panMode);
 							// Add the sound source to it
 	panner->addSource(*source);
 							// pass the CSL graph to the IO to make some sound
 	theIO->setRoot(*panner);
-								// loop to play transpositions
-	if (gMethod)
+							// loop to play transpositions
+	switch (gMethod) {
+	case 0:
 		logMsg("Playing HRTF-spatialized rotating samples");
-	else
+		break;
+	case 1:
 		logMsg("Playing Ambisonic-spatialized rotating samples");
-	while (gComp->playing) {
-							// update the sample position form the GUI
-		playNextSound(*source, &napTime);
-							// start the file playing
-		gSndfile->trigger();
-		sleepMsec(napTime);	// sleep a bit (interruptable)
+		break;
+	case 2:
+		logMsg("Playing simple-spatialized rotating samples");
 	}
+							// loop
+	while (gComp->playing) {
+							// update the sample position from the GUI
+		playNextSound(*source, &napTime);
+		if (sleepMsec(napTime))	// sleep a bit (interruptable)
+			goto ddone;
+	}
+ddone:
 	gComp->playing = false;
 	theIO->clearRoot();		// turn off sound
 	logMsg("Player stopped.");
@@ -413,6 +430,7 @@ CSLComponent::CSLComponent ()
     methodCombo->setTextWhenNoChoicesAvailable (T("(no choices)"));
     methodCombo->addItem (T("HRTF"), 1);
     methodCombo->addItem (T("Ambisonics"), 2);
+    methodCombo->addItem (T("Simple"), 3);
     methodCombo->addListener (this);
 
     addAndMakeVisible (label14 = new Label (T("new label"),
@@ -444,15 +462,15 @@ CSLComponent::CSLComponent ()
 		mAudioDeviceManager.addAudioCallback(this);
 									// get the audio device
 	AudioIODevice* audioIO = mAudioDeviceManager.getCurrentAudioDevice();
-									// reset the HW frame rate & block size to the CSL definition											
-	AudioDeviceManager::AudioDeviceSetup setup;		
+									// reset the HW frame rate & block size to the CSL definition
+	AudioDeviceManager::AudioDeviceSetup setup;
 	mAudioDeviceManager.getAudioDeviceSetup(setup);
 	setup.bufferSize = CGestalt::blockSize();
 	setup.sampleRate = CGestalt::frameRate();
 	mAudioDeviceManager.setAudioDeviceSetup(setup,true);
 									// set up CSL IO
-	theIO = new csl::IO(CGestalt::frameRate(), CGestalt::blockSize(), -1, -1, 
-					CGestalt::numInChannels(), CGestalt::numOutChannels());
+	theIO = new csl::IO(CGestalt::frameRate(), CGestalt::blockSize(), -1, -1,
+					0 /* CGestalt::numInChannels() */, CGestalt::numOutChannels());
 	theIO->start();
 
 	gCPULabel = cpuLabel;
@@ -679,7 +697,6 @@ void CSLComponent::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 			gSndfile = 0;
 		}									// open the sound file
 		gSndfile = new SoundFile(filename);
-		gSndfile->openForRead();
 		gSndfile->dump();
 		if (gSndfile->channels() > 1)		// make certain it's mono
 			gSndfile->mergeToMono();
@@ -764,13 +781,18 @@ void CSLComponent::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
     {
         //[UserComboBoxCode_methodCombo] -- add your combo box handling code here..
 
-		gMethod = !gMethod;
-		if (gMethod) {					// toggle these on for HRTF, off for Ambisonics
+		gMethod = methodCombo->getSelectedItemIndex();
+		headCombo->setEnabled(false);
+		dataFolder->setEnabled(false);
+		switch (gMethod) {					// toggle these on for HRTF, off for Ambisonics
+		case 0:
 			headCombo->setEnabled(true);
 			dataFolder->setEnabled(true);
-		} else {
-			headCombo->setEnabled(false);
-			dataFolder->setEnabled(false);
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
 		}
 		if (playing) {
 			this->stopStart();
@@ -821,41 +843,41 @@ void CSLComponent::sliderValueChanged (Slider* sliderThatWasMoved)
 
         //[/UserSliderCode_dPosSlider]
     }
-    else if (sliderThatWasMoved == aSpeedSlider)
-    {
-        //[UserSliderCode_aSpeedSlider] -- add your slider handling code here..
-        //[/UserSliderCode_aSpeedSlider]
-    }
-    else if (sliderThatWasMoved == eSpeedSlider)
-    {
-        //[UserSliderCode_eSpeedSlider] -- add your slider handling code here..
-        //[/UserSliderCode_eSpeedSlider]
-    }
-    else if (sliderThatWasMoved == dSpeedSlider)
-    {
-        //[UserSliderCode_dSpeedSlider] -- add your slider handling code here..
-        //[/UserSliderCode_dSpeedSlider]
-    }
-    else if (sliderThatWasMoved == aRandSlider)
-    {
-        //[UserSliderCode_aRandSlider] -- add your slider handling code here..
-        //[/UserSliderCode_aRandSlider]
-    }
-    else if (sliderThatWasMoved == eRandSlider)
-    {
-        //[UserSliderCode_eRandSlider] -- add your slider handling code here..
-        //[/UserSliderCode_eRandSlider]
-    }
-    else if (sliderThatWasMoved == dRandSlider)
-    {
-        //[UserSliderCode_dRandSlider] -- add your slider handling code here..
-        //[/UserSliderCode_dRandSlider]
-    }
-    else if (sliderThatWasMoved == durSlider)
-    {
-        //[UserSliderCode_durSlider] -- add your slider handling code here..
-        //[/UserSliderCode_durSlider]
-    }
+//    else if (sliderThatWasMoved == aSpeedSlider)
+//    {
+//        //[UserSliderCode_aSpeedSlider] -- add your slider handling code here..
+//        //[/UserSliderCode_aSpeedSlider]
+//    }
+//    else if (sliderThatWasMoved == eSpeedSlider)
+//    {
+//        //[UserSliderCode_eSpeedSlider] -- add your slider handling code here..
+//        //[/UserSliderCode_eSpeedSlider]
+//    }
+//    else if (sliderThatWasMoved == dSpeedSlider)
+//    {
+//        //[UserSliderCode_dSpeedSlider] -- add your slider handling code here..
+//        //[/UserSliderCode_dSpeedSlider]
+//    }
+//    else if (sliderThatWasMoved == aRandSlider)
+//    {
+//        //[UserSliderCode_aRandSlider] -- add your slider handling code here..
+//        //[/UserSliderCode_aRandSlider]
+//    }
+//    else if (sliderThatWasMoved == eRandSlider)
+//    {
+//        //[UserSliderCode_eRandSlider] -- add your slider handling code here..
+//        //[/UserSliderCode_eRandSlider]
+//    }
+//    else if (sliderThatWasMoved == dRandSlider)
+//    {
+//        //[UserSliderCode_dRandSlider] -- add your slider handling code here..
+//        //[/UserSliderCode_dRandSlider]
+//    }
+//    else if (sliderThatWasMoved == durSlider)
+//    {
+//        //[UserSliderCode_durSlider] -- add your slider handling code here..
+//        //[/UserSliderCode_durSlider]
+//    }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
@@ -925,7 +947,7 @@ void CSLComponent::stopStart () {
 		gDist = gComp->dPosSlider->getValue();
 		playing = true;							// set play flag
 		CGestalt::clearStopNow();				// clear stop flag
-		playThread = new CThread(hrtf_player);	// thread to call the hrtf_player
+		playThread = new HThread(hrtf_player);	// thread to call the hrtf_player
 		playThread->startThread();				// start player thread
 		playButton->setButtonText (T("Stop"));
 #ifdef WRITE_TO_FILE							// set up output cache for file
@@ -1121,7 +1143,8 @@ BEGIN_JUCER_METADATA
               caret="1" popupmenu="1"/>
   <COMBOBOX name="new combo box" id="2edac6c6c214dbb" memberName="methodCombo"
             virtualName="" explicitFocusOrder="0" pos="24 88 110 24" editable="0"
-            layout="33" items="HRTF&#10;Ambisonics" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
+            layout="33" items="HRTF&#10;Ambisonics&#10;Simple" textWhenNonSelected=""
+            textWhenNoItems="(no choices)"/>
   <LABEL name="new label" id="911ef9906ff0896a" memberName="label14" virtualName=""
          explicitFocusOrder="0" pos="32 64 72 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Spatializer" editableSingleClick="0"

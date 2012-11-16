@@ -38,13 +38,13 @@ SpeakerLayout *SpeakerLayout::defaultSpeakerLayout() {
 /// as default, and then forget about that; Panners will know to use such layout.
 /// @note As a suggestion, set the default layout before creating any Panners. Otherwise they'll have to rebuild their data.
 
-void SpeakerLayout::setDefaultSpeakerLayout(SpeakerLayout *defalutLayout) {
+void SpeakerLayout::setDefaultSpeakerLayout(SpeakerLayout *defaultLayout) {
 						// prevent a null speaker layout.
 	if (sDefaultSpeakerLayout == 0)
 		sDefaultSpeakerLayout = SpeakerLayout::defaultSpeakerLayout();
 	
 						// Make a "Hard-copy" of the layout. Client can then free their memory. 
-	*sDefaultSpeakerLayout = *defalutLayout; // copy the layout to the new one.
+	*sDefaultSpeakerLayout = *defaultLayout; // copy the layout to the new one.
 	
 						// Notify clients that the layout has changed, so they update accordingly.
 	sDefaultSpeakerLayout->changed((void *)sDefaultSpeakerLayout);
@@ -87,9 +87,9 @@ void SpeakerLayout::readSpeakerFile(const char *filePath){
 		char lineBuffer[1024]; // a space for reading lines of text into - arbitrary maximum length of 1023 characters
 		char *file = (char *) malloc(strlen(filePath));
 		strcpy(file, filePath);
-		char *cartesian = "CARTESIAN";
-		char *degrees = "SPHERICAL-DEGREES";
-		char *normal = "WITH-NORMAL";
+		const char *cartesian = "CARTESIAN";
+		const char *degrees = "SPHERICAL-DEGREES";
+		const char *normal = "WITH-NORMAL";
 		bool isCartesian = false;
 		bool isDegrees = false;
 		bool withNormal = false;
@@ -297,7 +297,9 @@ void Speaker::dump() {
 StereoSpeakerLayout::StereoSpeakerLayout() : SpeakerLayout() {
 		addSpeaker(-30);
 		addSpeaker(30);
-
 }
 
-
+HeadphoneSpeakerLayout::HeadphoneSpeakerLayout() : SpeakerLayout() {
+		addSpeaker(-90);
+		addSpeaker(90);
+}

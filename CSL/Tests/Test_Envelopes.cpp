@@ -188,8 +188,6 @@ UnitGenerator * createRandFreqEnvPatch(float dur) {
 	vox->setFrequency(*f_env);					// set the carrier's frequency
 	vox->setScale(*a_env);						// multiply index envelope by mod freq
 	pan->setScale(0.04);						// scale softer
-//	f_env->trigger();							// reset the envelopes to time 0
-//	a_env->trigger();	
 	return (pan);								// return &pan
 }
 

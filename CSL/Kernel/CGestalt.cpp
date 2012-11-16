@@ -14,11 +14,8 @@
 using namespace csl;	// this is the namespace, dummy!
 using namespace std;
 
-#ifdef USE_JUCE
-#include <juce.h>
-using namespace juce;
-#else
-#include <sys/time.h>
+#ifdef WIN32
+#include <crtdbg.h>
 #endif
 
 ////// These are the system default values //////
@@ -33,6 +30,7 @@ static unsigned mFrameRate = CSL_mFrameRate;					///< default sample rate (teste
 static csl::sample mFramePeriod = 1.0f / (float) CSL_mFrameRate;		///< 1 / default sample rate
 static unsigned mBlockSize = CSL_mBlockSize;					///< typical block size (can be as small as 128 in real usage)
 static unsigned mMaxBufferFrames = CSL_mMaxBufferFrames;		///< max block size (set large for zooming scopes)
+static unsigned mSndFileFrames = CSL_mSndFileFrames;			///< max block size (set large for zooming scopes)
 static unsigned mMaxSndFileFrames = CSL_mMaxSndFileFrames;		///< max block size (set large for zooming scopes)
 
 static unsigned mVerbosity = CSL_mVerbosity;					///< very verbose
@@ -46,6 +44,7 @@ static bool mStopNow = false;									///< flag to stop threads and timers
 unsigned CGestalt::frameRate() { return mFrameRate; }
 csl::sample CGestalt::framePeriod() { return mFramePeriod; }
 unsigned CGestalt::maxBufferFrames() { return mMaxBufferFrames; }
+unsigned CGestalt::sndFileFrames() { return mSndFileFrames; }
 unsigned CGestalt::maxSndFileFrames() { return mMaxSndFileFrames; }
 unsigned CGestalt::blockSize() { return mBlockSize; }
 unsigned CGestalt::numInChannels() { return mNumInChannels; }
@@ -76,6 +75,7 @@ void CGestalt::setFrameRate(unsigned sampleRate) {
 
 void CGestalt::setMaxBufferFrames(unsigned numFrames) { mMaxBufferFrames = numFrames; }
 void CGestalt::setMaxSndFileFrames(unsigned numFrames) { mMaxSndFileFrames = numFrames; }
+void CGestalt::setSndFileFrames(unsigned numFrames) { mSndFileFrames = numFrames; }
 void CGestalt::setBlockSize(unsigned blockSize) { mBlockSize = blockSize; }
 void CGestalt::setNumInChannels(unsigned numChannels) { mNumInChannels = numChannels; }
 void CGestalt::setNumOutChannels(unsigned numChannels) { mNumOutChannels = numChannels; }
@@ -113,11 +113,12 @@ string CGestalt::initFileText(char key) {
 		return string("");
 	char init[CSL_LINE_LEN];
 	while ( ! feof(inp)) {						// loop through input file
-		fgets(init, CSL_LINE_LEN, inp);			// Read a line
+	    if(fgets(init, CSL_LINE_LEN, inp) != NULL) {		// Read a line
 		if (init[0] == key) {					// if the key matches, return it
 			char * str = &init[2];
 			return string((const char *)str);
 		}
+	    }
 	}
 	fclose(inp);
 	return string("");
@@ -181,7 +182,7 @@ string CGestalt::sndFileName() {
 				fclose(dFile);				// close it and increment counter
 				cnt++;
 			}
-		} while(dFile);						// as long as you find files
+		} while (dFile);						// as long as you find files
 	} else {
 		logMsg("Write to file \"%s\" filename not recognized", fsnam);
 	}
@@ -200,26 +201,60 @@ string CGestalt::sndFileName() {
 
 // macro to process messasges that start with \n
 
+#if 1
 #define SWALLOW_CR()
+#else
+#define SWALLOW_CR()					\
+	if (format[0] == '\n') {			\
+		fprintf(stderr, "\n");			\
+		format[0] = ' ';				\
+	}
+#endif
 
-//#define SWALLOW_CR()					\
-//	if (format[0] == '\n') {			\
-//		fprintf(stderr, "\n");			\
-//		format[0] = ' ';				\
-//	}
+//#ifdef WIN32
+//#define BE_SILENT			// logging turned off entirely (e.g., on iPhone)
+//#endif
 
-void csl::vlogMsg(char * format, va_list args) {
+#ifdef BE_SILENT
+
+void csl::logMsg(const char * format, ...) { }
+
+void csl::logMsg(LogLevel level, const char * format, ...) { }
+
+#else		// logging
+
+void csl::vlogMsg(const char * format, va_list args) {
 		vlogMsg(kLogInfo, format, args);
 }
 
-void csl::logMsg(char * format, ...) {
+void csl::logMsg(const char * format, ...) {
 	va_list args;
 	va_start(args, format);
 	vlogMsg(format, args);
 	va_end(args);
 }
 
-void csl::vlogMsg(LogLevel level, char * format, va_list args) {
+#ifdef FMAK_AR			// special printing for FMAK apps
+
+#include "FMAKComponent.h"
+using namespace fmak;
+class FMAKComponent;			// forward declaration of FMAK component class
+extern FMAKComponent * gComp;
+
+void csl::vlogMsg(LogLevel level, const char * format, va_list args) {
+	char message[CSL_LINE_LEN];
+	vsprintf(message, format, args);
+	sprintf(message + strlen(message), "\n");
+	gComp->printMsg(message);
+//	vfprintf(stderr, format, args);
+//	fprintf(stderr, "\n");
+//	fflush(stderr);
+//	usleep(1000);		// sleep so GUI can update
+}
+
+#else			// normal way
+
+void csl::vlogMsg(LogLevel level, const char * format, va_list args) {
 	switch(level) {
 		case kLogInfo:
 			if (mVerbosity < 3)		return;
@@ -234,7 +269,7 @@ void csl::vlogMsg(LogLevel level, char * format, va_list args) {
 		case kLogError:
 			if (mVerbosity < 1)		return;
 			SWALLOW_CR()
-			fprintf(stderr, "%s%s", CSL_LOG_PREFIX, " Error: ");		
+			fprintf(stderr, "%s%s", CSL_LOG_PREFIX, "Error: ");		
 			break;
 		case kLogFatal:
 			SWALLOW_CR()
@@ -248,7 +283,9 @@ void csl::vlogMsg(LogLevel level, char * format, va_list args) {
 		exit(1);
 }
 
-void csl::logMsg(LogLevel level, char * format, ...) {
+#endif
+
+void csl::logMsg(LogLevel level, const char * format, ...) {
 	va_list args;
 	va_start(args, format);
 	vlogMsg(level, format, args);
@@ -258,22 +295,25 @@ void csl::logMsg(LogLevel level, char * format, ...) {
 ///< Log the file & line #
 
 void csl::logLine() {
-
+	// ToDo
 }
 
 ///< log file/line as a URL
 
 void csl::logURL() {
-
+	// ToDo
 }
+
+#endif // BE_SILENT
 
 #endif // UNDEFINED_IN_CRAM
 
 // A couple of useful functions that didn't fit in anywhere else...
 
-#ifndef CSL_WINDOWS
-#include <unistd.h>		// for usleep
+#ifndef WIN32
+	#include <unistd.h>		// for usleep
 #else
+
 void usleep(int usec) {
 	unsigned msec = usec / 1000;
 	unsigned now = Time::getMillisecondCounter();
@@ -284,6 +324,7 @@ float log2f(float n) {
 }
 #endif
 
+//#ifndef WIN32
 ///
 /// Global Sleep functions that work for windows and mac/unix.
 /// Note the use of the global flag gStopNow, which interrupts timers.
@@ -354,6 +395,8 @@ float csl::fTimeNow() {
 	 return (float) tv.tv_sec + ((float) tv.tv_usec / 1000000.0f);
 #endif
 }
+
+//#endif
 
 //// Randoms
 
@@ -448,7 +491,7 @@ unsigned csl::freqToKey(float frequency) {
 void Model::attachObserver (Observer * o) {
 	mObservers.push_back(o);
 	mHasObservers = true;
-	mUpdateTime = fTimeNow();
+//	mUpdateTime = fTimeNow();
 	if (o->mPeriod != 0) {				// if the observer has an update period
 		mPeriod = o->mPeriod;
 	}
@@ -490,9 +533,9 @@ void Model::changed(void * argument) {
 #ifdef CSL_DEBUG
 	logMsg("Model::update %d", mObservers.size());
 #endif
-	float nowt = fTimeNow();
-	if (nowt > (mUpdateTime + mPeriod)) {
-			mUpdateTime = nowt;
+	//float nowt = fTimeNow();
+	//if (nowt > (mUpdateTime + mPeriod)) {
+			//mUpdateTime = nowt;
 		if (mHasObserverMap) {
 			int key = this->evaluate(argument);
 			ObserverVector obs = mObsMap[key];
@@ -502,5 +545,5 @@ void Model::changed(void * argument) {
 			for (pos = mObservers.begin(); pos != mObservers.end(); ++pos)
 				(* pos)->update(argument);
 		}
-	}
+	//}
 }

@@ -76,28 +76,27 @@ void InOut::setGain(unsigned index, float tvalue) {			///< set gain value at ind
 
 void InOut::nextBuffer(Buffer & outputBuffer) throw (CException) {
 	unsigned numFrames = outputBuffer.mNumFrames;
-	SampleBufferVector outBuffers = outputBuffer.mBuffers;
-	SampleBufferVector inBuffers;
+	Buffer *inputBuffer;
 
 	if (mIO) {						// either grab the mic input, or my effect in chain
 		mIO->getInput(outputBuffer.mNumFrames, outputBuffer.mNumChannels);
-		inBuffers = mIO->mInputBuffer.mBuffers;
+		inputBuffer = &(mIO->mInputBuffer);
 	} else {
 		Effect::pullInput(numFrames);
 		Port * tinPort = mInputs[CSL_INPUT];
-		inBuffers = tinPort->mBuffer->mBuffers;
+		inputBuffer = tinPort->mBuffer;
 	}
 
 	switch (mFlags) {
 		case kNoProc:
 			for (unsigned i = 0; i < mOutChans; i++)
-				memcpy(outBuffers[i], inBuffers[i % mInChans], outputBuffer.mMonoBufferByteSize);
+				memcpy(outputBuffer.buffer(i), inputBuffer->buffer(i % mInChans), outputBuffer.mMonoBufferByteSize);
 			break;
 		case kLR2M:
 			for (unsigned i = 0; i < mOutChans; i++) {
-				sample * outPtr =  outBuffers[i];
-				sample * inPtr1 =  inBuffers[i % mInChans];
-				sample * inPtr2 =  inBuffers[(i+1) % mInChans];
+				sample * outPtr =  outputBuffer.buffer(i);
+				sample * inPtr1 =  inputBuffer->buffer(i % mInChans);
+				sample * inPtr2 =  inputBuffer->buffer((i+1) % mInChans);
 				for (unsigned j = 0; j < numFrames; j++)
 					*outPtr++ = (*inPtr1++ * mGains[i]) + (*inPtr2++* mGains[i]);
 			}
@@ -107,10 +106,10 @@ void InOut::nextBuffer(Buffer & outputBuffer) throw (CException) {
 			break;
 		case kN2M:					// N-to-M-channel mapping with bufferCMap
 			for (unsigned i = 0; i < mOutChans; i++) {
-				sample * outPtr =  outBuffers[i];
+				sample * outPtr =  outputBuffer.buffer(i);
 				int which = mMap.mChannelMap[i];
 				if (which < 0) continue;
-				sample * inPtr1 =  inBuffers[which];
+				sample * inPtr1 =  inputBuffer->buffer(which);
 				for (unsigned j = 0; j < numFrames; j++)
 					*outPtr++ = *inPtr1++ * mGains[i];
 			}

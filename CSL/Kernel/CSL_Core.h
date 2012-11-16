@@ -71,7 +71,7 @@ typedef enum {
 	typedef int BufferContentType;
 #endif
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 ///
 /// Buffer -- the multi-channel sample buffer class (passed around between generators and IO guys).
 ///
@@ -81,17 +81,19 @@ typedef enum {
 /// Note that this is a "record" class in that its members are all public and it has no accessor
 /// functions or complicated methods. It does handle sample buffer allocation and has
 /// Boolean members to determine what its pointer state is.
+/// Note also that Buffers are *not* thread-safe; they hand out pointers (sample*)
+/// that are assumed to be volatile.
 ///
 
 class Buffer {
 public:									/// Constructors: default is mono and default-size
 	Buffer(unsigned numChannels = 1, unsigned numFrames = CSL_mBlockSize); 
-	~Buffer();							///< Destructor
+	virtual ~Buffer();					///< Destructor
 	
 									// public data members	
-	SampleBufferVector mBuffers;		///< the storage vector -- pointers to (SampleBuffer) buffers
 	unsigned mNumChannels;				///< num channels in buffer (num mono buffers)
-	unsigned mNumFrames;				///< num frames in each buffer
+	unsigned mNumFrames;				///< num frames used in each buffer
+	unsigned mNumAlloc;					///< num frames in each buffer
 	unsigned mMonoBufferByteSize;		///< size of each buffer in bytes
 	unsigned mSequence;					///< sequential serial number
 	Timestamp mTimestamp;				///< the buffer's most recent timestamp
@@ -109,17 +111,35 @@ public:									/// Constructors: default is mono and default-size
 	void checkBuffers() throw (MemoryError);	///< allocate if not already there
 	void allocateBuffers() throw (MemoryError);	///< fcn to malloc storage buffers
 	void freeBuffers();							///< fcn to free them
+	bool canStore(unsigned numFrames);			///< answer whether the recevei can store numFrames more frames
 
-	void zeroBuffers();						///< fill all data with 0
-	void fillWith(sample value);			///< fill data with the given value
-	void copyFrom(Buffer & src) throw (RunTimeError);			///< import data from the given buffer
+	void zeroBuffers();							///< fill all data with 0
+	void fillWith(sample value);				///< fill data with the given value
+												// import data from the given buffer
+	void copyFrom(Buffer & src) throw (RunTimeError);			
+	void copyHeaderFrom(Buffer & source) throw (RunTimeError);	///< copy the "header" fields of a buffer
 	void copySamplesFrom(Buffer & src) throw (RunTimeError);	///< import data from the given buffer
+	void copySamplesFromTo(Buffer & src, unsigned offset) throw (RunTimeError);	///< same with write offset
+	void copyOnlySamplesFrom(Buffer & src) throw (RunTimeError);///< import data from the given buffer
+	
+	csl::Status convertRate(int fromRate, int toRate);			///< convert the sample rate using libSampleRate
 
-											/// convenience accessor for sample buffers
-	SampleBuffer monoBuffer(unsigned bufNum) { return mBuffers[bufNum]; }
+											/// answer a samp ptr with offset
+	virtual SampleBuffer samplePtrFor(unsigned channel, unsigned offset);
+											/// answer a samp ptr tested for extent (offset + maxFrame)
+	virtual SampleBuffer samplePtrFor(unsigned channel, unsigned offset, unsigned maxFrame);
+	
+											/// convenience accessors for sample buffers
+	virtual SampleBuffer monoBuffer(unsigned bufNum) { return mBuffers[bufNum]; }
+	virtual SampleBuffer buffer(unsigned bufNum) { return mBuffers[bufNum]; }
+	virtual SampleBuffer * buffers() { return mBuffers; }
+											/// Set the buffer pointer (rare; used in joiners)
+	virtual void setBuffers(SampleBuffer * sPtr) { mBuffers = sPtr; };
+	virtual void setBuffer(unsigned bufNum, SampleBuffer sPtr) { mBuffers[bufNum] = sPtr; };
+	virtual void setBuffer(unsigned bufNum, unsigned offset, sample samp) { *((mBuffers[bufNum]) + offset) = samp; };
 
 /// Buffer Sample Processing (optional)
-/// One could also easily add Buffer operations, such as (Buffer + Buffer) or (Buffer * Buffer)
+/// One could also easily add Buffer operators, such as (Buffer + Buffer) or (Buffer * Buffer)
 
 #ifdef CSL_DSP_BUFFER						
 	float rms(unsigned chan);				///< get the root-mean-square of the samples
@@ -133,6 +153,10 @@ public:									/// Constructors: default is mono and default-size
 	unsigned int indexOfMin(unsigned chan, unsigned low, unsigned hi);	///< answer the index of the peak value
 	void autocorrelation(unsigned chan, SampleBuffer result);			///< autocorrelation into the given array
 #endif
+
+protected:
+	SampleBufferVector mBuffers;		///< the storage vector -- pointers to (SampleBuffer) buffers
+
 };
 
 ///
@@ -173,7 +197,7 @@ typedef enum {
 
 class RingBuffer; 	///< forward declaration
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 ///
 /// UnitGenerator -- the core of CSL; all unit generators inherit from this class.
 ///
@@ -195,7 +219,7 @@ public:
 										/// Constructors (UGens are mono by default)
 										/// defaults to mono and maxBlockSize if not specified.
 	UnitGenerator(unsigned rate = CGestalt::frameRate(), unsigned chans = 1);	
-	virtual ~UnitGenerator() { }		///< Destructor
+	virtual ~UnitGenerator();			///< Destructor
 
 										// accessing methods
 	unsigned frameRate() { return mFrameRate; };				///< get/set the receiver's frame rate
@@ -207,8 +231,9 @@ public:
 	BufferCopyPolicy copyPolicy() { return mCopyPolicy; };		///< get/set the receiver's buffer copy policy
 	void setCopyPolicy(BufferCopyPolicy ch) { mCopyPolicy = ch; }
 
-	string * name() { return mName; };							///< get/set the receiver's name string
-	void setName(string ch) { mName = &ch; }
+//	string name() { return mName; };							///< get/set the receiver's name string
+//	void setName(char * ch) { mName = string(ch); }
+//	void setName(string ch) { mName = ch; }
 
 									/// get a buffer of Frames -- this is the core CSL "pull" function;
 									/// the given buffer can be written into, and a changed() message is sent.
@@ -226,12 +251,17 @@ public:
 	void addOutput(UnitGenerator * ugen);
 	void removeOutput(UnitGenerator * ugen);
 	UGenVector outputs() { return mOutputs; };
+	virtual unsigned numOutputs() { return mNumOutputs; };
+									/// check for fan-out and copy previous buffer; return true if fanning out
+	bool checkFanOut(Buffer & outputBuffer) throw (CException);
+	void handleFanOut(Buffer & outputBuffer) throw (CException);
 
 									/// set/get the value (not allowed in the abstract, useful for static values)
 	virtual void setValue(sample theValue) { throw LogicError("can't set value of a generator"); };
 	virtual sample value() { throw LogicError("can't get value of a generator"); };
 
 	virtual void dump();			///< pretty-print the receiver
+	virtual void trigger() { };		///< trigger ignored here
 
 protected:				// My data members
 	unsigned mFrameRate;			///< the frame rate -- initialized to be the default by the constructor
@@ -239,14 +269,14 @@ protected:				// My data members
 	BufferCopyPolicy mCopyPolicy;	///< the policy I use if asked for more or fewer channels
 	UGenVector mOutputs;			///< the vector of my output UGens
 	unsigned mNumOutputs;			///< the number of outputs
-	RingBuffer * mOutputCache;		///< my past output ring buffer (only used in case of fan-out)
+	Buffer * mOutputCache;			///< my past output ring buffer (only used in case of fan-out)
 	unsigned mSequence;				///< the highest-seen buffer seq number
-	string * mName;					///< my name (used for editors)
+//	string mName;					///< my name (used for editors)
 									/// utility method to zero out an outputBuffer
 	void zeroBuffer(Buffer & outputBuffer, unsigned outBufNum);
 };
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 ///
 /// Port -- used to represent constant, control-rate or signal inputs and outputs in named maps;
 /// holds a UnitGenerator and its buffer, OR a single floating-point value (in which case the
@@ -262,7 +292,7 @@ public:
 	virtual ~Port();					///< Destructor
 
 										// public data members
-	UnitGenerator * mUGen;				///< my unit generator (pointer)
+	UnitGenerator * mUGen;				///< my unit generator (pointer or NULL)
 	Buffer * mBuffer;					///< the buffer used to hold my output
 	float mValue;						///< my value (in case I'm fixed [mUGen == NULL])
 	float *mValuePtr;					///< my value's address (const or buffer pointer)
@@ -271,12 +301,14 @@ public:
 
 	void checkBuffer() throw (LogicError);	///< check the port's buffer and allocate it if needed
 	inline float nextValue();				///< answer the next value (dynamic or constant)
-	inline void nextFrame(SampleBuffer where);
-	inline bool isReady();
+	inline void nextFrame(SampleBuffer where);	///< write the val to a buffer
+	inline bool isReady();				///< answer whether I'm ready to be read
 	void resetPtr();					///< reset the buffer pointer without re-pulling the input
 	virtual bool isActive();			///< answer whether I'm active
 	void dump();						///< pretty-print the receiver
-	bool isFixed() { return (mPtrIncrement == 0); };	///< am I fixed or dynamic
+	bool isFixed() { return (mPtrIncrement == 0); };			///< am I fixed or dynamic
+	virtual void trigger() { if (mUGen) mUGen->trigger(); };	///< trigger passed on here
+
 };
 
 // Answer the next value (dynamic or constant) as a fast inline function
@@ -290,7 +322,7 @@ inline sample Port::nextValue() {
 
 inline void Port::nextFrame(SampleBuffer where) {
 	for (unsigned i = 0; i < mBuffer->mNumChannels; i++)
-		*where++ = mBuffer->mBuffers[i][mValueIndex];
+		*where++ = mBuffer->buffer(i)[mValueIndex];
 	mValueIndex++;						// increment the counter (an unsigned, initially 0)
 }
 
@@ -300,7 +332,7 @@ inline bool Port::isReady() {
 	return (mValuePtr != 0);
 }
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 ///
 /// Controllable -- superclass of the mix-ins that add control or signal inputs.
 /// This holds onto a map of port objects that represent the inputs,
@@ -314,7 +346,7 @@ inline bool Port::isReady() {
 class Controllable {
 public:
 	Controllable() : mInputs() { };			///< Constructor takes no arguments
-	virtual ~Controllable() { };			///< Destructor (ought to remove the output links of the ports)
+	virtual ~Controllable();				///< Destructor (remove the output links of the ports)
 
 	Port * getPort(CSL_MAP_KEY name);
 protected:
@@ -332,7 +364,7 @@ protected:
 	virtual void dump();					///< pretty-print the receiver's input/controls map
 };
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 ///
 /// Scalable -- mix-in class with scale and offset control inputs (may be constants or generators).
 /// This uses the mInput map keys CSL_SCALE and CSL_OFFSET.
@@ -355,6 +387,9 @@ public:
 
 	void setOffset(UnitGenerator & offset);			///< set the receiver's offset member to a UGen or a float
 	void setOffset(float offset);
+	virtual void trigger();							///< trigger passed on here
+	void isScaled();								///< answer whether scale = 1 & offset = 0
+
 };
 
 /// Macros for all the Scalable UnitGenerators (note that these don't end with ";")
@@ -387,7 +422,12 @@ public:
 	if (offsetPort)											\
 		offsetValue = offsetPort->nextValue()
 
-/////////////////////////////////////////////////
+#define IS_UNSCALED											\
+	(scalePort->isFixed()) && (offsetPort->isFixed()) &&	\
+		(scaleValue == 1.0) && (offsetValue == 0.0)
+
+
+//-------------------------------------------------------------------------------------------------//
 ///
 /// Effect -- mix-in for classes that have unit generators as inputs (like filters).
 /// Note that this always uses a separate buffer for the input.
@@ -398,7 +438,7 @@ public:
 	Effect();									///< Constructors
 	Effect(UnitGenerator & input);				///< use the given input
 
-	bool isActive();
+	virtual bool isActive();					///< am I active?
 
 	void setInput(UnitGenerator & inp);			///< set the receiver's input generator
 //	UnitGenerator *input() { return mInputs[CSL_INPUT]->mUGen; }	// no getter for now
@@ -410,11 +450,12 @@ protected:
 												/// method to read the input value
 	void pullInput(Buffer & outputBuffer) throw (CException);
 	void pullInput(unsigned numFrames) throw (CException);
+	virtual void trigger();						///< trigger passed on here
 												/// get the input port
 	inline Port * inPort() { return mInputs[CSL_INPUT]; };
 };
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 ///
 /// Phased -- a mix-in for objects with phase accumulators (local float) and frequency controls (an input port).
 /// This puts an item named CSL_FREQUENCY in the Controllable parent mInputs map.
@@ -429,12 +470,12 @@ public:
 	~Phased();										///< Destructor
 
 													/// Setter accessors
-	void setFrequency(UnitGenerator & frequency);
-	void setFrequency(float frequency);
-	void setPhase(float phase) { mPhase = phase; };
+	void setFrequency(UnitGenerator & frequency);	///< set frequency
+	void setFrequency(float frequency);				///< set frequency
+	void setPhase(float phase) { mPhase = phase; };	///< set phase
 
 protected:
-	float mPhase;									///< the actual phase accumulator
+	sample mPhase;									///< the actual phase accumulator
 };
 
 /// Macros for all the Phased UnitGenerators  (note that these don't end with ";")
@@ -465,10 +506,11 @@ protected:
 	if (freqPort)											\
 		freqValue = freqPort->nextValue()
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 ///
 /// Writeable -- a mix-in for buffers and streams that one can write to
 ///
+
 class Writeable {
 public:								/// write to the receiver
 	virtual void writeBuffer(Buffer& inputBuffer) throw(CException);
@@ -495,7 +537,7 @@ typedef enum {
 	typedef int SeekPosition;
 #endif
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 ///
 /// Seekable -- a mix-in for positionable streams
 ///
@@ -506,12 +548,12 @@ public:
 	virtual ~Seekable() { /* ?? */ };
 
 	unsigned mCurrentFrame;					///< where I currently am in the buffer
-	double mActualFrame;					///< where I currently am in the buffer
+	double mActualFrame;					///< where I actually am in the buffer
 
 											/// general-purpose seek on a stream
 	virtual unsigned seekTo(int position, SeekPosition whence) throw(CException) = 0;
 	virtual void reset() throw(CException);	///< reset-to-zero
-	virtual unsigned duration() const = 0;	///< number of frames in the Seekable
+	virtual unsigned duration() = 0;		///< number of frames in the Seekable
 };
 
 ///
@@ -530,8 +572,8 @@ public:
 
 ///
 /// A fan-out generator for DSP graphs with loops
-/// This takes a single input, and provides mChannels outputs;
-/// it only calls its input every mChannels frames.
+/// This takes a single input, and provides mNumFanOuts outputs;
+/// it only calls its input every mNumFanOuts frames.
 /// This behavior is now standard on UnitGenerators, using their mOutputs UGenVector
 /// (see UnitGenerators::nextBuffer).
 ///
@@ -542,10 +584,11 @@ public:
 	~FanOut() { };
 
 	virtual void nextBuffer(Buffer & outputBuffer) throw(CException);
+	virtual void nextBuffer(Buffer & outputBuffer,  unsigned outBufNum) throw(CException);
 
 protected:
 	Buffer mBuffer;			///< my temp buffer
-	unsigned mOutputs;		///< the number of outputs
+	unsigned mNumFanOuts;	///< the number of outputs
 	unsigned mCurrent;		///< the current output
 };
 
@@ -555,10 +598,13 @@ protected:
 
 class Splitter : public FanOut {
 public:
-	Splitter(UnitGenerator & in, unsigned taps);	///< Constructor
+	Splitter(UnitGenerator & in);				///< Constructor
 	~Splitter() { };
 
-	void nextBuffer(Buffer & outputBuffer) throw(CException);
+	unsigned numChannels() { return 1; };		///< I'm mono
+												/// nextBuffer processes splitter channels
+	virtual void nextBuffer(Buffer & outputBuffer) throw(CException);
+	virtual void nextBuffer(Buffer & outputBuffer,  unsigned outBufNum) throw(CException);
 };
 
 ///
@@ -567,15 +613,21 @@ public:
 
 class Joiner : public Effect {
 public:										///< loop through my vector of inputs
-	Joiner() { };							///< Constructors
+	Joiner() : Effect() { mNumChannels = 0; };	///< Constructors
 	Joiner(UnitGenerator & in1, UnitGenerator & in2);
 	~Joiner() { };
-
-	void nextBuffer(Buffer & outputBuffer) throw(CException);
-	void addInput(UnitGenerator & in);		///< add the argument to vector of inputs
+												/// nextBuffer processes joiner channels
+	virtual void nextBuffer(Buffer & outputBuffer) throw(CException);
+	virtual void nextBuffer(Buffer & outputBuffer,  unsigned outBufNum) throw(CException);
+	void addInput(UnitGenerator & in);			///< add the argument to vector of inputs
+	bool isActive();
+	virtual void trigger();						///< trigger passed on here
+//	unsigned numChannels() { return mNumChannels; };
+//	inline Port * inPort() { return mInputs[CSL_INPUT]; };
+//	virtual unsigned numOutputs() { return mNumOutputs; };
 
 protected:
-	std::vector<UnitGenerator *>mInputs;	///< my vector of inputs
+//	UGenVector mInputs;						///< my vector of inputs
 };
 
 ///
@@ -604,8 +656,8 @@ public:
 					unsigned numChannels) throw (CException);
 };
 
-
-////////////////////// Support for the IO classes /////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
+///// Support for the IO classes
 
 #ifndef CSL_WINDOWS					// on "normal" platforms
 
@@ -628,7 +680,7 @@ int getSysTime(timeval *val, void * e);
 
 #endif								// Windows
 
-// IO Status flag
+/// IO Status flag
 
 #ifdef CSL_ENUMS
 typedef enum {
@@ -649,7 +701,7 @@ typedef enum {
 	typedef int IO_Status;
 #endif
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 ///
 /// IO -- the abstract I/O scheduling class; subclasses interface to specific I/O APIs.
 ///	An IO object has a graph (a ptr to a UGen), and it registers itself with some call-back API
@@ -713,7 +765,7 @@ protected:									/// initialize overridden in subclasses
 	virtual void initialize(unsigned sr, unsigned bs, int is, int os, unsigned ic, unsigned oc) { };
 };
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 ///
 /// IO Device class -- a holder for a sound interface with name, id, # IO channels, etc.
 ///

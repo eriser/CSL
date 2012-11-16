@@ -64,7 +64,7 @@ CASoundFile::CASoundFile(CFURLRef path)
 	mPath = string(theName);
 }
 
-CASoundFile::~CASoundFile() { }
+CASoundFile::~CASoundFile() { /* no-op */ }
 
 // Accessors
 
@@ -107,13 +107,13 @@ void CASoundFile::openForRead() throw (CException) {
 							  NULL);			// UInt32 *isWritable
 	if (err) { 
 		printf("\nCASoundFile::openForRead: AudioFileGetPropertyInfo Error = %x\nFile: \"%s\"\n\n", 
-				err, mPath.c_str()); 
+				(int) err, mPath.c_str()); 
 		return;
 	}
 	err = AudioFileGetProperty(mSoundID, kAudioFilePropertyAudioDataPacketCount, &propertySize, &fileSize);
 	if (err) { 
 		printf("\nCASoundFile::openForRead: AudioFileGetProperty Error = %x\nFile: \"%s\"\n\n", 
-				err, mPath.c_str()); 
+				(int) err, mPath.c_str()); 
 		return;
 	}
 	AudioStreamBasicDescription fileFormat;
@@ -121,7 +121,7 @@ void CASoundFile::openForRead() throw (CException) {
 	err = AudioFileGetProperty(mSoundID, kAudioFilePropertyDataFormat, &propertySize, &fileFormat);
 	if (err) { 
 		printf("\nCASoundFile::openForRead: AudioFileGetProperty2 Error = %x\nFile: \"%s\"\n\n", 
-				err, mPath.c_str()); 
+				(int) err, mPath.c_str()); 
 		return;
 	}
 //	logMsg("Format = 0x%x", fileFormat.mFormatID);
@@ -196,12 +196,12 @@ void CASoundFile::readBufferFromFile(unsigned numFrames) {
 	err = AudioFileReadPackets(mSoundID, false, &numBytes, NULL, currentFrame, &fileSize, soundBuffer);
 	if (err) { 
 		printf("\nCASoundFile::openForRead: AudioFileReadPackets Error = %x\nFile: \"%s\"\n\n", 
-				err, mPath.c_str()); 
+				(int) err, mPath.c_str()); 
 		return;
 	}
 	if (fileSize != numFrames) {
 		printf("\nCASoundFile::openForRead: read too few samples, %d instead of %d\n", 
-				fileSize, numFrames); 
+				(int) fileSize, numFrames); 
 	}
 															// now process the short buffer just read in
 	unsigned short * tBfr = (unsigned short *) soundBuffer;
@@ -211,7 +211,7 @@ void CASoundFile::readBufferFromFile(unsigned numFrames) {
 	short sVal;
 //	printf("\nCASoundFile::readBufferFromFile: %d ch %d bps\n\n", myChannels, mBytesPerSample); 
 	if (myChannels == 1) {									// copy mono data
-		sample * sampPtr = mWavetable.mBuffers[0];			// this code is lifted from JUCE (AiffAudioFormat.cpp)
+		sample * sampPtr = mWavetable.buffer(0];			// this code is lifted from JUCE (AiffAudioFormat.cpp)
 		if (mBytesPerSample == 2) {							// 16-bit samples
 			sample scale = 1.0f / 32867.0f;
 			for (unsigned j = 0; j < fileSize; j++) {		// copy/scale sample data

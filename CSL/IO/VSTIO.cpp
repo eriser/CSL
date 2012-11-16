@@ -122,13 +122,13 @@ void VSTIO::processReplacing (float ** inputs, float ** outputs, VstInt32 sample
 		mInputBuffer.checkBuffers();
 								// copy data to mInputBuffer for the in-out
 		for (unsigned i = 0; i < mNumOutChannels; i++)
-			memcpy(mInputBuffer.mBuffers[i], inputs[i], sampleFrames * sizeof(VstInt32));
+			memcpy(mInputBuffer.buffer(i), inputs[i], sampleFrames * sizeof(VstInt32));
 								// set up outbuf
 		mOutputBuffer.setSize(mNumOutChannels, sampleFrames);
 //		mOutputBuffer.checkBuffers();
 								// copy JUCE data ptrs
 		for (unsigned i = 0; i < mNumOutChannels; i++)
-			mOutputBuffer.mBuffers[i] = outputs[i];
+			mOutputBuffer.setBuffer(i, outputs[i]);
 		try {					// Tell the IO to call its graph
 			this->pullInput(mOutputBuffer);
 		} catch (csl::CException e) {

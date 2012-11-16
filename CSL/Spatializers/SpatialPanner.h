@@ -21,8 +21,7 @@ namespace csl {
 
 class SpatialPanner : public UnitGenerator, public Observer {
 public:
-										/// Constructor - Optionally, a SpeakerLayout can be specified, 
-										/// otherwise the default is used.
+										/// Constructor - a SpeakerLayout can be specified
 	SpatialPanner(SpeakerLayout *layout = SpeakerLayout::defaultSpeakerLayout());
 	virtual ~SpatialPanner();
 
@@ -32,25 +31,30 @@ public:
 
 	unsigned numSources() { return mSources.size(); }; 	///< number of active inputs.
 	
-	virtual void addSource(SpatialSource &s);			///< Add a sound souce to the list of inputs to be
+	virtual void addSource(SpatialSource &s);			///< Add a souce to the list of inputs to be
 														///  processed and create a cache object
 
 	virtual void removeSource(SpatialSource &s);		///< Remove a Sound Source. 
 
-	virtual void update(void *arg);		///< Called when the speaker layout changes, so panners update their data.
+	virtual void update(void *arg);		///< Called when the speaker layout changes
+
+	virtual void nextBuffer(Buffer & outputBuffer) throw (CException) = 0;
+	virtual void nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
+		throw LogicError("Asking for mono nextBuffer of a SpatialPanner");
+	}
 
 protected:
 										/// SpatialSource... refers to its input UGen, 
 										/// but with the knowledge of its position within a space.
-	vector <SpatialSource *> mSources;	///< Vector of pointers to the loudspeakers
+	UGenVector mSources;				///< Vector of pointers to the inputs
 	vector <void *> mCache;				///< Vector of pointers to the prior I/O data.
 
 	SpeakerLayout *mSpeakerLayout;		///< If null, it will use the default layout by calling 
 										///  SpeakerLayout::defaultSpeakerLayout();
 	Buffer mTempBuffer;					///< Buffer used to temporarily hold input source data.
 
-	virtual void *cache() = 0;					///< create the cache
-	virtual void speakerLayoutChanged() { };	///< Called by panner base class when the speaker layout changes.
+	virtual void *cache();						///< create the cache
+	virtual void speakerLayoutChanged() { };	///< Called when the speaker layout changes.
 }; 
 
 }

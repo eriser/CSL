@@ -39,6 +39,8 @@ Label* gCPULabel;
 AudioDeviceManager * gAudioDeviceManager;
 SoundFile * gSndfile = 0;
 CSLComponent * gComp = 0;
+unsigned argCnt;						// globals for argc/v
+char **argVals;
 
 //#define WRITE_TO_FILE					// write 20 sec of snd to a file for testing
 #ifdef WRITE_TO_FILE
@@ -73,10 +75,13 @@ void playNextSound(SpatialSource & source, int * napTime) {
 		gDirection = ! gDirection;
 
 	source.setPosition('s',				// update src position with the random values
-			fRand5(gAzim, gComp->aRandSlider->getValue()),
-			fRand5(gElev, gComp->eRandSlider->getValue()),
-			fRand5(gDist, gComp->dRandSlider->getValue()));
+			fRandB(gAzim, gComp->aRandSlider->getValue()),
+			fRandB(gElev, gComp->eRandSlider->getValue()),
+			fRandB(gDist, gComp->dRandSlider->getValue()));
 	source.dump();						// print the position
+
+	theIO->setRoot(*gSndfile);
+	gSndfile->trigger();				// start the file playing
 
 	char msg[10];						// print the CPU usage
 	float usg = (float) gAudioDeviceManager->getCpuUsage();
@@ -101,14 +106,13 @@ void * hrtf_player(void *) {
 	panner->addSource(*source);
 //	BlockResizer * blocker = new BlockResizer(*panner, HRTF_BLOCK_SIZE);
 							// pass the CSL graph to the IO to make some sound
-	theIO->setRoot(*panner);
+//	theIO->setRoot(*panner);
+	theIO->setRoot(*gSndfile);
 							// loop to play transpositions
 	logMsg("Playing HRTF-spatialized rotating samples\n");
 	while (gComp->playing) {
 							// update the sample position from the GUI
 		playNextSound(*source, &napTime);
-							// start the file playing
-		gSndfile->trigger();
 		sleepMsec(napTime);	// sleep a bit (interruptable)
 	}
 	gComp->playing = false;
@@ -865,7 +869,7 @@ void CSLComponent::audioDeviceIOCallback (const float** inputChannelData,
 	if (theIO->mGraph) {
 		outBuffer.setSize(totalNumOutputChannels, numSamples);
 		for (unsigned i = 0; i < totalNumOutputChannels; i++)
-			outBuffer.mBuffers[i] = outputChannelData[i];
+			outBuffer.setBuffer(i, outputChannelData[i]);
 
 		try {				// Tell the IO to call its graph
 			theIO->pullInput(outBuffer);
@@ -908,7 +912,7 @@ void CSLComponent::stopStart () {
 		gDist = gComp->dPosSlider->getValue();
 		playing = true;							// set play flag
 		CGestalt::clearStopNow();				// clear stop flag
-		playThread = new CThread(hrtf_player);	// thread to call the hrtf_player
+		playThread = new HThread(hrtf_player);	// thread to call the hrtf_player
 		playThread->startThread();				// start player thread
 		playButton->setButtonText (T("Stop"));
 #ifdef WRITE_TO_FILE							// set up output cache for file

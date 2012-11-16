@@ -9,9 +9,9 @@
 
 #include "SoundFile.h"
 
-#include <juce.h>
-#include "src/juce_appframework/audio/audio_file_formats/juce_AudioFormatReader.h"
-#include "src/juce_appframework/audio/audio_file_formats/juce_AudioFormatWriter.h"
+#include "../JuceLibraryCode/JuceHeader.h"
+#include "src/audio/audio_file_formats/juce_AudioFormatReader.h"
+#include "src/audio/audio_file_formats/juce_AudioFormatWriter.h"
 
 namespace csl {
 
@@ -22,14 +22,14 @@ namespace csl {
 class JSoundFile : public Abst_SoundFile {
 public:
 	JSoundFile(string path, int start = -1, int stop = -1);
-	JSoundFile(string folder, string path, int start = -1, int stop = -1);
+//	JSoundFile(string folder, string path, int start = -1, int stop = -1);
 	JSoundFile(JSoundFile & otherSndFile);			///< Copy constructor -- shares sample buffer
 	~JSoundFile();
 
 	unsigned duration() const;						///< number of frames in the sound file
 	SoundFileFormat format();						///< get format
-	
-	void openForRead() throw (CException);			///< open file and get stats
+													// open file and get stats
+	void openForRead(bool load = true) throw (CException);
 													/// Open a file for write. Default values are some common format.
 	void openForWrite(SoundFileFormat format = kSoundFileFormatAIFF, 
 					unsigned channels = 1, 

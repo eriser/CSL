@@ -6,6 +6,7 @@
 
 #ifdef USE_JUCE
 	#include "Test_Support.h"
+	#include "../JuceLibraryCode/JuceHeader.h"
 #else
 	#define USE_TEST_MAIN			// use the main() function in test_support.h
 	#include "Test_Support.cpp"		// include all of CSL core and the test support functions
@@ -13,7 +14,7 @@
 
 using namespace csl;
 
-extern AudioDeviceManager * gAudioDeviceManager;	// global JUCE audio device mgr
+extern juce::AudioDeviceManager * gAudioDeviceManager;	// global JUCE audio device mgr
 
 
 // dump io port-type & device names

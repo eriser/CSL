@@ -36,11 +36,11 @@
 /*==========================================================================*/
 
 FFTReal::FFTReal (const long length)
-:	_length (length)
-,	_nbr_bits (int (floor (logf (length) / logf (2) + 0.5f)))
-,	_bit_rev_lut (int (floor (logf (length) / logf (2) + 0.5f)))
+:	_bit_rev_lut (int (floor (logf (length) / logf (2) + 0.5f)))
 ,	_trigo_lut (int (floor (logf (length) / logf (2) + 0.5f)))
 ,	_sqrt2_2 (flt_t (sqrtf (2) * 0.5f))
+,	_length (length)
+,	_nbr_bits (int (floor (logf (length) / logf (2) + 0.5f)))
 {
 	assert ((1L << _nbr_bits) == length);
 

@@ -60,8 +60,8 @@ void KarplusString::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (
 	
 	sample samp, lastSample;
 	unsigned numFrames = outputBuffer.mNumFrames;	
-	sample *outPtr = outputBuffer.mBuffers[outBufNum]; // get the pointer to the output buffer to write into
-	sample *delayPtr = mDelayLine.mBuffers[0]; // get the pointer to the delay line storage
+	sample *outPtr = outputBuffer.buffer(outBufNum); // get the pointer to the output buffer to write into
+	sample *delayPtr = mDelayLine.buffer(0); // get the pointer to the delay line storage
 	if ( ! mEnergy)
 		return;
 	DECLARE_SCALABLE_CONTROLS;

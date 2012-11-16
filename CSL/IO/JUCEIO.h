@@ -7,7 +7,7 @@
 #define CSL_JUCEIO_H
 
 #include "CSL_Core.h"
-#include "juce.h"
+#include <juce.h>
 
 namespace csl {
 

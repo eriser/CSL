@@ -8,8 +8,17 @@
 #include "RingBuffer.h"	// UnitGenerator uses RingBuffers
 #include <string.h>		// for bzero / memset
 #include <stdlib.h>		// for malloc
-
+#include <math.h>
+#ifndef WIN32
+#include <samplerate.h>	// libsamplerate header file
+#endif
 using namespace csl;
+
+#ifdef WIN32
+
+#define rint(x)			((int)(x + 0.5f))
+
+#endif
 
 //
 // Basic buffer methods
@@ -18,16 +27,17 @@ using namespace csl;
 // Constructor with size args does not allocate
 
 Buffer::Buffer(unsigned numChannels, unsigned numFrames) :
-		mBuffers(0),
 		mNumChannels(0),
 		mNumFrames(0),
+		mNumAlloc(0),
 		mMonoBufferByteSize(0),
 		mSequence(0),
 		mAreBuffersAllocated(false),
 		mDidIAllocateBuffers(false),
 		mIsPopulated(false),
 		mAreBuffersZero(true),
-		mType(kSamples) {
+		mType(kSamples),
+		mBuffers(0) {
 	setSize(numChannels, numFrames);
 }
 
@@ -43,7 +53,7 @@ Buffer::~Buffer() {
 
 void Buffer::setSize(unsigned numChannels, unsigned numFrames) {
 	if (mAreBuffersAllocated && mDidIAllocateBuffers && (mNumChannels != numChannels) 
-				&& (mNumFrames < numFrames)) {
+				&& (mNumAlloc < numFrames)) {
 		freeBuffers();
 		mDidIAllocateBuffers = false;
 		mAreBuffersAllocated = false;
@@ -80,12 +90,21 @@ void Buffer::checkBuffers() throw (MemoryError) {
 
 // allocate the sample arrays
 
+//#define FVERBOSE_MALLOC			// define for verbose debugging of buffer alloc/free
+
 void Buffer::allocateBuffers() throw (MemoryError) {
+#ifdef FVERBOSE_MALLOC
+	logMsg("			Buffer::allocateBuffers(%x  %d  %d)", this, mNumChannels, mNumFrames);
+#endif
 	for (unsigned i = 0; i < mNumChannels; i++) {
 		SAFE_MALLOC(mBuffers[i], sample, mNumFrames);
+		memset(mBuffers[i], 0, mNumFrames * sizeof(sample));
 	}
+//	if (mNumFrames < 16)
+//		logMsg("Small buffer: %d", mNumFrames);
 	mAreBuffersAllocated = true;
 	mDidIAllocateBuffers = true;
+	mNumAlloc = mNumFrames;
 }
 
 // free them carefully
@@ -95,21 +114,27 @@ void Buffer::freeBuffers() {
 		return;					// they aren't allocated -- I shouldn't free them
 	if ( ! mDidIAllocateBuffers)
 		return;					// I didn't allocate them -- I shouldn't free them
-#ifdef CSL_DEBUG
-	logMsg("Buffer::freeBuffers(%d, %d)", mNumChannels, mNumFrames);
-#endif
 	if (& mBuffers == NULL)
 		return;
-	for (unsigned i = 0; i < mNumChannels; i++) {
-		if (mBuffers[i]) {
-			delete mBuffers[i];		// do the delete
-			mBuffers[i] = NULL;		// set to zero right away
+#ifdef FVERBOSE_MALLOC
+	logMsg("			Buffer::freeBuffers    (%x  %d  %d)", this, mNumChannels, mNumFrames);
+#endif
+	try {
+		for (unsigned i = 0; i < mNumChannels; i++) {
+			if (mBuffers[i]) {
+				delete mBuffers[i];		// do the delete
+				mBuffers[i] = NULL;		// set to zero right away
+			}
 		}
+	} catch (std::exception ex) {
+		logMsg(kLogError, "\nError in Buffer::freeBuffers: %s\n", ex.what());
+		throw MemoryError("Error in Buffer::freeBuffers");
 	}
 	mAreBuffersAllocated = false;
 	mDidIAllocateBuffers = false;
 	delete mBuffers;
 	mBuffers = 0;
+	mNumAlloc = 0;
 }
 
 // empty the sample buffers
@@ -122,19 +147,54 @@ void Buffer::zeroBuffers() {
 	mAreBuffersZero = true;
 }
 
+/// answer a samp ptr tested for extent (offset + maxFrame)
+
+sample * Buffer::samplePtrFor(unsigned channel, unsigned offset){
+	return(mBuffers[channel] + offset);
+}
+
+/// answer a samp ptr tested for extent (offset + maxFrame)
+
+sample * Buffer::samplePtrFor(unsigned channel, unsigned offset, unsigned maxFrame){
+	if (mNumAlloc >= (offset + maxFrame))
+		return(mBuffers[channel] + offset);
+	return NULL;
+}
+
+///< answer whether the receiver can store numFrames more frames
+
+bool Buffer::canStore(unsigned numFrames) {
+	return ((mNumFrames + numFrames) < mNumAlloc);
+}
+
 // fill with a constant
 
 void Buffer::fillWith(sample value) {
-	float* buffer = NULL;
+	float * bbuffer = NULL;
 	unsigned outBufNum, i;
 	unsigned numChans = mNumChannels;
 	unsigned numFrames = mNumFrames;
 	for (outBufNum = 0; outBufNum < numChans; outBufNum++) {
-		buffer = mBuffers[outBufNum];
+		bbuffer = mBuffers[outBufNum];
 		for (i = 0; i < numFrames; i++)
-			*buffer++ = value;
+			*bbuffer++ = value;
 	}
 	mAreBuffersZero = false;
+}
+
+// copy the "header" info
+
+void Buffer::copyHeaderFrom(Buffer & source) throw (RunTimeError) {
+	if ((source.mNumChannels > mNumChannels) || (source.mNumFrames > mNumAlloc)) {
+		logMsg("Buffer::copyHeaderFrom(ch %d %d, fr %d %d)", 
+				mNumChannels, source.mNumChannels, mNumAlloc, source.mNumFrames);
+		throw RunTimeError("Can't reallocate buffers at run-time");
+	} 
+	mNumChannels = source.mNumChannels;			// copy members
+	mNumFrames = source.mNumFrames;
+	mMonoBufferByteSize = mNumFrames * sizeof(sample);
+	mSequence = source.mSequence;
+	mType = source.mType;
 }
 
 // Copy everything but samples from the argument to the receiver
@@ -144,7 +204,9 @@ void Buffer::copyFrom(Buffer & source) throw (RunTimeError) {
 	delete mBuffers;
 	mNumChannels = source.mNumChannels;			// copy members
 	mNumFrames = source.mNumFrames;
-	mMonoBufferByteSize = source.mMonoBufferByteSize;
+	mNumAlloc = source.mNumAlloc;
+	mMonoBufferByteSize = mNumFrames * sizeof(sample);
+	mSequence = source.mSequence;
 	mBuffers = new SampleBuffer[mNumChannels];	// reserve space for buffers
 												// copy sample pointers
 	for (unsigned outBufNum = 0; outBufNum < mNumChannels; outBufNum++) {
@@ -158,16 +220,99 @@ void Buffer::copyFrom(Buffer & source) throw (RunTimeError) {
 // Copy samples from the argument to the receiver; be paranoid about size limits
 
 void Buffer::copySamplesFrom(Buffer & source) throw (RunTimeError) {
-	if ((source.mNumChannels > mNumChannels) || (source.mNumFrames > mNumFrames))
+	if ((source.mNumChannels > mNumChannels) || (source.mNumFrames > mNumAlloc)) {
+		logMsg(kLogError, "Buffer::copySamplesFrom(ch %d %d, fr %d %d)", 
+				mNumChannels, source.mNumChannels, mNumAlloc, source.mNumFrames);
 		throw RunTimeError("Can't reallocate buffers at run-time");
+	} 
 	mNumChannels = source.mNumChannels;
 	mNumFrames = source.mNumFrames;
-	mMonoBufferByteSize = source.mMonoBufferByteSize;
-	for (unsigned outBufNum = 0; outBufNum < mNumChannels; outBufNum++) {
-		memcpy(mBuffers[outBufNum], source.monoBuffer(outBufNum), mMonoBufferByteSize);
+	mMonoBufferByteSize = mNumFrames * sizeof(sample);
+	for (unsigned outBufNum = 0; outBufNum < mNumChannels; outBufNum++) {			// copy loop
+		unsigned sBufNum = csl_min(outBufNum, (source.mNumChannels - 1));
+		memcpy(mBuffers[outBufNum], source.monoBuffer(sBufNum), mMonoBufferByteSize);
 	}
 	mAreBuffersZero = false;
 }
+
+void Buffer::copyOnlySamplesFrom(Buffer & source) throw (RunTimeError) {
+	if ((source.mNumChannels > mNumChannels) || (source.mNumFrames > mNumAlloc)) {
+		logMsg(kLogError, "Buffer::copyOnlySamplesFrom(ch %d %d, fr %d %d)", 
+				mNumChannels, source.mNumChannels, mNumFrames, source.mNumFrames);
+		throw RunTimeError("Can't reallocate buffers at run-time");
+	} 
+	for (unsigned outBufNum = 0; outBufNum < mNumChannels; outBufNum++) {
+		unsigned sBufNum = csl_min(outBufNum, (source.mNumChannels - 1));
+		memcpy(mBuffers[outBufNum], source.monoBuffer(sBufNum), mMonoBufferByteSize);
+	}
+}
+
+///< same with write offset
+
+void Buffer::copySamplesFromTo(Buffer & source, unsigned offset) throw (RunTimeError) {
+	if ((source.mNumChannels > mNumChannels) || ((offset + source.mNumFrames) > mNumAlloc)) {
+		logMsg(kLogError, "Buffer::copyOnlySamplesFrom(ch %d %d, fr %d %d)", 
+			   mNumChannels, source.mNumChannels, mNumFrames, source.mNumFrames);
+		throw RunTimeError("Can't reallocate buffers at run-time");
+	} 
+	for (unsigned outBufNum = 0; outBufNum < mNumChannels; outBufNum++) {
+		unsigned sBufNum = csl_min(outBufNum, (source.mNumChannels - 1));
+		memcpy(mBuffers[outBufNum] + offset, source.monoBuffer(sBufNum), 
+				(source.mNumFrames * sizeof(sample)));
+	}
+}
+
+#ifdef USE_SRC
+
+// convert the sample rate using libSampleRate
+
+Status Buffer::convertRate(int fromRate, int toRate) {
+	double src_ratio = (double) toRate / (double) fromRate;
+	int	error;
+									// scaled buffer length
+	unsigned newLen = (unsigned) (rint(((double) mNumFrames) * src_ratio));
+	SRC_STATE * src_state;			// SRC structs
+	SRC_DATA src_data;
+										// create/allocate new scaled buffer
+	Buffer * newBuf = new Buffer(mNumChannels, newLen);
+	newBuf->allocateBuffers();
+	
+//	logMsg("Buffer::convertRate from %d to %d = %d frames", fromRate, toRate, newLen);
+												// create temp name and rename file
+	src_ratio = (double) toRate / (double) fromRate;
+	if (src_is_valid_ratio (src_ratio) == 0) {
+		logMsg (kLogError, "Error: Sample rate change out of valid range.");
+		return kErr;
+	}
+									/* Initialize the sample rate converter. */
+	if ((src_state = src_new (SRC_SINC_FASTEST /* SRC_SINC_BEST_QUALITY */, 1, &error)) == NULL) {	
+		logMsg ("Error : src_new() failed : %s.", src_strerror (error));
+		exit (1);
+	};
+	src_data.src_ratio = src_ratio;	// set up SRC
+	src_data.input_frames = mNumFrames;
+	src_data.output_frames = newLen;
+	src_data.end_of_input = 1;
+									// loop over the channels
+	for (unsigned i = 0; i < mNumChannels; i++) {
+		src_data.data_in = mBuffers[i];
+		src_data.data_out = newBuf->buffer(i);
+									// call src_process
+		error = src_process(src_state, &src_data);
+		if (error) {
+			logMsg("SRC Error : %s", src_strerror(error));
+			return kErr;
+		}
+	}
+	src_state = src_delete (src_state);
+	this->copyFrom(*newBuf);		// copy sample pointers to me
+	mDidIAllocateBuffers = true;	// toggle ownership flags
+	newBuf->mDidIAllocateBuffers = false;
+	delete newBuf;
+	return kOk;
+}
+
+#endif
 
 ///////////////////////////////////
 
@@ -342,7 +487,7 @@ BufferCMap::BufferCMap(unsigned numChannels, unsigned realNumChannels, unsigned 
 BufferCMap::~BufferCMap() { }
 
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 //
 // UnitGenerator implementation
 //
@@ -355,8 +500,15 @@ UnitGenerator::UnitGenerator(unsigned rate, unsigned chans) :  Model(),
 				mCopyPolicy(kCopy),
 				mNumOutputs(0),
 				mOutputCache(0),
-				mSequence(0),
-				mName(0) { }
+				mSequence(0)
+			/*	mName(0) */
+	{ }
+
+///< Destructor
+
+UnitGenerator::~UnitGenerator() {
+//	logMsg("		~UnitGenerator %x", this);
+}
 
 void UnitGenerator::zeroBuffer(Buffer & outputBuffer, unsigned outBufNum) {
 	float * buffer = outputBuffer.monoBuffer(outBufNum);
@@ -366,11 +518,11 @@ void UnitGenerator::zeroBuffer(Buffer & outputBuffer, unsigned outBufNum) {
 // output management and auto-fan-out
 
 void UnitGenerator::addOutput(UnitGenerator * ugen) {
+//	logMsg("UnitGenerator::addOutput %x to %x", ugen, this);
 	mOutputs.push_back(ugen);				// if adding the 2nd output, set up fan-out cache
 	if ((mNumOutputs == 1) && (mOutputCache == 0)) {
-		mOutputCache = new RingBuffer();
-		mOutputCache->mBuffer.setSize(mNumChannels, CGestalt::maxBufferFrames());
-		mOutputCache->mBuffer.allocateBuffers();
+		mOutputCache = new Buffer(mNumChannels, CGestalt::maxBufferFrames());
+		mOutputCache->allocateBuffers();
 	}
 	mNumOutputs++;
 }
@@ -392,6 +544,29 @@ void UnitGenerator::dump() {
 	logMsg("a UnitGenerator with %d outputs", mOutputs.size());
 }
 
+// check for fan-out; if fanning out, copy previous buffer & return true
+
+bool UnitGenerator::checkFanOut(Buffer & outputBuffer) throw (CException) {
+	if (mNumOutputs > 1) {					// if we're doing auto-fan-out
+		if (outputBuffer.mSequence <= mSequence) {		// if we've already computed this seq #
+											// and block copy samples from the cache into the output
+			outputBuffer.copyOnlySamplesFrom(*mOutputCache);
+//			logMsg("UnitGenerator::checkFanOut");
+			return true;					// finished!
+		}
+	}
+	return false;
+}
+
+// if fanning out, store last output and set seq number
+
+void UnitGenerator::handleFanOut(Buffer & outputBuffer) throw (CException) {
+	if (mNumOutputs > 1)					// if we're doing auto-fan-out and this is the first time
+		mOutputCache->copySamplesFrom(outputBuffer);			// store it in the buffer
+	mSequence = csl_max(mSequence, outputBuffer.mSequence);		// remember my seq #
+//	this->changed((void *) & outputBuffer);						// signal dependents (if any) of my change
+}
+
 //
 // Generic next buffer function: call the private (mono) version for each I/O channel;
 // copy or expand depending on the mCopyPolicy;
@@ -405,15 +580,7 @@ void UnitGenerator::nextBuffer(Buffer & outputBuffer) throw (CException) {
 #ifdef CSL_DEBUG
 	logMsg("UnitGenerator::nextBuffer");
 #endif
-	if (mNumOutputs > 1) {					// if we're doing auto-fan-out
-		if (outputBuffer.mSequence <= mSequence) {		// if we've already computed this seq #
-											//  reset the ring buffer read tap back just enough
-			mOutputCache->seekTo((int) (0 - outputBuffer.mNumFrames));
-											// and block copy samples from the cache into the output
-			mOutputCache->nextBuffer(outputBuffer);
-			return;							// finished!
-		}
-	}
+	if (checkFanOut(outputBuffer)) return;
 											// Copy the output buffer samples
 	switch (mCopyPolicy) {
 	default:
@@ -430,12 +597,7 @@ void UnitGenerator::nextBuffer(Buffer & outputBuffer) throw (CException) {
 		this->nextBuffer(outputBuffer, 0);
 		break;
 	}
-	
-	if (mNumOutputs > 1)					// if we're doing auto-fan-out and this is the first time
-		mOutputCache->writeBuffer(outputBuffer);				// store it in the ring buffer
-	mSequence = csl_max(mSequence, outputBuffer.mSequence);		// remember my seq #
-	
-	this->changed((void *) & outputBuffer);						// signal dependents (if any) of my change
+	handleFanOut(outputBuffer);				// process possible fan-out
 }
 
 // Generic private next buffer implementation; by default, just zero out the buffer
@@ -445,7 +607,7 @@ void UnitGenerator::nextBuffer(Buffer & outputBuffer,  unsigned outBufNum) throw
 		zeroBuffer(outputBuffer, i);		// my subclasses do more interesting things here
 }
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 //
 // Port implementation
 
@@ -472,7 +634,10 @@ Port::Port(float value) :
 				mValuePtr(& mValue),
 				mPtrIncrement(0) { }
 
-Port::~Port() { }
+Port::~Port() {
+
+
+}
 
 // check the port's buffer and allocate it if needed
 
@@ -510,37 +675,47 @@ bool Port::isActive() {
 void Port::dump() {
 	logMsg("a Port with UGen = %x, value = %g, incr = %d", mUGen, mValue, mPtrIncrement);
 	if (mUGen != 0) {
-		printf("\t");
+		fprintf(stderr, "\t");
 		mUGen->dump();
 	}
 }
 
-/////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 //
 // Controllable implementation -- Grab the dynamic values for the scale and offset controls
+
+///< Destructor
+
+ Controllable::~Controllable() {
+ 	for (PortMap::iterator pos = mInputs.begin(); pos != mInputs.end(); pos++)
+		delete (pos->second);
+	mInputs.clear();
+}
 
 void Controllable::pullInput(Port * thePort, unsigned numFrames) throw (CException) {
 #ifdef CSL_DEBUG
 	logMsg("Controllable::pullInput");
 #endif
 	if (thePort == NULL) {
-//		logMsg("port == null!");
+		logMsg("Controllable::pullInput port == null!");
 		return;
 	}
 	UnitGenerator * theUG = thePort->mUGen;			// get its UGen
 	if (theUG == NULL) {							// if it's a static variable
-//		logMsg("UG == null!");
+//		logMsg("Controllable::pullInput UG == null!");
 		return;										// ignore it
 	}
 	Buffer * theBuffer = thePort->mBuffer;			// else get the buffer
 	if (theBuffer == NULL) {						// if it's a static variable
-//		logMsg("Buffer == null!");
+		logMsg("Controllable::pullInput Buffer == null!");
 		return;										// ignore it
 	}
+	thePort->checkBuffer();
 	theBuffer->mNumFrames = numFrames;
 	theBuffer->mType = kSamples;
+	theBuffer->zeroBuffers();
 	
-	theUG->nextBuffer(* theBuffer);				// and ask the UGen for nextBuffer()
+	theUG->nextBuffer(* theBuffer);			//////// and ask the UGen for nextBuffer()
 	
 	theBuffer->mIsPopulated = true;
 	thePort->mValuePtr = (thePort->mBuffer->monoBuffer(0)) - 1;
@@ -555,7 +730,7 @@ void Controllable::pullInput(Port * thePort, Buffer & theBuffer) throw (CExcepti
 	UnitGenerator * theUG = thePort->mUGen;			// get its UGen
 	if (theUG == NULL)								// if it's a static variable
 		return;										// ignore it
-	theUG->nextBuffer(theBuffer);					// and ask the UGen for nextBuffer()
+	theUG->nextBuffer(theBuffer);			///////// and ask the UGen for nextBuffer()
 	
 	theBuffer.mIsPopulated = true;
 	thePort->mValuePtr = (theBuffer.monoBuffer(0)) - 1;
@@ -626,7 +801,7 @@ void Controllable::dump() {
 //
 // Phased implementation -- Constructors
 
-Phased::Phased() : mPhase(0.0f) {
+Phased::Phased() : Controllable(), mPhase(0.0f) {
 	mInputs[CSL_FREQUENCY] = new Port;
 #ifdef CSL_DEBUG
 	logMsg("Phased::add freq input");
@@ -701,7 +876,11 @@ Scalable::Scalable(UnitGenerator & scale, UnitGenerator & offset) {
 #endif
 }
 
-Scalable::~Scalable() { /* no-op for now */ }
+Scalable::~Scalable() { 
+//	if (mInputs) {
+//		
+//	}
+}
 
 // Scalable -- Accessors
 
@@ -733,20 +912,36 @@ void Scalable::setOffset(float offset) {
 #endif
 }
 
+// trigger passed on here
+
+void Scalable::trigger() {
+	if (mInputs[CSL_SCALE])
+		mInputs[CSL_SCALE]->trigger();
+	if (mInputs[CSL_OFFSET])
+		mInputs[CSL_OFFSET]->trigger();
+}
+
+// answer whether scale = 1 & offset = 0
+
+//void isScaled() {
+//
+//}
+
 /////////////////////////////////////////////////
 //
 // Effect implementation
 
-Effect::Effect() : UnitGenerator() {
+Effect::Effect() : Controllable(), UnitGenerator() {
 	isInline = false;
 //	mInputs[CSL_INPUT] = new Port;
 #ifdef CSL_DEBUG
 	logMsg("Effect::add null input");
 #endif
- }
+}
 
-Effect::Effect(UnitGenerator & input) : UnitGenerator() {
+Effect::Effect(UnitGenerator & input) : Controllable(), UnitGenerator() {
 	isInline = false;
+	mNumChannels = input.numChannels();
 	this->addInput(CSL_INPUT, input);
 #ifdef CSL_DEBUG
 	logMsg("Effect::add input UG");
@@ -757,8 +952,8 @@ bool Effect::isActive() {
 	Port * iPort = mInputs[CSL_INPUT];
 	if (iPort)
 		return (iPort->isActive());
-	return false;
-};
+	return true;			// subclasses might not use mInputs[CSL_INPUT]
+}
 
 void Effect::setInput(UnitGenerator & input) {
 	isInline = false;
@@ -775,13 +970,13 @@ void Effect::pullInput(Buffer & outputBuffer) throw (CException) {
 	logMsg("Effect::pullInput");
 #endif
 	if (isInline)			// if inline, just use the input pointer
-		mInputPtr = outputBuffer.mBuffers[0];
+		mInputPtr = outputBuffer.buffer(0);
 	else {
 		Port * iPort = mInputs[CSL_INPUT];
 							// else pull a buffer from my input
 		Controllable::pullInput(iPort, outputBuffer);
 		
-		mInputPtr = outputBuffer.mBuffers[0];
+		mInputPtr = outputBuffer.buffer(0);
 	}
 }
 
@@ -791,46 +986,68 @@ void Effect::pullInput(unsigned numFrames) throw (CException) {
 #endif
 	Port * iPort = mInputs[CSL_INPUT];
 	Controllable::pullInput(iPort, numFrames);
-	mInputPtr = iPort->mBuffer->mBuffers[0];
+	mInputPtr = iPort->mBuffer->buffer(0);
+}
+
+///< trigger passed on here
+
+void Effect::trigger() {
+	if (mInputs[CSL_INPUT])
+		mInputs[CSL_INPUT]->trigger();
 }
 
 // FanOut methods
 
 FanOut::FanOut(UnitGenerator & in, unsigned taps)
-			: Effect(in), mOutputs(taps), mCurrent(taps) {
+		: Effect(in), mNumFanOuts(taps), mCurrent(taps) {
 #ifdef CSL_DEBUG
-	logMsg("FanOut::FanOut");
+	logMsg("FanOut::FanOut %d", mNumFanOuts);
 #endif
+}
+
+void FanOut::nextBuffer(Buffer & outputBuffer,  unsigned outBufNum) throw (CException) {
+	throw LogicError("Asking for mono nextBuffer of a FanOut");
 }
 
 // nextBuffer just pulls the input every "mOutputs" calls
 
 void FanOut::nextBuffer(Buffer & outputBuffer) throw (CException) {
-	if (++mCurrent >= mOutputs) {
-		Effect::pullInput(mBuffer);
+	if (outputBuffer.mNumChannels != mNumChannels) 
+		throw LogicError("Asking for wrong output ch # of a FanOut");
+	if (mCurrent >= mNumFanOuts) {
+		pullInput(outputBuffer.mNumFrames);
 		mCurrent = 0;
+//		logMsg("	reset");
 	}						// Copy the output buffer samples
-	outputBuffer.copySamplesFrom(mBuffer);
+	Buffer * buf = mInputs[CSL_INPUT]->mBuffer;
+	outputBuffer.copyOnlySamplesFrom(*buf);
+//	logMsg("FanOut %d", mCurrent);
+	mCurrent++;
 }
 
 // Splitter class -- a de-multiplexer for multi-channel signals
 
-Splitter::Splitter(UnitGenerator & in, unsigned taps) : FanOut(in, taps) { }
+Splitter::Splitter(UnitGenerator & in) 
+		: FanOut(in, in.numChannels()) { }
+
+void Splitter::nextBuffer(Buffer & outputBuffer,  unsigned outBufNum) throw (CException) {
+	throw LogicError("Asking for mono nextBuffer of a Splitter");
+}
 
 // Like for FanOut, next-buffer calls the input every mOutput calls, 
 // but it only copies one channel at a time to the output
 
 void Splitter::nextBuffer(Buffer & outputBuffer) throw (CException) {
-	unsigned numOutputChans = outputBuffer.mNumChannels;
-	Buffer * buf = inPort()->mBuffer;
-
-	if (numOutputChans != 1) {
+	if (outputBuffer.mNumChannels != 1) 
 		throw LogicError("Asking for a stereo output of a channel splitter");
-	}
-	if (mCurrent == mOutputs) {
-		Effect::pullInput(outputBuffer.mNumFrames);
+								// pull input
+	if (mCurrent >= mNumFanOuts) {
+		pullInput(outputBuffer.mNumFrames);
 		mCurrent = 0;
 	}
+	Buffer * buf = mInputs[CSL_INPUT]->mBuffer;
+	if (buf == 0) 
+		throw LogicError("Missing buffer in channel splitter");
 	unsigned bufferByteSize = outputBuffer.mMonoBufferByteSize;
 	SampleBuffer dest = outputBuffer.monoBuffer(0);
 	SampleBuffer src = buf->monoBuffer(mCurrent);
@@ -840,33 +1057,53 @@ void Splitter::nextBuffer(Buffer & outputBuffer) throw (CException) {
 
 // Joiner class -- a multiplexer for multi-channel signals
 
-Joiner::Joiner(UnitGenerator & in1, UnitGenerator & in2) {
-	mInputs.push_back(& in1);
-	mInputs.push_back(& in2);
+Joiner::Joiner(UnitGenerator & in1, UnitGenerator & in2) : Effect() {
+	Controllable::addInput(0, in1);
+	Controllable::addInput(1, in2);
+	mNumChannels = 2;
 }
 
 void Joiner::addInput(UnitGenerator & in) {	///< add the argument to vector of inputs
-	mInputs.push_back(& in);
+	Controllable::addInput(mNumChannels, in);
+	mNumChannels++;
+}
+
+bool Joiner::isActive() {
+	for (unsigned i = 0; i < mNumChannels; i++) {
+		if (mInputs[i]->mUGen->isActive())
+			return true;
+	}
+	return false;
+}
+
+
+void Joiner::nextBuffer(Buffer & outputBuffer,  unsigned outBufNum) throw (CException) {
+	throw LogicError("Asking for mono nextBuffer of a Joiner");
 }
 
 // nextBuffer calls each of the input channels as a mono channel
 
 void Joiner::nextBuffer(Buffer & outputBuffer) throw (CException) {
-	unsigned numOutputChans = outputBuffer.mNumChannels;
-	Buffer tempBuffer;
-
-	if (numOutputChans != mInputs.size()) {
-		throw LogicError("Asking for the wrong number of channels of a channel joiner");
+	if (outputBuffer.mNumChannels != mNumChannels) {
+		throw LogicError("Wrong number of channels in a joiner");
 	}
 						// set up the fake mono buffer
-	tempBuffer.setSize(1, outputBuffer.mNumFrames);
+	Buffer tempBuffer(1, outputBuffer.mNumFrames);
+
 						// loop through the mono inputs
-	for (unsigned i = 0; i < mInputs.size(); i++) {
+	for (unsigned i = 0; i < mNumChannels; i++) {
 						// put the mono in samples into 1 channel of the output
-		tempBuffer.mBuffers[0] = outputBuffer.monoBuffer(i);
+		tempBuffer.setBuffer(0, outputBuffer.monoBuffer(i));
 						// get a buffer of mono samples from one of the inputs
-		mInputs[i]->nextBuffer(tempBuffer);
+		mInputs[i]->mUGen->nextBuffer(tempBuffer);
 	}
+}
+
+///< trigger passed on here
+
+void Joiner::trigger() {
+	for (unsigned i = 0; i < mNumChannels; i++)
+		mInputs[i]->trigger();
 }
 
 // Writeable implementation
@@ -1035,6 +1272,7 @@ void IO::pullInput(Buffer & outBuffer, SampleBuffer out) throw(CException) {
 	static struct timeval * mte = & mThen;
 	static struct timeval * mno = & mNow;
 	GET_TIME(mte);
+	float maxSampEver = 0.0f;
 #endif
 //	unsigned numFrames = outBuffer.mNumFrames;
 //	unsigned numChans = outBuffer.mNumChannels;
@@ -1072,7 +1310,7 @@ int (timeval *val, void * e) {
 	QueryPerformanceCounter(&tick);
 	val->tv_sec = tick.QuadPart/ticksPerSecond.QuadPart;
 	val->tv_usec = tick.QuadPart/ticksPerUSecond;
-//	cout << "Fraction: " << val->tv_sec << "/" << val->tv_usec  << " " << ticksPerUSecond << endl;
+//	cerr << "Fraction: " << val->tv_sec << "/" << val->tv_usec  << " " << ticksPerUSecond << endl;
 	return 0;
 }
 #endif
@@ -1097,8 +1335,8 @@ void IO::printTimeStatistics(struct timeval * now, struct timeval * then, long *
 			mUsage = (float) *timeSum / *timeVals * 100.0f / cycleTime;
 			*timeVals = 0;
 			*timeSum = 0;
-			logMsg("\tCPU usage: %.2f percent.", mUsage);
-//			logMsg("\tIO:: %d active clients", ((Mixer *) mGraph)->activeSources());
+			logMsg("\tCPU usage: %.2f percent (%5.3f).", mUsage, maxSampEver);
+//			logMsg("\tIO: %d active clients", ((Mixer *) mGraph)->activeSources());
 //			unsigned num_instruments = library.size();
 //			for (unsigned i = 0; i < num_instruments; i++) {
 //				Instrument * instr = library[i];
@@ -1110,20 +1348,20 @@ void IO::printTimeStatistics(struct timeval * now, struct timeval * then, long *
 		*timeVals += 1;
 		*timeSum += SUB_TIMES(now, then);
 	}
-	// cout << "here now/this: " << now->tvSec << " " << then->tvSec << endl;
+	// cerr << "here now/this: " << now->tvSec << " " << then->tvSec << endl;
 }
 
 #endif
 
 // Answer the most recent input buffer
 
-Buffer & IO:: getInput() throw(CException) {
+Buffer & IO::getInput() throw(CException) {
 	return getInput(mInputBuffer.mNumFrames, mInputBuffer.mNumChannels);
 }
 
 // really get the desired format of input
 
-Buffer & IO:: getInput(unsigned numFrames, unsigned numChannels) throw(CException) {
+Buffer & IO::getInput(unsigned numFrames, unsigned numChannels) throw(CException) {
 	if (mNumInChannels == 0)
 		throw IOError("Can't get unopened input");
 	if (mInterleaved) {

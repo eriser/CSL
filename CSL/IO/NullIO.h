@@ -9,6 +9,7 @@
 #include "CSL_Core.h"
 
 #include "ThreadUtilities.h"	// Thread util classes (used only by NullIO)
+
 //#include "ThreadedFrameStream.h"
 
 namespace csl {
@@ -34,7 +35,7 @@ public:
 
 protected:
 	bool mRunning;								/// whether or not I'm running
-	Thread * mThread;								///< my timer thread
+	juce::Thread * mThread;								///< my timer thread
 	Synch * mSynch;								///< the sync I wait on
 	static void * FeederFunction(void * arg);		///< shared init function
 //	Buffer mEmptyBuffer;

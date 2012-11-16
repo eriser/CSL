@@ -19,6 +19,13 @@
 #include <stdarg.h>			// for va_arg, vaList, etc.
 #include <string>
 
+#ifdef USE_JUCE
+#include "../JuceLibraryCode/JuceHeader.h"
+using namespace juce;
+#else
+#include <sys/time.h>
+#endif
+
 namespace csl {
 
 ///
@@ -47,6 +54,9 @@ public:												// Accessor (getter/setter) methods
 
 	static unsigned maxSndFileFrames();				///< the max num frames that can be cached
 	static void setMaxSndFileFrames(unsigned numFrames);
+
+	static unsigned sndFileFrames();				///< the default num frames that are cached
+	static void setSndFileFrames(unsigned numFrames);
 
 	static unsigned verbosity();					///< the default logging verbosity 
 	static void setVerbosity(unsigned verbosity);	// (0 = only fatal errors, 1 = warnings, 
@@ -77,18 +87,53 @@ public:												// Accessor (getter/setter) methods
 /// Useful Macros
 ///
 
-/// safe malloc using new operator; zeroes memory after testing pointer
+/// SAFE_MALLOC = safe malloc using new operator
 /// used like: SAFE_MALLOC(mSampleBuffer, sample, mWindowSize);
 
 #define SAFE_MALLOC(ptr, type, len)						\
 	ptr = new type[len];								\
 	if ((char *) ptr == NULL)							\
+		throw MemoryError("can't allocate buffer")
+
+/// Matrix allocate
+///	SAFE_MATMALLOC(mRealSpectrum, FloatArray, mNumFrames, float, mWinSize);
+/// SAFE_MATMALLOC(mSpectBands, FloatArray, mNumFrames, float, NUM_BANDS)
+
+#define SAFE_MATMALLOC(ptr, mtype, num, type, len)		\
+	ptr = new mtype[num];								\
+	if ((char *) ptr == NULL)							\
 		throw MemoryError("can't allocate buffer");		\
-	memset(ptr, 0, len * sizeof(ptr))
+	for (unsigned i = 0; i < num; i++) {				\
+		ptr[i] = new type[len];							\
+		if ((char *) ptr[i] == NULL)					\
+			throw MemoryError("can't allocate buffer");	\
+	}
+
+/// Structure allocate
+///	SAFE_STRUCTMALLOC(mRealSpectrum, FloatArray, mNumFrames, float);
+
+#define SAFE_STRUCTMALLOC(ptr, mtype, num, type)		\
+	ptr = new mtype[num];								\
+	if ((char *) ptr == NULL)							\
+		throw MemoryError("can't allocate buffer");		\
+	for (unsigned i = 0; i < num; i++) {				\
+		ptr[i] = new type;								\
+		if ((char *) ptr[i] == NULL)					\
+			throw MemoryError("can't allocate buffer");	\
+	}
+
+// Safe free and matrix version
 
 #define SAFE_FREE(ptr)									\
 	if (ptr)											\
 		delete[] ptr
+
+#define SAFE_MATFREE(ptr, num)							\
+	for (unsigned i = 0; i < num; i++) {				\
+		if (ptr[i])										\
+			delete[] ptr[i];							\
+	}													\
+	delete[] ptr
 
 /////////////////////////////////////////////////////////////////////////
 ///
@@ -114,16 +159,16 @@ typedef enum {					///< Enumeration for log message severity level
 /// These are the public logging messages
 ///
 
-void logMsg(char * format, ...);			///< default is kLogInfo severity
-void logMsg(LogLevel level, char* format, ...);
+void logMsg(const char * format, ...);		///< default is kLogInfo severity
+void logMsg(LogLevel level, const char* format, ...);
 
 void logLine();								///< Log the file & line #
 void logURL();								///< log file/line as a URL
 
 // These two are private -- for handling var-args
 
-void vlogMsg(char * format, va_list args);
-void vlogMsg(LogLevel level, char * format, va_list args);
+void vlogMsg(const char * format, va_list args);
+void vlogMsg(LogLevel level, const char * format, va_list args);
 
 /////////////////////////////////////////////////////////////////////////
 ///
@@ -143,7 +188,7 @@ float fTimeNow();							///< system or IO time in seconds
 /// Which kind of accurate timer to use?
 
 // #define C_TIME		Time::getHighResolutionTicks()
-#define C_TIME		Time::getMillisecondCounter()
+#define C_TIME		juce::Time::getMillisecondCounter()
 
 ///
 /// A variety of useful random-number functions
@@ -202,7 +247,7 @@ typedef std::vector <Observer *> ObserverVector;
 class Model {
 public:
 	Model() : mHasObservers(false), mHasObserverMap(false), mUpdateTime(0), mPeriod(0) { };	///< constructor
-	~Model() { };							///< (possibly notify obersvers on my death)
+	virtual ~Model() { /* no-op */ };		///< (possibly notify obersvers on my death)
 	
 	void attachObserver(Observer *);		///< register/remove observers
 	void detachObserver(Observer *);

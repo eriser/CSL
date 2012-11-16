@@ -73,7 +73,7 @@
 #define CSL_ENUMS				// define this to use the various enumerations (which are problematic with SWIG)
 // #define CSL_DEBUG			// define this for very verbose debugging of constructors and call-backs
 // #define CSL_DSP_BUFFER		// define this for Buffer Sample Processing (feature extraction)
-// #define USE_JUCE				// use JUCE for all IO (now set as a command-line flag)
+// #define USE_JUCE				// use JUCE for all IO (now set as a compile-time flag)
 
 ////
 //// Major System Defaults (used in CGestalt to set static constants)
@@ -83,23 +83,25 @@
 
 #ifdef IPHONE
 	#define CSL_mBlockSize 256				///< I/O block size (set to 64-2048 in typical usage)
-	#define CSL_mMaxBufferFrames 1024		///< max block size
+	#define CSL_mMaxBufferFrames 256		///< max block size
+	#define CSL_mSndFileFrames 2000000		///< default file cache size = 2 MB
 	#define CSL_mMaxSndFileFrames 2000000	///< max file cache size = 2 MB
 #else										///  normal hosts
-	#define CSL_mBlockSize 512				///< I/O block size (set to 64-2048 in typical usage)
+	#define CSL_mBlockSize 2048				///< I/O block size (set to 64-2048 in typical usage)
 	#define CSL_mMaxBufferFrames 8192		///< max block size (set large for zooming scopes)
-	#define CSL_mMaxSndFileFrames 128000000	///< max file cache size = 128 MB (set to a large value)
+	#define CSL_mSndFileFrames 20480000		///< default file cache size = 20 MFrames (~ 2 min)
+	#define CSL_mMaxSndFileFrames 64000000	///< max file cache size = 64 MB (set to a large value)
 #endif
 
 //#define READ_IO_PROPS						///< overwrite the system frame rate and block size from the 
 											///  selected hardware interface at startup time
 
-#define DEFAULT_WTABLE_SIZE CGestalt::maxBufferFrames()	// size of wavetables, or use blockSize?
+#define DEFAULT_WTABLE_SIZE CGestalt::maxBufferFrames()	///< size of wavetables, or use blockSize?
 
 #define CSL_mVerbosity 3					///< very verbose logging
 #define CSL_mLoggingPeriod 10				///< log CPU usage every N sec
 
-#define CSL_LOG_PREFIX ":: "				///< prefix for log msgs (may be empty)
+#define CSL_LOG_PREFIX "-- "				///< prefix for log msgs (may be empty)
 // #define CSL_LOG_PREFIX "\nCSL: "			///< verbose logging tags
 
 #define CSL_mOutPort 57123					///< RFS output port
@@ -111,17 +113,17 @@
 #define CSL_LINE_LEN 512					///< default line length
 #define CSL_STR_LEN 1024					///< default long string length
 
-#define SAMPS_TO_WRITE (4096 * 10 * 10)		///< record about 10 seconds by default
+#define SAMPS_TO_WRITE (44100 * 30)			///< record 30 seconds by default
 #define OUT_SFILE_NAME "XX_csl.aiff"		///< csl output file name temlpate
 //#define OUT_SFILE_NAME "CSLXX.aiff"		///< csl output file name temlpate
 
 #ifdef CSL_WINDOWS
-#define CSL_DATA_DIR "..\\..\\..\\CSL_Data\\"	///< folder where the CSL data can be found
-#define CSL_INIT_FILE "..\\..\\..\\csl.ini"		///< where to store the CSL init file
+	#define CSL_DATA_DIR "..\\..\\..\\CSL_Data\\"	///< folder where the CSL data can be found
+	#define CSL_INIT_FILE "..\\..\\..\\csl.ini"		///< where to store the CSL init file
 #else
-#define CSL_DATA_DIR "~/Code/CSL/CSL_Data/"		///< folder where the CSL data can be found
-#define CSL_INIT_FILE "~/.cslrc"				///< where to store the CSL init file
-#define DO_TIMING								///< Gather performance timing (not on Windows)
+	#define CSL_DATA_DIR "~/Code/CSL/CSL_Data/"		///< folder where the CSL data can be found
+	#define CSL_INIT_FILE "~/.cslrc"				///< where to store the CSL init file
+//	#define DO_TIMING								///< Gather performance timing (not on Windows)
 #endif
 
 //// Which Soundfile class to use? (choose with a compiler option, e.g., -DUSE_LSND)
@@ -136,10 +138,12 @@
 	#define SoundFile CASoundFile			// CoreAudio
 #endif
 
+#define USE_SNDFILEBUFFER					// add snd file buffer class
+
 //// Which MIDI IO port class to use? 
 //// (define here or choose with a compiler option, e.g., -DUSE_PMIDI)
 
-#define USE_JMIDI
+//#define USE_JMIDI
 #define DEFAULT_MIDI_IN 0
 #define DEFAULT_MIDI_OUT 0
 
@@ -160,13 +164,14 @@
 //#define USE_FFTREAL						// use FFTReal (smaller and simpler)
 
 
-////// Core CSL Types ///////////////////
+////////////////////////// Core CSL Types //////////////////////////////////////////////
 
 #include <vector>							///< we use the STL vector, map, and string classes
-#include <map>
 #include <string>	
+#include <map>
+//#include <juce.h>
 
-namespace csl {								///< All of CSL takes place in the "csl" namespace
+namespace csl {								///< All of CSL takes place within the "csl" namespace
 
 
 //// CSL base audio and geometrical data type declarations - PAY ATTENTION
@@ -195,31 +200,41 @@ typedef SampleComplex* SampleComplexPtr;		///< complex pointer
 class CPoint;									///< Forward declaration
 typedef std::vector <CPoint *> PointVector;		///< A vector of points
 
+typedef std::vector<unsigned> UnsignedVector;	///< A vector of unsigneds
+
 typedef void * VoidFcnPtr(void * arg);			///< the generic void fcn pointer
-typedef void VoidFcnPtrN();						///< the truly void fcn pointer
+typedef void VoidFcnPtrN(void);						///< the truly void fcn pointer
 
 //// I/O and control port map types
 
+class Buffer;									///< Forward declaration to Buffer (in CSL_Core.h)
 class UnitGenerator;							///< Forward declaration to UnitGenerator (in CSL_Core.h)
 class Port;										///< Forward declaration to Port
 class IODevice;									///< Forward declaration to IO Device model
 class Instrument;								///< Forward declaration to Instrument 
-class Observer;								///< Forward declaration
+class Observer;									///< Forward declaration
 
 typedef unsigned CSL_MAP_KEY;					///< the type I use for map keys (could also be a string)
 												/// PortMap: a map between a name/key and a port object 
 												/// (used for control and audio inputs)
 typedef std::map <CSL_MAP_KEY, Port *> PortMap;
-												/// UGenVector: unit generator pointers (used for outputs)
+												/// Buffer/UGenVector: unit generator pointers (used for outputs)
+typedef std::vector <Buffer *> BufferVector;
 typedef std::vector <UnitGenerator *> UGenVector;
 												/// UGenMap: a named map of unit generators (used for GUIs)
 typedef std::map <std::string, UnitGenerator *> UGenMap;
+												// these are used in mixers
+typedef std::map <unsigned, UnitGenerator *> UGenIMap;
+typedef std::map <unsigned, float> FloatMap;
+typedef std::vector <float> FloatVector;
 												/// IOs hold onto device vectors
 typedef std::vector <IODevice *> IODeviceVector;
 												/// Players hold onto Instrument vectors/maps
 typedef std::vector <Instrument *> InstrumentVector;
 typedef std::map <int, InstrumentVector> InstrumentLibrary;
 typedef std::map <std::string, Instrument *> InstrumentMap;
+
+typedef std::map <std::string, std::string> StringMap;
 
 /// Timestamp type: we assume that we can get the host's best guess at the IO word clock
 ///  (normally passed into the audio IO callback function). call timeNow() to get the time
@@ -317,7 +332,7 @@ typedef struct {
 #ifdef CSL_WINDOWS			// Microsoft is explicit
 //#include "stdafx.h"
 							// Hypotenuse = complex-to-real-magnitude
-	#define hypotf(av, bv)	sqrt((av * av) + (bv * bv))
+	#define hypotf(av, bv)	sqrtf((av * av) + (bv * bv))
 
 #ifdef MSVS6				// ignore pragmas not understood by Microsoft Visual C++
 	#pragma warning(once:4068 4244 4305 4355)
@@ -329,7 +344,7 @@ typedef struct {
 //	typedef signed long long INT64;
 //	typedef unsigned long long UINT64;
 
-#endif
+#endif // CSL_WINDOWS
 
 } // end of namespace
 

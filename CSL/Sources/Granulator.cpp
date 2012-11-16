@@ -26,8 +26,8 @@ void GrainPlayer::nextBuffer(Buffer & outputBuffer) throw (CException) {
 	sample samp, env;
 	float durHalf;
 	unsigned numFrames = outputBuffer.mNumFrames;
-	out1 = outputBuffer.mBuffers[0];
-	out2 = outputBuffer.mBuffers[1];
+	out1 = outputBuffer.buffer(0);
+	out2 = outputBuffer.buffer(1);
 	memset(out1, 0, numFrames * sizeof(sample));
 	memset(out2, 0, numFrames * sizeof(sample));
 		
@@ -40,8 +40,8 @@ void GrainPlayer::nextBuffer(Buffer & outputBuffer) throw (CException) {
 	for (Grain * curGrain = mCloud->mPlayingGrains; curGrain != 0; 
 			curGrain = curGrain->nextGrain) {
 //		printf(".");
-		out1 = outputBuffer.mBuffers[0];							// assume stereo output
-		out2 = outputBuffer.mBuffers[1];
+		out1 = outputBuffer.buffer(0);							// assume stereo output
+		out2 = outputBuffer.buffer(1);
 		length = curGrain->numSamples;
 		sample * sPtr = curGrain->samples;
 		for (unsigned i = 0; i < numFrames; i++) {					// sample loop

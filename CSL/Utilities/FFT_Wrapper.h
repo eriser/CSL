@@ -67,10 +67,10 @@ typedef enum {
 
 class Abst_FFT_W {
 public:							/// Constuctor sets up twiddle factor tables
-	Abst_FFT_W(unsigned size, CSL_FFTType type = CSL_FFT_REAL, CSL_FFTDir forward = CSL_FFT_FORWARD) 
-				: mSize(size), mCSize((size / 2) + 1), mType(type), mDirection(forward) { };
+	Abst_FFT_W(unsigned size, CSL_FFTType type = CSL_FFT_REAL, CSL_FFTDir dir = CSL_FFT_FORWARD) 
+				: mSize(size), mCSize((size / 2) + 1), mType(type), mDirection(dir) { };
 
-	~Abst_FFT_W() { };			///< destructor frees tables
+	virtual ~Abst_FFT_W() { };			///< destructor frees tables
 
 								/// run the transform between in and out
 	virtual void nextBuffer(Buffer & in, Buffer & out) throw (CException) = 0;
@@ -88,7 +88,6 @@ protected:
 
 #ifdef USE_FFTW
 
-
 class FFTW_Wrapper : public Abst_FFT_W {
 public:
 	FFTW_Wrapper(unsigned size, CSL_FFTType type = CSL_FFT_REAL, CSL_FFTDir forward = CSL_FFT_FORWARD);
@@ -97,7 +96,7 @@ public:
 	void nextBuffer(Buffer & in, Buffer & out) throw (CException);
 
 private:		
-	SampleBuffer mInBuf;		///< input sample* ptr
+//	SampleBuffer mInBuf;		///< input sample* ptr
 	SampleBuffer mSampBuf;		///< temp sample buf ptr
 	fftwf_complex *mSpectBuf;	///< complex spectrum
 	fftwf_plan mPlan;			///< FFTW plan object
@@ -110,7 +109,6 @@ private:
 //
 
 #ifdef USE_FFTREAL
-
 
 class FFTR_Wrapper : public Abst_FFT_W {
 public:
@@ -131,7 +129,6 @@ private:
 //
 
 #ifdef USE_KISSFFT
-
 
 class KISSFFT_Wrapper : public Abst_FFT_W {
 public:

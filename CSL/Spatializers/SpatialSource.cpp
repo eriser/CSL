@@ -19,19 +19,18 @@ using namespace csl;
 SpatialSource::SpatialSource() : mPosition(NULL), mPositionChanged(true) { }
 
 SpatialSource::SpatialSource(UnitGenerator &input, float azi, float ele, float dist)
-	: mPosition(NULL), mPositionChanged(true) {
-	
+		: mPosition(NULL), 
+		  mPositionChanged(true) {
+	if (input.numChannels() != 1)
+		throw LogicError("Adding a non-mono ugen to a spatial source");
 	mPosition = new CPoint(kPolar, (float)dist, (float)(azi * CSL_PI/180.0), (float)(ele * CSL_PI/180.0));
-	
 	this->addInput(CSL_INPUT, input);
 #ifdef CSL_DEBUG
 	logMsg("SpatialSource::input UG added");
-#endif		
-	
+#endif
 }
 
 SpatialSource::~SpatialSource() {
-	// For now, this works, but it is buggy. The correct way would be to flag wether it was created by me or not.
 	if (mPosition)
 		delete mPosition;
 }
@@ -83,9 +82,9 @@ void SpatialSource::setPosition(char s, double azi, double ele, double dist) {
 void SpatialSource::dump() {
 //	cout << "x: " << mPosition->x << "\t" << "y: " << mPosition->y << "\t" << "z: " << mPosition->z << endl;
 //	cout << "\t\tradius: " << distance() << "\tazi: " << azimuth() << "\tele: " << elevation() << endl;
-	printf("\taz: %5.1f  el: %5.1f  dist: %4.1f\n",
-			azimuth() * CSL_DEGS_PER_RAD, 
-			elevation() * CSL_DEGS_PER_RAD, 
+	printf("\taz: %5.2f  el: %5.2f  dist: %4.2f\n",
+			azimuth(), // * CSL_DEGS_PER_RAD, 
+			elevation(), // * CSL_DEGS_PER_RAD, 
 			distance());
 }
 

@@ -20,7 +20,7 @@ RingBufferTap::RingBufferTap(RingBuffer *parent, int offset) : UnitGenerator(), 
 
 // Tap utilities.
 
-unsigned RingBufferTap::duration() const {
+unsigned RingBufferTap::duration() {
 	return mParentBuffer->mBuffer.mNumFrames;
 }
 
@@ -66,8 +66,8 @@ void RingBufferTap::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw(C
 		currentFrame = ringBufferStartFrame;
 
 	// Get a pointer to the buffers (read and write).
-	SampleBuffer currentBufferPtr = mParentBuffer->mBuffer.mBuffers[currentBufNum] + currentFrame;
-	SampleBuffer outputBufferPtr = outputBuffer.mBuffers[outBufNum];
+	SampleBuffer currentBufferPtr = mParentBuffer->mBuffer.buffer(currentBufNum) + currentFrame;
+	SampleBuffer outputBufferPtr = outputBuffer.buffer(outBufNum);
 
 	for (; numFrames > 0; numFrames -= framesWritten) {
 		canCopyToEnd = (currentFrame + numFrames) > ringBufferEndFrame;
@@ -78,7 +78,7 @@ void RingBufferTap::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw(C
 		else
 			currentFrame += framesWritten;
 		// increment buffer pointers
-		currentBufferPtr = mParentBuffer->mBuffer.mBuffers[currentBufNum] + currentFrame;
+		currentBufferPtr = mParentBuffer->mBuffer.buffer(currentBufNum) + currentFrame;
 		outputBufferPtr += framesWritten;
 	}
 	mTempCurrentFrame = currentFrame; // remember the state
@@ -111,8 +111,8 @@ void RingBufferTap::destructiveNextBuffer(Buffer &outputBuffer, unsigned outBufN
 	else if (currentFrame < ringBufferStartFrame)
 		currentFrame = ringBufferStartFrame;
 	unsigned currentBufNum = outBufNum % (mParentBuffer->mBuffer.mNumChannels);		
-	SampleBuffer currentBufferPtr = mParentBuffer->mBuffer.mBuffers[currentBufNum] + currentFrame;
-	SampleBuffer outputBufferPtr = outputBuffer.mBuffers[outBufNum];
+	SampleBuffer currentBufferPtr = mParentBuffer->mBuffer.buffer(currentBufNum) + currentFrame;
+	SampleBuffer outputBufferPtr = outputBuffer.buffer(outBufNum);
 		
 	unsigned framesWritten = 0;
 	for (; numFrames > 0; numFrames -= framesWritten) {
@@ -125,7 +125,7 @@ void RingBufferTap::destructiveNextBuffer(Buffer &outputBuffer, unsigned outBufN
 		else
 			currentFrame += framesWritten;
 				// increment buffer pointers
-		currentBufferPtr = mParentBuffer->mBuffer.mBuffers[currentBufNum] + currentFrame;
+		currentBufferPtr = mParentBuffer->mBuffer.buffer(currentBufNum) + currentFrame;
 		outputBufferPtr += framesWritten;
 	}
 				// remember the state
@@ -236,8 +236,8 @@ void RingBuffer::writeBuffer(Buffer &inputBuffer, unsigned bufNum) throw(CExcept
 
 	unsigned framesWritten = 0;
 	unsigned currentBufNum = bufNum % mBuffer.mNumChannels;
-	SampleBuffer currentBufferPtr = mBuffer.mBuffers[currentBufNum] + currentFrame;
-	SampleBuffer inputBufferPtr = inputBuffer.mBuffers[bufNum];
+	SampleBuffer currentBufferPtr = mBuffer.buffer(currentBufNum) + currentFrame;
+	SampleBuffer inputBufferPtr = inputBuffer.buffer(bufNum);
 //	printf("\tRB: %7.5f\n", *inputBufferPtr);
 	for (; numFrames > 0; numFrames -= framesWritten) {
 		bool copyToEnd = (currentFrame + numFrames) > ringBufferEndFrame;
@@ -248,7 +248,7 @@ void RingBuffer::writeBuffer(Buffer &inputBuffer, unsigned bufNum) throw(CExcept
 		else
 			currentFrame += framesWritten;
 							// increment buffer pointers
-		currentBufferPtr = mBuffer.mBuffers[currentBufNum] + currentFrame;
+		currentBufferPtr = mBuffer.buffer(currentBufNum) + currentFrame;
 		inputBufferPtr += framesWritten;
 	}
 							// remember the state
@@ -272,8 +272,8 @@ void RingBuffer::sumIntoBuffer(Buffer &inputBuffer, unsigned bufNum) throw(CExce
 	unsigned currentBufNum = bufNum % mBuffer.mNumChannels;
 	bool canCopyToEnd;
 	
-	SampleBuffer currentBufferPtr = mBuffer.mBuffers[currentBufNum] + currentFrame;
-	SampleBuffer inputBufferPtr = inputBuffer.mBuffers[bufNum];
+	SampleBuffer currentBufferPtr = mBuffer.buffer(currentBufNum) + currentFrame;
+	SampleBuffer inputBufferPtr = inputBuffer.buffer(bufNum);
 	
 	for (; numFrames > 0; numFrames -= framesWritten) {
 		canCopyToEnd = (currentFrame + numFrames) > ringBufferEndFrame;
@@ -284,7 +284,7 @@ void RingBuffer::sumIntoBuffer(Buffer &inputBuffer, unsigned bufNum) throw(CExce
 
 		if (canCopyToEnd) {
 			currentFrame = ringBufferStartFrame;
-			currentBufferPtr = mBuffer.mBuffers[currentBufNum] + currentFrame;
+			currentBufferPtr = mBuffer.buffer(currentBufNum) + currentFrame;
 		} else
 			currentFrame += framesWritten;
 	}
@@ -335,7 +335,7 @@ void BufferStream::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw(CE
 	unsigned currentFrame = mCurrentFrame;
 	unsigned bufferEndFrame = mBuffer->mNumFrames;
 	unsigned currentBufNum = outBufNum % (mBuffer->mNumChannels);
-	SampleBuffer outputBufferPtr = outputBuffer.mBuffers[outBufNum];
+	SampleBuffer outputBufferPtr = outputBuffer.buffer(outBufNum);
 	
 	// if we are past the end
 	if (currentFrame > bufferEndFrame) {
@@ -343,7 +343,7 @@ void BufferStream::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw(CE
 		return;
 	}
 	
-	SampleBuffer currentBufPtr = mBuffer->mBuffers[currentBufNum] + currentFrame;	
+	SampleBuffer currentBufPtr = mBuffer->buffer(currentBufNum) + currentFrame;	
 	unsigned framesWritten = 0;
 	bool copyToEnd = (currentFrame + numFrames) > bufferEndFrame;
 	framesWritten = copyToEnd ? (bufferEndFrame - currentFrame) : numFrames;
@@ -369,8 +369,8 @@ void BufferStream::writeBuffer(Buffer &inputBuffer, unsigned bufNum) throw(CExce
 	}
 		
 	unsigned currentBufNum = bufNum % mBuffer->mNumChannels;
-	SampleBuffer currentBufPtr = mBuffer->mBuffers[currentBufNum] + currentFrame;
-	SampleBuffer inputBufferPtr = inputBuffer.mBuffers[bufNum];
+	SampleBuffer currentBufPtr = mBuffer->buffer(currentBufNum) + currentFrame;
+	SampleBuffer inputBufferPtr = inputBuffer.buffer(bufNum);
 	unsigned framesWritten = 0;
 	bool copyToEnd = (currentFrame + numFrames) > bufferEndFrame;
 	framesWritten = copyToEnd ? (bufferEndFrame - currentFrame) : numFrames;

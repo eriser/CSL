@@ -74,7 +74,7 @@ public:
 	Grain * mSilentGrains;		///< shared grain lists - ptr to the free pool (silent)
 	Grain * mPlayingGrains;		///< ptr to the list of active grains
 	GrainulatorState gState;	///< granulator state flag
-	int64 gNow;					///< clock for accurate timing
+	long gNow;					///< clock for accurate timing
 	float sampsPerTick;			///< resolution of hi-res clock(s-rate / 1 billion)
 
 protected:

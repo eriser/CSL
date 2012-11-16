@@ -173,11 +173,20 @@ class AmbisonicDecoder : public AmbisonicUnitGenerator {
 public:
 	// Constructors & destructor:
 	/// Defaults to standard speaker layout as defined in "HOA_SpeakerLayout" class and to Ambisonic order of encoded input
-	AmbisonicDecoder(AmbisonicUnitGenerator &input, SpeakerLayout *layout = SpeakerLayout::defaultSpeakerLayout(), AmbisonicDecoderMethod method = kPROJECTION, AmbisonicDecoderFlavour flavour = kBASIC);
+	AmbisonicDecoder(AmbisonicUnitGenerator &input, 
+					SpeakerLayout *layout = SpeakerLayout::defaultSpeakerLayout(), 
+					AmbisonicDecoderMethod method = kPROJECTION, 
+					AmbisonicDecoderFlavour flavour = kBASIC);
 	/// Initializes with uniform Ambisonic order, defaults to standard speaker layout as defined in "HOA_SpeakerLayout" class
-	AmbisonicDecoder(UnitGenerator &input, unsigned order, SpeakerLayout *layout = SpeakerLayout::defaultSpeakerLayout(), AmbisonicDecoderMethod method = kPROJECTION, AmbisonicDecoderFlavour flavour = kBASIC);
+	AmbisonicDecoder(UnitGenerator &input, unsigned order, 
+					SpeakerLayout *layout = SpeakerLayout::defaultSpeakerLayout(), 
+					AmbisonicDecoderMethod method = kPROJECTION, 
+					AmbisonicDecoderFlavour flavour = kBASIC);
 	/// Initializes with hybrid Ambisonic order
-	AmbisonicDecoder(UnitGenerator &input, unsigned hOrder, unsigned vOrder, SpeakerLayout *layout = SpeakerLayout::defaultSpeakerLayout(), AmbisonicDecoderMethod method = kPROJECTION, AmbisonicDecoderFlavour flavour = kBASIC);
+	AmbisonicDecoder(UnitGenerator &input, unsigned hOrder, unsigned vOrder, 
+					SpeakerLayout *layout = SpeakerLayout::defaultSpeakerLayout(), 
+					AmbisonicDecoderMethod method = kPROJECTION, 
+					AmbisonicDecoderFlavour flavour = kBASIC);
 	
 	~AmbisonicDecoder();	///< Destructor
 		

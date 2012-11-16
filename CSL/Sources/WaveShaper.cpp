@@ -70,10 +70,10 @@ void WaveShaper::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CE
 					// get the sine wave
 	Sine::nextBuffer(outputBuffer, outBufNum);
 					// get the pointer to the output buffer to write into
-	sample * buffer = outputBuffer.mBuffers[outBufNum];
+	sample * buffer = outputBuffer.buffer(outBufNum);
 	unsigned numFrames = outputBuffer.mNumFrames;
 					// get the pointer to the transfer function
-	sample * function = mTransferFunction.mBuffers[0];
+	sample * function = mTransferFunction.buffer(0);
 	unsigned fcnLength = mTransferFunction.mNumFrames;
 	unsigned fcnLengthHalf = fcnLength / 2;	
 	sample samp;

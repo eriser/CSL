@@ -64,11 +64,12 @@ public:
 
 // I do this by hand so that I can keep argc/argv
 
-unsigned argCnt;						// globals for argc/v
-char **argVals;
+extern unsigned argCnt;						// globals for argc/v
+extern char **argVals;
 
-int main (int argc, char* argv[]) {
+int main (int argc, const char* argv[]) {
 	argCnt = argc;
-	argVals = argv;
-	return JUCE_NAMESPACE::JUCEApplication::main (argc, argv, new JUCECSLApplication());
+	argVals = (char **) argv;
+//	return JUCE_NAMESPACE::JUCEApplication::main (argc, argv, new JUCECSLApplication());
+	return JUCE_NAMESPACE::JUCEApplication::main (argc, argv);
 }

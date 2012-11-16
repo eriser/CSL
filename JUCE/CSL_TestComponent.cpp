@@ -117,7 +117,7 @@ extern IO * theIO;							// global IO object accessed by other threads
 Label* gCPULabel;							// CPU % label...
 AudioDeviceManager * gAudioDeviceManager;	// global JUCE audio device mgr
 unsigned argCnt;							// globals for argc/v from cmd-line
-char **argVals;
+const char **argVals;
 
 #define WRITE_TO_FILE						// support file recording
 #ifdef WRITE_TO_FILE
@@ -178,26 +178,26 @@ CSLComponent::CSLComponent ()
       familyCombo (0),
       recordButton (0)
 {
-    addAndMakeVisible (playButton = new TextButton (T("playNote")));
-    playButton->setButtonText (T("Play/Stop"));
+    addAndMakeVisible (playButton = new TextButton ("playNote"));
+    playButton->setButtonText ("Play/Stop");
     playButton->addButtonListener (this);
 
-    addAndMakeVisible (quitButton = new TextButton (T("quitAction")));
-    quitButton->setButtonText (T("Quit"));
+    addAndMakeVisible (quitButton = new TextButton ("quitAction"));
+    quitButton->setButtonText ("Quit");
     quitButton->addButtonListener (this);
 
-    addAndMakeVisible (testCombo = new ComboBox (T("test to run")));
+    addAndMakeVisible (testCombo = new ComboBox ("test to run"));
     testCombo->setEditableText (false);
     testCombo->setJustificationType (Justification::centredLeft);
     testCombo->setTextWhenNothingSelected (String::empty);
-    testCombo->setTextWhenNoChoicesAvailable (T("(no choices)"));
+    testCombo->setTextWhenNoChoicesAvailable ("(no choices)");
     testCombo->addListener (this);
 
     addAndMakeVisible (oscilloscopeL = new AudioWaveformDisplay());
-    oscilloscopeL->setName (T("new component"));
+    oscilloscopeL->setName ("new component");
 
-    addAndMakeVisible (label = new Label (T("CSL test"),
-                                          T("CSL 5 Demos")));
+    addAndMakeVisible (label = new Label ("CSL test",
+                                          "CSL 5 Demos"));
     label->setFont (Font (Font::getDefaultSerifFontName(), 30.0000f, Font::bold));
     label->setJustificationType (Justification::centredLeft);
     label->setEditable (false, false, false);
@@ -205,12 +205,12 @@ CSLComponent::CSLComponent ()
     label->setColour (TextEditor::textColourId, Colours::black);
     label->setColour (TextEditor::backgroundColourId, Colour (0x0));
 
-    addAndMakeVisible (prefsButton = new TextButton (T("new button")));
-    prefsButton->setButtonText (T("Audio Prefs"));
+    addAndMakeVisible (prefsButton = new TextButton ("new button"));
+    prefsButton->setButtonText ("Audio Prefs");
     prefsButton->addButtonListener (this);
 
-    addAndMakeVisible (cpuLabel = new Label (T("new label"),
-                                             T("0.0%")));
+    addAndMakeVisible (cpuLabel = new Label ("new label",
+                                             "0.0%"));
     cpuLabel->setFont (Font (Font::getDefaultSansSerifFontName(), 15.0000f, Font::bold));
     cpuLabel->setJustificationType (Justification::centredRight);
     cpuLabel->setEditable (false, false, false);
@@ -218,48 +218,48 @@ CSLComponent::CSLComponent ()
     cpuLabel->setColour (TextEditor::backgroundColourId, Colour (0x0));
 
     addAndMakeVisible (oscilloscopeR = new AudioWaveformDisplay());
-    oscilloscopeR->setName (T("new component"));
+    oscilloscopeR->setName ("new component");
 
     addAndMakeVisible (VUMeterL = new VUMeter());
-    VUMeterL->setName (T("new component"));
+    VUMeterL->setName ("new component");
 
     addAndMakeVisible (VUMeterR = new VUMeter());
-    VUMeterR->setName (T("new component"));
+    VUMeterR->setName ("new component");
 
-    addAndMakeVisible (scaleSlider = new Slider (T("new slider")));
+    addAndMakeVisible (scaleSlider = new Slider ("new slider"));
     scaleSlider->setRange (0, 1, 0);
     scaleSlider->setSliderStyle (Slider::LinearHorizontal);
     scaleSlider->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
     scaleSlider->addListener (this);
 
-    addAndMakeVisible (amplitudeSlider = new Slider (T("new slider")));
+    addAndMakeVisible (amplitudeSlider = new Slider ("new slider"));
     amplitudeSlider->setRange (-5, 5, 0);
     amplitudeSlider->setSliderStyle (Slider::LinearVertical);
     amplitudeSlider->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
     amplitudeSlider->addListener (this);
 
-    addAndMakeVisible (loopButton = new ToggleButton (T("new toggle button")));
-    loopButton->setButtonText (T("Loop"));
+    addAndMakeVisible (loopButton = new ToggleButton ("new toggle button"));
+    loopButton->setButtonText ("Loop");
     loopButton->addButtonListener (this);
 
-    addAndMakeVisible (familyCombo = new ComboBox (T("test family")));
+    addAndMakeVisible (familyCombo = new ComboBox ("test family"));
     familyCombo->setEditableText (false);
     familyCombo->setJustificationType (Justification::centredLeft);
     familyCombo->setTextWhenNothingSelected (String::empty);
-    familyCombo->setTextWhenNoChoicesAvailable (T("(no choices)"));
-    familyCombo->addItem (T("Oscillators"), 1);
-    familyCombo->addItem (T("Sources"), 2);
-    familyCombo->addItem (T("Envelopes"), 3);
-    familyCombo->addItem (T("Effects"), 4);
-    familyCombo->addItem (T("Panners"), 5);
+    familyCombo->setTextWhenNoChoicesAvailable ("(no choices)");
+    familyCombo->addItem ("Oscillators", 1);
+    familyCombo->addItem ("Sources", 2);
+    familyCombo->addItem ("Envelopes", 3);
+    familyCombo->addItem ("Effects", 4);
+    familyCombo->addItem ("Panners", 5);
 #ifdef USE_JMIDI
-    familyCombo->addItem (T("Controls"), 6);
+    familyCombo->addItem ("Controls", 6);
 #endif
-	familyCombo->addItem (T("Audio"), 7);
+	familyCombo->addItem ("Audio", 7);
     familyCombo->addListener (this);
 
-    addAndMakeVisible (recordButton = new ToggleButton (T("new toggle button")));
-    recordButton->setButtonText (T("Record"));
+    addAndMakeVisible (recordButton = new ToggleButton ("new toggle button"));
+    recordButton->setButtonText ("Record");
     recordButton->addButtonListener (this);
 
     //[UserPreSize]
@@ -282,8 +282,8 @@ CSLComponent::CSLComponent ()
 													   true /* select default device */));
 	if (error.isNotEmpty())
 		AlertWindow::showMessageBox (AlertWindow::WarningIcon,
-									 T("CSL Demo"),
-									 T("Couldn't open an output device!\n\n") + error);
+									 "CSL Demo",
+									 "Couldn't open an output device!\n\n" + error);
 										// get the audio device
 	AudioIODevice* audioIO = mAudioDeviceManager.getCurrentAudioDevice();
 	unsigned sRate = (unsigned) audioIO->getCurrentSampleRate();
@@ -332,12 +332,12 @@ CSLComponent::CSLComponent ()
 		sscanf(initMsg.c_str(), "%d %d", & whichSuite, & whichTest);
 		printf("Select suite %d, test %d\n", whichSuite, whichTest);
 	}
-	if (argCnt > 1)					// cmd-line args select test suite and test
-		whichSuite = atoi(argVals[1]);
-	if (argCnt > 2)
-		whichTest = atoi(argVals[2]);
-	if (argCnt > 1)
-		printf("Select suite %d, test %d\n", whichSuite, whichTest);
+//	if (argCnt > 1)					// cmd-line args select test suite and test
+//		whichSuite = atoi(argVals[1]);
+//	if (argCnt > 2)
+//		whichTest = atoi(argVals[2]);
+//	if (argCnt > 1)
+//		printf("Select suite %d, test %d\n", whichSuite, whichTest);
 									// combo menu selections
 	familyCombo->setSelectedId(whichSuite, true);
 	this->setComboLabels(whichSuite - 1);
@@ -465,7 +465,7 @@ void CSLComponent::buttonClicked (Button* buttonThatWasClicked)
 														false, false);
 											// ...and show it in a DialogWindow...
 		audioSettingsComp.setSize (500, 400);
-		DialogWindow::showModalDialog (T("Audio Settings"),
+		DialogWindow::showModalDialog ("Audio Settings",
 									   &audioSettingsComp,
 									   this,
 									   Colours::azure,
@@ -587,14 +587,17 @@ void CSLComponent::audioDeviceIOCallback (const float** inputChannelData,
 								// set up CSL buffer object
 	if (theIO->mGraph) {
 		outBuffer.setSize(totalNumOutputChannels, numSamples);
+		outBuffer.mAreBuffersAllocated = true;
 								// copy JUCE data ptrs
 		for (unsigned i = 0; i < totalNumOutputChannels; i++)
-			outBuffer.mBuffers[i] = outputChannelData[i];
+			outBuffer.setBuffer(i, outputChannelData[i]);
 
 		try {					//////
 								// Tell the IO to call its graph
 								//////
 			theIO->pullInput(outBuffer);
+			outBuffer.mIsPopulated = true;
+			outBuffer.mAreBuffersZero = false;
 
 		} catch (csl::CException e) {
 			logMsg(kLogError, "Error running CSL: graph: %s\n", e.what());
@@ -625,9 +628,9 @@ void CSLComponent::audioDeviceIOCallback (const float** inputChannelData,
 			if ( ! gFileBuffer)
 				return;
 								// get cache ptrs & copy outbuf
-			csl::sample * sPtr = gFileBuffer->mBuffers[0] + gSampIndex;
+			csl::sample * sPtr = gFileBuffer->buffer(0) + gSampIndex;
 			memcpy(sPtr, outputChannelData[0], (numSamples * sizeof(csl::sample)));
-			sPtr = gFileBuffer->mBuffers[1] + gSampIndex;
+			sPtr = gFileBuffer->buffer(1) + gSampIndex;
 			memcpy(sPtr, outputChannelData[1], (numSamples * sizeof(csl::sample)));
 								// update ptrs
 			gSampIndex += numSamples;

@@ -163,7 +163,7 @@ void FIR::readTaps(char * fileName) {
 void FIR::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException) {
 	float sum;
 	int tap;
-	sample * outPtr = outputBuffer.mBuffers[outBufNum];
+	sample * outPtr = outputBuffer.buffer(outBufNum);
 	unsigned numFrames = outputBuffer.mNumFrames;
 	unsigned numTaps = mFilterSpec->mNumTaps;
 	double *tapDataPtr = mFilterSpec->mTapData;

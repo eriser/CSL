@@ -38,9 +38,9 @@ void FFT::nextBuffer(Buffer& outputBuffer) throw (CException) {
 	
 	pullInput(numFrames);							// get the input samples via Effect
 													// Copy the input data into the buffer 
-	memcpy(mInBuf.mBuffers[0], mInputPtr, numFrames * sizeof(sample));
+	memcpy(mInBuf.buffer(0), mInputPtr, numFrames * sizeof(sample));
 	
-	SampleBuffer bufPtr = mInBuf.mBuffers[0];			// apply signal window to buffer
+	SampleBuffer bufPtr = mInBuf.buffer(0);			// apply signal window to buffer
 	SampleBuffer winPtr = mWindowBuffer;	
 	for (int i = 0; i < mFFTSize; i++)
 		*bufPtr++ *= *winPtr++;
@@ -142,7 +142,7 @@ void IFFT::nextBuffer(Buffer & outputBuffer) throw (CException) {
 		return;
 	}
 	mInBuf.setSize(1, outputBuffer.mNumFrames);
-	mInBuf.mBuffers[0] = (SampleBuffer) mSpectrum;
+	mInBuf.setBuffer(0, (SampleBuffer) mSpectrum);
 
 	mWrapper.nextBuffer(mInBuf, outputBuffer);			// execute the IFFT via the wrapper
 

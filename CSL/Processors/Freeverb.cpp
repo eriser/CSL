@@ -25,7 +25,7 @@ const float kScaleDry		= 2.0f;
 const float kScaleDamp		= 0.4f;
 const float kScaleRoom		= 0.28f;
 const float kOffsetRoom		= 0.7f;
-const float kInitialRoom	= 0.9;
+const float kInitialRoom	= 0.95;
 const float kInitialDamp	= 0.5f;
 const float kInitialWet		= 0.5;
 const float kInitialDry		= 0.5;
@@ -178,7 +178,7 @@ void Freeverb::setWidth(float twidth) {
 
 void Freeverb::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException) {
 	unsigned numFrames = outputBuffer.mNumFrames;
-	sample * fp = outputBuffer.mBuffers[outBufNum];
+	sample * fp = outputBuffer.buffer(outBufNum);
 	this->pullInput(outputBuffer);
 	sample * inputBuf = mInputPtr;
 	float out, input;
@@ -206,7 +206,7 @@ void Freeverb::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CExce
 // Constructor sets up splitter/joiner network
 
 Stereoverb::Stereoverb(UnitGenerator &input) {
-	split = new Splitter(input, 2);
+	split = new Splitter(input);
 
 	leftRev = new Freeverb(* split);			// 2 mono reverbs
 	leftRev->setWetLevel(kInitialWet);
@@ -226,6 +226,10 @@ Stereoverb::~Stereoverb() {
 	delete leftRev;
 	delete rightRev;
 	delete join;
+}
+
+bool Stereoverb::isActive() {
+	return(split->isActive());
 }
 
 void Stereoverb::setRoomSize(float size) {

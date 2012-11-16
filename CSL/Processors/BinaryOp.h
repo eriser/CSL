@@ -32,9 +32,8 @@ public:								/// The constructor for dual-UnitGenerator operation
 	BinaryOp(float op1, UnitGenerator & op2);
 	virtual ~BinaryOp();				///< The destructor
 
-									/// Finds out if the buffer changes over the given bufferLength range
-	void dump();						///< Prints instance info
-									/// Set the operand from a fixed float
+	void dump();					///< Prints instance info
+	void setOperand(float op);		///< Set the operand from a fixed float
 
 protected:	
 									/// Abstract function that will do the processing for each buffer
@@ -48,6 +47,14 @@ protected:
 	inline sample operandFixedValue(Buffer & outputBuffer);		
 
 };
+
+inline bool BinaryOp::inputIsFixed() {
+	return (Effect::inPort())->isFixed();
+}
+
+inline bool BinaryOp::operandIsFixed() {
+	return mInputs[CSL_OPERAND]->isFixed();
+}
 
 /// Declare the operand port (accessing the mInputs map) and current value.
 

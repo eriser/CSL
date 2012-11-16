@@ -25,12 +25,13 @@ public:
 	AmbisonicPanner(unsigned hOrder, unsigned vOrder, SpeakerLayout *layout = SpeakerLayout::defaultSpeakerLayout()); // Default constructor
 	~AmbisonicPanner();
 
-	virtual void addSource(SpatialSource &s);		///< Implement Panner's addSource, inserting an Encoder to each source.
-	virtual void removeSource(SpatialSource &s);	///< Remove a sound source
+	void addSource(SpatialSource &s);		///< Implement Panner's addSource, inserting an Encoder to each source.
+	void removeSource(SpatialSource &s);	///< Remove a sound source
 
 	void rotate(float amount); // AN ANGLE
 	
-	virtual void nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException); ///< fill the buffer with the next buffer_length of values
+											/// fill the buffer with the next buffer_length of values
+	void nextBuffer(Buffer &outputBuffer /*, unsigned outBufNum */) throw (CException); 
 
 	void dump() { }; ///< Print info about this instance
 
@@ -38,10 +39,8 @@ protected:
 	AmbisonicMixer *mMixer;
 	AmbisonicDecoder *mDecoder;
 	AmbisonicRotator *mRotator;
-//	void initialize();
-
-	virtual void *cache();		///< Returns an instance of it's cache data per sound source.
 	
+//	void initialize();	
 // 	virtual void speakerLayoutChanged();	///< called when the speaker layout changes, so panners update precalculated data	
 
 };

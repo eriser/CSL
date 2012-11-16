@@ -19,7 +19,7 @@ Window::Window(unsigned windowSize, float gain) : UnitGenerator(), mGain(gain) {
 }
 
 Window::~Window() {
-		mWindowBuffer.freeBuffers();
+	mWindowBuffer.freeBuffers();
 }
 
 void Window::setGain(float gain) {
@@ -32,20 +32,18 @@ void Window::setSize(unsigned windowSize) {
 	mWindowSize = windowSize;
 											// If previously allocated, free me first.
 	mWindowBuffer.freeBuffers();
-	mWindowBuffer.setSize(1, mWindowSize); // Allocate memory to store the window.
+	mWindowBuffer.setSize(1, mWindowSize);	// Allocate memory to store the window.
 	mWindowBuffer.allocateBuffers();
-	fillWindow(); // Fill the buffer with the window data.
-
+	fillWindow();							// Fill the buffer with the window data.
 }
 
 void Window::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException) {
 	/// get everything into registers
 	unsigned numFrames = outputBuffer.mNumFrames;
-	sample* outputBufferPtr = outputBuffer.mBuffers[outBufNum];
-	sample* windowBufferPtr = mWindowBuffer.mBuffers[0];
+	sample* outputBufferPtr = outputBuffer.buffer(outBufNum);
+	sample* windowBufferPtr = mWindowBuffer.buffer(0);
 	unsigned windowBufferPos = mWindowBufferPos;
 	unsigned windowBufferSize = mWindowSize;
-
 #ifdef CSL_DEBUG
 	logMsg("Window::nextBuffer");
 #endif
@@ -58,62 +56,73 @@ void Window::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CExcept
 }
 
 void Window::fillWindow() {
-	sample* windowBufferPtr = mWindowBuffer.mBuffers[0];
-	// create the window -- I make a Hamming window, subclasses may override
+	sample* windowBufferPtr = mWindowBuffer.buffer(0);
+			// create the window -- I make a Hamming window, subclasses may override
 	for (unsigned i = 0; i < mWindowSize; i++ )
-		windowBufferPtr[i] = (0.54 - 0.46*cos(CSL_TWOPI*i/(mWindowSize - 1) ));
-
+		*windowBufferPtr++ = (0.54 - 0.46*cos(CSL_TWOPI*i/(mWindowSize - 1) ));
 }
 
 void RectangularWindow::fillWindow() {
-	sample* windowBufferPtr = mWindowBuffer.mBuffers[0];
+	sample* windowBufferPtr = mWindowBuffer.buffer(0);
 	for (unsigned i = 0; i < mWindowSize; i++ )	// create the window 
-		windowBufferPtr[i] = mGain;
+		*windowBufferPtr++ = mGain;
+}
 
+void TriangularWindow::fillWindow() {
+	sample* windowBufferPtr = mWindowBuffer.buffer(0);
+	float accum = 0.0f;
+	unsigned winHalf = mWindowSize / 2;
+	float step = 1.0f / ((float) winHalf);
+	for (unsigned i = 0; i < winHalf; i++ ) {	// create the rising half 
+		*windowBufferPtr++ = accum;
+		accum += step;
+	}
+	for (unsigned i = winHalf; i < mWindowSize; i++ ) {	// create the falling half 
+		*windowBufferPtr++ = accum;
+		accum -= step;
+	}
 }
 
 void HammingWindow::fillWindow() {
-	sample* windowBufferPtr = mWindowBuffer.mBuffers[0];
+	sample* windowBufferPtr = mWindowBuffer.buffer(0);
 	sample increment = CSL_TWOPI/(mWindowSize - 1);
 	for (unsigned i = 0; i < mWindowSize; i++ )
-		windowBufferPtr[i] = (0.54 - 0.46*cos(i * increment));
-
+		*windowBufferPtr++ = (0.54 - 0.46*cos(i * increment));
 }
 
 void HannWindow::fillWindow() {
-	sample* windowBufferPtr = mWindowBuffer.mBuffers[0];
+	sample* windowBufferPtr = mWindowBuffer.buffer(0);
 	sample increment = CSL_TWOPI/(mWindowSize - 1);
 	
-	for (unsigned i = 0; i < mWindowSize; i++ ) // create the window
-		windowBufferPtr[i] = 0.5 * (1 - cos(i * increment)) * mGain;
-
+	for (unsigned i = 0; i < mWindowSize; i++ )
+		*windowBufferPtr++ = 0.5 * (1 - cos(i * increment)) * mGain;
 }
 
 void BlackmanWindow::fillWindow() {
-	sample* windowBufferPtr = mWindowBuffer.mBuffers[0];
+	sample* windowBufferPtr = mWindowBuffer.buffer(0);
 	sample increment = CSL_TWOPI/(mWindowSize - 1);
 	
-	for (unsigned i = 0; i < mWindowSize; i++ )	// create the window 
-		windowBufferPtr[i] = (0.42 - 0.5 * cos(i * increment) + 0.08 * cos(2 * i * increment)) * mGain;
-
+	for (unsigned i = 0; i < mWindowSize; i++ )
+		*windowBufferPtr++ = (0.42 - 0.5 * cos(i * increment) + 0.08 * cos(2 * i * increment)) * mGain;
 }
 
 void BlackmanHarrisWindow::fillWindow() {
-	sample* windowBufferPtr = mWindowBuffer.mBuffers[0];
+	sample* windowBufferPtr = mWindowBuffer.buffer(0);
 	sample increment = CSL_TWOPI/(mWindowSize - 1);
 	
-	for (unsigned i = 0; i < mWindowSize; i++ )	// create the window 
-		windowBufferPtr[i] = (0.35875 - 0.48829 * cos(i * increment) + 0.14128 * cos(2 * i * increment) - 0.01168 * cos(3 * i * increment)) * mGain;
-
+	for (unsigned i = 0; i < mWindowSize; i++ ) 
+		*windowBufferPtr++ = (0.35875 - 0.48829 * cos(i * increment) 
+					+ 0.14128 * cos(2 * i * increment) 
+					- 0.01168 * cos(3 * i * increment)) * mGain;
 }
 
 void WelchWindow::fillWindow() {
-	sample* windowBufferPtr = mWindowBuffer.mBuffers[0];
+	sample* windowBufferPtr = mWindowBuffer.buffer(0);
 	sample increment = 2.f/(mWindowSize - 1);
 	sample phase = -1.f;
 	
 	for (unsigned i = 0; i < mWindowSize; i++ )	{ // create the window 
-		windowBufferPtr[i] =  (1.f - phase * phase) * mGain;
+		*windowBufferPtr++ =  (1.f - phase * phase) * mGain;
 		phase += increment;
 	}
 }
@@ -121,4 +130,3 @@ void WelchWindow::fillWindow() {
 void Window::dump() {
 	logMsg("Window of size: %d samples", mWindowSize);
 }
-

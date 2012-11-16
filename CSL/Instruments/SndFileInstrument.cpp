@@ -21,7 +21,7 @@ SndFileInstrument::SndFileInstrument(string path, int start, int stop) :		// ini
 
 SndFileInstrument::SndFileInstrument(string folder, string path, int start, int stop) :		// initializers
 			Instrument(),
-			mPlayer(folder, path /*, start, stop */),
+			mPlayer(folder + path /*, start, stop */),
 			mEnvelope((mPlayer.stopFrame() - mPlayer.startFrame()) / mPlayer.frameRate(), 0.01, 0.01),
 			mPanner(mEnvelope, 0.0, 1.0),	// stereo panner
 			mRate(1.0) {						// set the player's playback rate

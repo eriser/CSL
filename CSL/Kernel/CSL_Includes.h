@@ -10,7 +10,7 @@
 #include "RingBuffer.h"			/// Utility circular buffer
 #include "BlockResizer.h"		/// BlockResizer
 #include "CPoint.h"				/// 2D & 3D points
-#include "ThreadUtilities.h"	/// CThread utilities
+//#include "ThreadUtilities.h"	/// CThread utilities
 #include "Variable.h"			/// Static/dynamic variables
 
 // Sources
@@ -59,7 +59,7 @@
 // MIDI
 
 #ifdef USE_JMIDI
-	#include "MIDIIOJ.h"
+//	#include "MIDIIOJ.h"
 #endif
 
 #ifdef USE_PMIDI

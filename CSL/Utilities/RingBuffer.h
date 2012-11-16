@@ -31,7 +31,7 @@ public:
 	unsigned mLoopEndFrame;					///< Number of frames away from buffer end.
 
 	void setOffset(int offset);
-	unsigned duration() const;
+	unsigned duration();
 	unsigned seekTo(int position, SeekPosition whence) throw(CException);
 	void setLoopStart(unsigned frame) { mLoopStartFrame = frame; }
 	void setLoopEnd(unsigned frame) { mLoopEndFrame = frame; }

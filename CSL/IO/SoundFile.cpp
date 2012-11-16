@@ -5,59 +5,76 @@
 
 #include "SoundFile.h"
 
+#ifdef USE_TAGS
+#include <taglib/fileref.h>			// libTag includes
+#include <taglib/tag.h>
+#endif
+
 using namespace csl;
+
+SoundFileMetadata::SoundFileMetadata() { }
+
+void SoundFileMetadata::dump() {
+	if (mTitle.empty()) {
+		logMsg("No metadata");
+		return;
+	}
+	int secs = mLength % 60;						// make a mins:secs display for the duration
+	int mins = (mLength - secs) / 60;
+	char dur[CSL_WORD_LEN];
+	if (secs < 10)
+		sprintf(dur, "%d:0%d", mins, secs);
+	else
+		sprintf(dur, "%d:%d", mins, secs);
+	logMsg("Tags: \"%s\" - %s - %s - %d - %s min", 
+			mTitle.c_str(), mArtist.c_str(), mAlbum.c_str(), mYear, dur);
+	logMsg("		trk %d - %s - %d kbps - %d Hz - %d ch", 
+			mTrack, mGenre.c_str(), mBitRate, mSampleRate, mChannels);
+//	if ( ! mComment.empty()) 
+//		logMsg("		Comment: %s", mComment.c_str());
+}
 
 // Abst_SoundFile Constructors
 
 Abst_SoundFile::Abst_SoundFile(string tpath, int tstart, int tstop) : 
 			WavetableOscillator(), Writeable(), Seekable(), 
+			mProperties(0),
 			mPath(string(tpath)), 
+			mMode(kSoundFileClosed),
+			mFormat(kSoundFileFormatOther),
 			mIsValid(false), 
 			mIsLooping(false),
 			mStart(tstart), 
 			mStop(tstop),
-			mRate(1.0) {
-	mCurrentFrame = 0;
-//	this->initFromSndfile();							// now do the init fcn
-//	logMsg("Opened sound file \"%s\"", mPath.c_str());
-}
-
-Abst_SoundFile::Abst_SoundFile(string folder, string tpath, int tstart, int tstop) : 
-			WavetableOscillator(), Writeable(), Seekable(), 
-			mPath(folder + tpath), 
-			mIsValid(false), 
-			mIsLooping(false),
-			mStart(tstart), 
-			mStop(tstop),
-			mRate(1.0) {
-	mCurrentFrame = 0;
-//	printf("SF: \"%s\"\n", mPath.c_str());
-//	this->initFromSndfile();							// now do the init fcn
-//	logMsg("Opened sound file \"%s\"", mPath.c_str());
-}
+			mRate(1.0),
+			mNumFrames(0),
+			mBytesPerSample(0),
+			mBase(0) { /* no-op */}
 
 ///< Copy constructor -- shares sample buffer
 
 Abst_SoundFile::Abst_SoundFile(Abst_SoundFile & otherSndFile) :
 			WavetableOscillator(), Writeable(), Seekable(), 
+			mProperties(otherSndFile.mProperties),
 			mMode(otherSndFile.mode()), 
 			mIsValid(otherSndFile.isValid()), 
 			mIsLooping(otherSndFile.isLooping()),
 			mStart(otherSndFile.startFrame()), 
 			mStop(otherSndFile.stopFrame()),
-			mRate(otherSndFile.playbackRate()) {
-	this->setWaveform(otherSndFile.mWavetable);
-	mCurrentFrame = 0;
+			mRate(otherSndFile.playbackRate()),
+			mBase(otherSndFile.mBase) {
+	this->setWaveform(otherSndFile.mWavetable), mCurrentFrame = 0;
 	if ( ! otherSndFile.isCached())
 		logMsg(kLogError, "Cannot copy uncached sound file \"%s\"", mPath.c_str());
 	setPath(otherSndFile.path());
-//	logMsg("Open sound file \"%s\"", mPath.c_str());
 }
 
 // Clean up data allocated
 
 Abst_SoundFile::~Abst_SoundFile() {
 //	freeBuffer();		this is done by the WaveTableOsc destructor
+	if (mProperties) 
+		delete mProperties;
 }
 
 void Abst_SoundFile::setPath(string tpath) {
@@ -65,7 +82,7 @@ void Abst_SoundFile::setPath(string tpath) {
 }
 
 unsigned Abst_SoundFile::channels() const {
-	return mIsValid ? mNumChannels : 1;
+	return mIsValid ? mNumChannels : 0;
 }
 
 float Abst_SoundFile::durationInSecs() {
@@ -81,6 +98,7 @@ void Abst_SoundFile::freeBuffer() {
 
 void Abst_SoundFile::checkBuffer(unsigned numFrames) {
 	if ( ! mWavetable.mAreBuffersAllocated) {				// if no sample read buffer allocated
+		mWavetable.freeBuffers();
 		mWavetable.setSize(mNumChannels, numFrames);
 		mWavetable.allocateBuffers();
 	} else if (mWavetable.mNumFrames < numFrames) {			// if asking for more samples than fit in the buffer
@@ -97,33 +115,62 @@ void Abst_SoundFile::checkBuffer(unsigned numFrames) {
 //#endif
 }
 
+void Abst_SoundFile::checkBuffer(unsigned numChans, unsigned numFrames) {
+	if ( ! mWavetable.mAreBuffersAllocated) {				// if no sample read buffer allocated
+		mNumChannels = numChans;
+		mWavetable.setSize(mNumChannels, numFrames);
+		mWavetable.allocateBuffers();
+							// if asking for more samples than fit in the buffer
+	} else if ((mWavetable.mNumFrames < numFrames) || (mNumChannels != numChans)) {
+		logMsg("Reallocating sound file buffers (%d)", numFrames * mNumChannels);	
+		mNumChannels = numChans;
+		mWavetable.freeBuffers();
+		mWavetable.setSize(mNumChannels, numFrames);
+		mWavetable.allocateBuffers();
+	}
+}
+
 // average all the channels to mono
 
 void Abst_SoundFile::mergeToMono() {
-	if ( ! mWavetable.mAreBuffersAllocated)
+	if ( ! mWavetable.mAreBuffersAllocated) {
+		logMsg("Abst_SoundFile::mergeToMono - buffers not allocated");	
 		return;
-	if (mNumChannels == 1)
+	}
+	if (mNumChannels == 1) {
+		logMsg("Abst_SoundFile::mergeToMono - sound file already mono");	
 		return;
+	}
 	Buffer newBuf(1, mWavetable.mNumFrames);	// create a new mono buffer
 	newBuf.allocateBuffers();
 												// sum channels
+	unsigned numCh = mNumChannels;
 	for (unsigned i = 0; i < mWavetable.mNumFrames; i++) {
 		sample sum = 0.0f;
-		for (unsigned j = 0; j < mNumChannels; j++)
-			sum += mWavetable.mBuffers[j][i];
+		for (unsigned j = 0; j < numCh; j++)
+			sum += (mWavetable.buffer(j))[i];
 												// store the average
-		newBuf.mBuffers[0][i] = sum / mNumChannels;
+		newBuf.setBuffer(0, i, sum / numCh);
 	}											// now overwrite my own mWavetable
 	mWavetable.copyFrom(newBuf);
 	newBuf.mDidIAllocateBuffers = false;
 	mWavetable.mDidIAllocateBuffers = true;
+	mNumChannels = 1;
+}
+
+// Abst_SoundFile::convertRate - perform sample-rate conversion
+
+void Abst_SoundFile::convertRate(int fromRate, int toRate) {
+#ifndef USE_SRC
+	return;
+#else
+	mWavetable.convertRate(fromRate, toRate);
+	mFrameRate = toRate;
+	mNumFrames = mWavetable.mNumFrames;
+#endif
 }
 
 // ~~~~~~~ Accessors ~~~~~~~~
-
-unsigned Abst_SoundFile::duration() const {
-	return mNumFrames;
-}
 
 void Abst_SoundFile::setStart(int val) { 
 	mStart = val;
@@ -160,6 +207,10 @@ void Abst_SoundFile::setStopRatio(float val) {
 	setStop((int) (val * duration()));
 }
 
+void Abst_SoundFile::setBase(int val) {
+	mBase = val;
+}
+
 // Rate and transposition
 
 void Abst_SoundFile::setRate(UnitGenerator & frequency) { 
@@ -186,6 +237,12 @@ bool Abst_SoundFile::isCached() {
 	return (mWavetable.mNumFrames == duration()); 
 }
 
+///< answer if file has X samples in RAM
+
+bool Abst_SoundFile::isCached(unsigned samps) {	
+	return (mWavetable.mNumFrames < (mCurrentFrame + samps));
+}
+
 // trigger the file to start
 
 void Abst_SoundFile::trigger() {
@@ -204,6 +261,35 @@ void Abst_SoundFile::setToEnd() {
 	mCurrentFrame = mStop;
 }
 
+// Read the ID3 tags. Returns true if able to read them from the file
+
+bool Abst_SoundFile::readTags() throw (CException) {
+#ifdef USE_TAGS
+	if ( ! mProperties) 
+		mProperties = new SoundFileMetadata;
+	TagLib::FileRef tfil(mPath.c_str());
+	if ( ! tfil.isNull() && tfil.tag()) {
+		TagLib::Tag *tag = tfil.tag();
+		mProperties->mTitle		= string(tag->title().toCString());
+		mProperties->mArtist	= string(tag->artist().toCString());
+		mProperties->mAlbum		= string(tag->album().toCString());
+		mProperties->mYear		= tag->year();
+		mProperties->mComment	= string(tag->comment().toCString());
+		mProperties->mTrack		= tag->track();
+		mProperties->mGenre		= string(tag->genre().toCString());
+	}
+	if( ! tfil.isNull() && tfil.audioProperties()) {
+		TagLib::AudioProperties *properties = tfil.audioProperties();
+		mProperties->mBitRate	= properties->bitrate();
+		mProperties->mSampleRate= properties->sampleRate();
+		mProperties->mChannels	= properties->channels();
+		mProperties->mLength	= properties->length();
+	}
+	return !tfil.isNull();
+#else
+	return false;
+#endif
+}
 
 // log snd file props
 
@@ -232,7 +318,7 @@ void Abst_SoundFile::nextBuffer(Buffer &outputBuffer) throw(CException) {
 		numFrames = mStop - currentFrame;
 		outputBuffer.zeroBuffers();
 	}
-	if ( ! this->isCached()) {						// if not playing from cache buffer
+	if ( ! this->isCached(numFrames)) {				// if not playing from cache buffer
 		this->readBufferFromFile(numFrames);		// read from file
 	}
 
@@ -246,14 +332,14 @@ void Abst_SoundFile::nextBuffer(Buffer &outputBuffer) throw(CException) {
 				int which = csl_min(i, (mNumChannels - 1));
 				SampleBuffer sndPtr = mWavetable.monoBuffer(which) + currentFrame;
 				SampleBuffer outPtr = outputBuffer.monoBuffer(i);
-				memcpy(outPtr, sndPtr, numBytes);
+				memcpy(outPtr, sndPtr, numBytes);					// here's the memcpy
 			}
 		} else {													// else loop applying scale/offset
 			sample samp;
 			for (unsigned i = 0; i < outputBuffer.mNumChannels; i++) {
 				SampleBuffer buffer = outputBuffer.monoBuffer(i);	// get pointer to the selected output channel
 				SampleBuffer dPtr = mWavetable.monoBuffer(csl_min(i, (mNumChannels - 1))) + currentFrame;
-				for (unsigned j = 0; j < numFrames; j++) {			// sample loop
+				for (unsigned j = 0; j < numFrames; j++) {			// here's the sample loop
 					samp = (*dPtr++ * scaleValue) + offsetValue; 	// get and scale the file sample
 					*buffer++ = samp;
 					UPDATE_SCALABLE_CONTROLS;						// update the dynamic scale/offset
@@ -268,7 +354,7 @@ void Abst_SoundFile::nextBuffer(Buffer &outputBuffer) throw(CException) {
 		for (unsigned i = 0; i < mNumChannels; i++)
 			WavetableOscillator::nextBuffer(outputBuffer, i);	
 	}
-	currentFrame += numFrames;								// incrememnt buf ptr
+	currentFrame += numFrames;								// increment buf ptr
 	if ((currentFrame >= (unsigned) mStop) && mIsLooping)	// if we are past the end of the file...
 		currentFrame = 0;							// this will click, have to call nextBuffer() recursively here
 	mCurrentFrame = currentFrame;					// store back to member
@@ -308,17 +394,20 @@ void SoundCue::readFrom (FILE *input) {
 	char cmName[128];
 	unsigned start, stop;
 
-	fscanf(input, "%s %u %u\n", cmName, &start, &stop);
-	mName = cmName;
-	mStart = start;
-	mStop = stop;
-	mCurrent = mStart;
+	if(fscanf(input, "%s %u %u\n", cmName, &start, &stop) == 3) {
+	    mName = cmName;
+	    mStart = start;
+	    mStop = stop;
+	    mCurrent = mStart;
+	}
 }
 
 // Pretty-print the receiver
 
 void SoundCue::dump() {
-	logMsg("\tSC: \"%s\" %d - %d (%.3f)\n", mName.c_str(), mStart, mStop, ((float)(mStop - mStart) / (float)(mFile->frameRate() * mFile->channels())));
+	logMsg("\tSC: \"%s\" %d - %d (%.3f)\n", 
+			mName.c_str(), mStart, mStop, 
+			((float)(mStop - mStart) / (float)(mFile->frameRate() * mFile->channels())));
 }
 
 // Copy samples from the file's sample buffer to the output
@@ -327,11 +416,11 @@ void SoundCue::dump() {
 
 void SoundCue::nextBuffer(Buffer &outputBuffer) throw(CException) {
 	unsigned numFrames = outputBuffer.mNumFrames;
-	unsigned toCopy, toZero;
+	unsigned toCopy = 0, toZero;
 	SampleBuffer out;
 	
 	for (unsigned h = 0; h < outputBuffer.mNumChannels; h++) {
-		out = outputBuffer.mBuffers[h];
+		out = outputBuffer.buffer(h);
 		if (mCurrent >= mStop) {			// if done
 			for (unsigned i = 0; i < numFrames; i++) 
 				*out++ = 0.0;
@@ -339,7 +428,7 @@ void SoundCue::nextBuffer(Buffer &outputBuffer) throw(CException) {
 		}	
 		SampleBuffer samps = (mFile->mWavetable.monoBuffer(0)) + (mCurrent * mFile->channels()) + h;
 		if ( ! mFile->isValid()) {		// if no file data
-			printf("\tCannot play uncached sound file \"%s\"n", mName.c_str());
+			fprintf(stderr, "\tCannot play uncached sound file \"%s\"n", mName.c_str());
 			for (unsigned i = 0; i < numFrames; i++) 
 				*out++ = 0.0;
 			continue;
@@ -349,7 +438,7 @@ void SoundCue::nextBuffer(Buffer &outputBuffer) throw(CException) {
 		if ((mCurrent + numFrames) >= (unsigned) mStop) {
 			toCopy = mStop - mCurrent;
 			toZero = numFrames - toCopy;
-		//	printf("\tSample \"%s\" finished\n", mName);
+		//	fprintf(stderr, "\tSample \"%s\" finished\n", mName);
 		}						// Now do the copy loops
 		for (unsigned i = 0; i < toCopy; i++) 
 			*out++ = *samps++;
@@ -376,6 +465,70 @@ void SoundCue::trigger(void) {
 	mCurrent = mStart;
 	mFloatCurrent = 0.0;
 }
+
+#ifdef USE_SNDFILEBUFFER
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//
+// SoundFileBuffer implementation
+//
+
+#include "SoundFileL.h"			// abstract class header
+
+
+SoundFileBuffer::SoundFileBuffer(string path, unsigned numFrames) 
+		: Buffer(CGestalt::numOutChannels(), numFrames) {
+	mFile = (Abst_SoundFile * ) (new LSoundFile(path));
+	mFile->openForRead(false);
+	mFile->readBufferFromFile(CGestalt::sndFileFrames());
+	mNumChannels = mFile->channels();
+	mNumFrames = mFile->duration();
+	mNumAlloc = csl_min(CGestalt::sndFileFrames(), mNumFrames);
+	mMonoBufferByteSize = mNumFrames * mNumChannels * sizeof(sample);
+	mAreBuffersAllocated = true;
+	mDidIAllocateBuffers = false;
+	
+	mBuffers = new SampleBuffer[mNumChannels];	// reserve space for buffers
+	for (unsigned i = 0; i < mNumChannels; i++)
+		setBuffer(i, mFile->buffer(i));
+}
+
+///< Copy constructor -- shares sample buffer
+
+SoundFileBuffer::SoundFileBuffer(Abst_SoundFile & otherSndFile) {
+	// setBuffer
+}
+
+SoundFileBuffer::~SoundFileBuffer() { }
+
+
+/// answer a samp ptr, testing that it's in RAM
+
+sample * SoundFileBuffer::samplePtrFor(unsigned channel, unsigned offset){
+	if ((mFile->base() <= offset) && (mFile->base() + mFile->cacheSize() > offset))
+		return(mFile->mWavetable.buffer(channel) + (offset - mFile->base()));
+	if (mFile) {
+		mFile->seekTo(offset);
+		mFile->readBufferFromFile(mFile->mWavetable.mNumFrames);
+		return(mFile->mWavetable.buffer(channel));
+	}
+	return NULL;
+}
+
+/// answer a samp ptr tested for extent (offset + maxFrame)
+
+sample * SoundFileBuffer::samplePtrFor(unsigned channel, unsigned offset, unsigned maxFrame){
+	if ((mFile->base() <= offset) && ((mFile->base() + mNumAlloc) > (offset + maxFrame)))
+		return (mFile->mWavetable.buffer(channel) + (offset - mFile->base()));
+	if (mFile) {
+		mFile->seekTo(offset);
+		mFile->readBufferFromFile(mFile->mWavetable.mNumFrames);
+		return(mFile->mWavetable.buffer(channel));
+	}
+	return NULL;
+}
+
+#endif
 
 #ifdef UNDEFINED
 

@@ -156,9 +156,9 @@ public:
 						// 2D Rotation
 	void rotateBy(double angle);
 						// Pretty-printing
-	void dump() { printf(" CP: %g @ %g @ %g", x, y, z); }
+	void dump() { fprintf(stderr, " CP: %g @ %g @ %g", x, y, z); }
 	void dumpPol() {
-		printf(" CP: %g @ %g @ %g", 
+		fprintf(stderr, " CP: %g @ %g @ %g", 
 				r(), 
 				theta()* CSL_DEGS_PER_RAD, 
 				ele()* CSL_DEGS_PER_RAD);

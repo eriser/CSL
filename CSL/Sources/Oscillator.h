@@ -33,7 +33,7 @@ public:								/// Constructor: parameters are optional.
 	Oscillator(float frequency = 220.0, float ampl = 1.0, float offset = 0.0, float phase = 0.0);
 	Oscillator(UnitGenerator & frequency, float ampl = 1.0, float offset = 0.0, float phase = 0.0);
 	Oscillator(UnitGenerator & frequency, UnitGenerator & ampl, float offset = 0.0, float phase = 0.0);
-	~Oscillator();						///< Destructor
+	virtual ~Oscillator();				///< Destructor
 	
 	void dump();						///< print the receiver for debugging
 };
@@ -73,7 +73,8 @@ public:
 	WavetableOscillator(Buffer & wave, float frequency = 220.0f, float phase = 0.0f);
 	WavetableOscillator(float frequency = 1, float ampl = 1.0f, float offset = 0.0f, float phase = 0.0f);
 #endif
-	void setWaveform(Buffer & wave);		///< plug in waveforms
+	~WavetableOscillator();				///< Destructor
+	void setWaveform(Buffer & wave, bool freeBufs = true);	///< plug in waveforms
 										/// set the interpolation flag
 	void setInterpolate(InterpolationPolicy whether) { mInterpolate = whether; };
 										// get the next buffer of samples

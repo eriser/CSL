@@ -51,14 +51,14 @@ void BlockResizer::nextBuffer(Buffer & outBuffer) throw(CException) {
 												// channel buffer copy loop
 		for (unsigned i = 0; i < outBuffer.mNumChannels; i++)	{
 			unsigned whichIn = csl_min(i,  (mNumChannels - 1));		// handle mono/stereo
-			SampleBuffer src = mInputBuffer.mBuffers[whichIn] + mFramePointer;
-			SampleBuffer dest = outBuffer.mBuffers[i] + copiedSoFar;
+			SampleBuffer src = mInputBuffer.buffer(whichIn) + mFramePointer;
+			SampleBuffer dest = outBuffer.buffer(i) + copiedSoFar;
 			memcpy (dest, src, toCopy * sizeof(sample));
 		}
 //		logMsg("r %d s %d p %d", toCopy, copiedSoFar, mFramePointer);
 		
 		mFramePointer += toCopy;				// now update pointers
-		if (mFramePointer >= mBufferSize)
+		if (mFramePointer >= (int) mBufferSize)
 			mFramePointer = -1;					// time to grab more input
 		copiedSoFar += toCopy;
 		if (copiedSoFar >= numFrames)			// return if we're done

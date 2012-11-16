@@ -21,7 +21,7 @@ void Lorenz::dump() {
 
 // The default next_buffer function just plays one variable of the Lorenz Strange Attractor between +1 and -1
 void Lorenz::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	sample *bufferPtr = outputBuffer.mBuffers[outBufNum];
+	sample *bufferPtr = outputBuffer.buffer(outBufNum);
 	unsigned numFrames = outputBuffer.mNumFrames;
 	float xx , yy, zz;
 	static float max;

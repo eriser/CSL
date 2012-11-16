@@ -26,23 +26,32 @@ public:
 	Mixer(unsigned chans, UnitGenerator & mScale);
 	virtual ~Mixer();
 					// Accessing
-	UGenVector getInputs(void) { return(mSources); };				///< list of inputs, arbitrary # of channels
-	unsigned getNumInputs(void) { return(mSources.size()); };		///< number of active inputs
+	UGenVector * getInputs(void) { return(&mSources); };	///< list of inputs, arbitrary # of channels
+	unsigned getNumInputs(void);				///< number of active inputs
 					/// add/remove inputs
 	void addInput(UnitGenerator & inp);
 	void addInput(UnitGenerator * inp);
+	void addInput(UnitGenerator & inp, float ampl);
+	void addInput(UnitGenerator * inp, float ampl);
 	void removeInput(UnitGenerator & inp);
+	void removeInput(UnitGenerator * inp);
 	void deleteInputs();
+					/// set the scale of an input
+	void scaleInput(UnitGenerator & inp, float val);	
+
 					/// fill the buffer with the next buffer_length of values
 	void nextBuffer(Buffer &outputBuffer) throw (CException);
 					/// print info about this instance
 	void dump();
 	unsigned activeSources();
+	bool isActive() { return mSources.size() > 0; };	///< mixers with inputs are always active
 
 protected:
-	UGenVector mSources;					///< list of inputs, arbitrary # of channels
-	Buffer mOpBuffer;						///< buffer used for operations, if needed
+	UGenVector mSources;						///< *vector* of inputs, arbitrary # of channels
+	FloatVector mScaleValues;					///< scales of inputs
+	Buffer mOpBuffer;							///< buffer used for operations, if needed
 	void allocateOpBuffer(unsigned chans);		///< allocate the op buffer
+	bool hasScales;								///< set to true if any of the scale values != 1.0
 };
 
 /// The CSL mono-to-stereo L/R panner class
@@ -60,14 +69,15 @@ public:
 	Panner();												///< empty constructor
 	Panner(UnitGenerator &input);							///< given an input stream
 	Panner(UnitGenerator &input, UnitGenerator &position);	///< given input and position stream
-	Panner(UnitGenerator &input, float position);				///< given an input and an amplitude const
-	Panner(UnitGenerator &input, UnitGenerator &position, UnitGenerator &amplitude);	///< given an amplitude stream
+	Panner(UnitGenerator &input, float position);			///< given an input and an amplitude const
+	Panner(UnitGenerator &input, UnitGenerator &position, UnitGenerator &amplitude);///< given an amplitude stream
 	Panner(UnitGenerator &input, UnitGenerator &position, float amplitude);			///< given an amplitude value
 	Panner(UnitGenerator &input, float position, float amplitude);					///< given an amplitude value and pan value
 	~Panner();
 						/// Operations
 	void setPosition(UnitGenerator &pan);						///< set the position to a UGen
 	void setPosition(float pan);								///< set the position to a float
+
 	virtual unsigned numChannels() const { return 2; };			///< I'm stereo!
 
 	virtual void nextBuffer(Buffer &outputBuffer) throw (CException);
@@ -126,7 +136,7 @@ public:						// Constructors / destructor
 
 protected:
 	float mWidth;			// stereo width range: -1->1. -1 = mix to mono, 0 = no change 1 = widen
-	float mGain;				// amplitude scaler 0->10, 1 -- no scaling
+	float mGain;			// amplitude scaler 0->10, 1 -- no scaling
 	float mPan;				// pan position 0->1 0.5 -- no panning
 };
 

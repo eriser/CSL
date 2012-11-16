@@ -62,7 +62,7 @@ public:
 								/// next buffer interpolator
 	void nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException);
 								/// handy version given Scalable port pointers
-	void nextBuffer(Buffer &outputBuffer, unsigned outBufNum, Port * scalePort, Port * offsetPort) throw (CException);
+	virtual void nextBuffer(Buffer &outputBuffer, unsigned outBufNum, Port * scalePort, Port * offsetPort) throw (CException);
 
 	void reset();				///< reset counters
 	void trigger() { this->reset(); };		///< reset internal time to restart envelope
@@ -89,11 +89,11 @@ typedef map<float, LineSegment *> Breakpoints;
 class Envelope : public UnitGenerator, public Scalable {
 public:
 	Envelope() : UnitGenerator(), Scalable(1, 0), mDuration(0), mSegments(0), mValues(0) { };
-	Envelope(LineMode mode, float t, float x1, float y1, float x2 = NULL, float y2 = 1.0, float x3 = NULL, float y3 = 1.0,
-				float x4 = NULL, float y4 = 1.0, float x5 = NULL, float y5 = 1.0, float x6 = NULL, float y6 = 1.0);
+	Envelope(LineMode mode, float t, float x1, float y1, float x2 = 0, float y2 = 1.0, float x3 = 0, float y3 = 1.0,
+				float x4 = 0, float y4 = 1.0, float x5 = 0, float y5 = 1.0, float x6 = 0, float y6 = 1.0);
 	Envelope(LineMode mode, float t, unsigned int size, float x[], float y[]);
-	Envelope(float t, float x1, float y1, float x2 = NULL, float y2 = 1.0, float x3 = NULL, float y3 = 1.0,
-				float x4 = NULL, float y4 = 1.0, float x5 = NULL, float y5 = 1.0, float x6 = NULL, float y6 = 1.0);
+	Envelope(float t, float x1, float y1, float x2 = 0, float y2 = 1.0, float x3 = 0, float y3 = 1.0,
+				float x4 = 0, float y4 = 1.0, float x5 = 0, float y5 = 1.0, float x6 = 0, float y6 = 1.0);
 	Envelope(float t, unsigned int size, float x[], float y[]);
 
 	virtual ~Envelope();
@@ -186,10 +186,10 @@ public:
 	The line segments used internally look something like the following
 
 	| 
-	|      /---------------			.
-	|     /			  \			.
-	|---/			   \			.
-	|				    \-----		.
+	|     /---------------			
+	|    /				   \			
+	|---/					\			
+	|						 \-----		
 	------------------------------------
 
 	Note that, internally, the breakpoints are kept with cumulative times, whereas the
@@ -285,4 +285,3 @@ protected:
 }
 
 #endif
-

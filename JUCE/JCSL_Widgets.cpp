@@ -6,7 +6,6 @@
 //		RangeSlider - interprets its two markers as base value and range, rather than min/max
 //			i.e., the upper marker is the base value, and the lower one is the random range
 //		VUMeter (based on killerbobjr's MeterComponent)
-//
 
 #include "JCSL_Widgets.h"
 #include <math.h>
@@ -21,7 +20,7 @@
 AudioWaveformDisplay::AudioWaveformDisplay() {
 	bufferPos = 0;
 	bufferSize = CSL_mMaxBufferFrames;			// allocate buffer
-	circularBuffer = (float*) juce_calloc (sizeof (float) * bufferSize);
+	circularBuffer = (float*) calloc (1, sizeof (float) * bufferSize);
 	currentOutputLevel = 0.0f;
 	numSamplesIn = 0;
 	setOpaque (true);
@@ -30,7 +29,7 @@ AudioWaveformDisplay::AudioWaveformDisplay() {
 }
 
 AudioWaveformDisplay::~AudioWaveformDisplay() {
-	juce_free (circularBuffer);
+	free (circularBuffer);
 }
 
 // set up oscilloscope state (since constructor takes no args)
@@ -42,7 +41,7 @@ void AudioWaveformDisplay::initialise(int channel, unsigned rate, unsigned windo
 		delayInMsec = 0;
 	samplesToAverage = window;			// avg range
 	bufferSize = CSL_mMaxBufferFrames / 4;  // * window;			// allocate buffer
-	circularBuffer = (float*) juce_calloc (sizeof (float) * bufferSize);
+	circularBuffer = (float*) calloc (1, sizeof (float) * bufferSize);
 	zeroCross = zeroX;					// whether to trigger on zero-X
 	whichChannel = channel;
 //	startTimer(delayInMsec);			// repaint every so-many msec
@@ -164,7 +163,7 @@ void AudioWaveformDisplay::audioDeviceStopped() {
 
 AudioSpectrumDisplay::AudioSpectrumDisplay() : AudioWaveformDisplay() {
 	bufferSize = 512;				// # windows to buffer
-	spectrumBuffer = (float **) juce_calloc (sizeof (float *) * bufferSize);
+	spectrumBuffer = (float **) calloc (1, sizeof (float *) * bufferSize);
 	bufferPos = 0;
 	mLogDisplay = false;
 	mSpectroDisplay = true;			// open in spectrogram display
@@ -172,7 +171,7 @@ AudioSpectrumDisplay::AudioSpectrumDisplay() : AudioWaveformDisplay() {
 }
 
 AudioSpectrumDisplay::~AudioSpectrumDisplay() {
-	juce_free (spectrumBuffer);
+	free (spectrumBuffer);
 }
 
 // callaback copies *mag* samples in spectrumBuffer
@@ -303,18 +302,18 @@ void RangeSlider::mouseDown (const MouseEvent& e) {
 			valueBox->hideEditor (true);
 		sliderBeingDragged = 0;
 		mousePos = (float) (isVertical() ? e.y : e.x);
-		maxPosDistance = fabsf (getLinearSliderPos (valueMax) - 0.1f - mousePos);
-		minPosDistance = fabsf (getLinearSliderPos (valueMin) + 0.1f - mousePos);
+		maxPosDistance = fabsf (getLinearSliderPos (getMaxValue()) - 0.1f - mousePos);
+		minPosDistance = fabsf (getLinearSliderPos (getMinValue()) + 0.1f - mousePos);
 		if (maxPosDistance <= minPosDistance)
 			sliderBeingDragged = 2;
 		else
 			sliderBeingDragged = 1;
 	}
-	minMaxDiff = valueMax - valueMin;
+	minMaxDiff = getMaxValue() - getMinValue();
 	mouseXWhenLastDragged = e.x;
 	mouseYWhenLastDragged = e.y;
 	if (sliderBeingDragged == 2)
-		valueWhenLastDragged = currentValue;
+		valueWhenLastDragged = getValue();
 	else if (sliderBeingDragged == 1)
 		valueWhenLastDragged = baseValue;
 	valueOnMouseDown = valueWhenLastDragged;            
@@ -379,7 +378,7 @@ void RangeSlider::setRangeValue (double newValue, const bool sendUpdateMessage, 
 // Default constructor = 32-segment vertical VU meter
 
 VUMeter::VUMeter() :
-			Component(T("VU Meter")),
+			Component("VU Meter"),
 			m_channel(0),
 			m_img(0),
 			m_meterType(VUMeter::Vertical),
@@ -417,7 +416,7 @@ VUMeter::VUMeter(int channel,
 				const Colour& max, 
 				const Colour& back, 
 				float threshold) : 
-    Component(T("VU Meter")),
+    Component("VU Meter"),
     m_channel(channel),
 	m_img(0),
     m_meterType(type),
@@ -455,7 +454,7 @@ VUMeter::VUMeter(int channel,
 				Image* overlay, 
 				float minPosition, 
 				float maxPosition, 
-				Point& needleCenter,
+				Point<int>& needleCenter,
 				int needleLength,
 				int needleWidth,
 				int arrowLength,
@@ -463,7 +462,7 @@ VUMeter::VUMeter(int channel,
 				const Colour& needleColour, 
 				int needleDropShadow, 
 				int dropDistance) :
-    Component(T("Meter Component")),
+    Component("Meter Component"),
     m_channel(channel),
     m_img(0),
     m_meterType(Analog),
@@ -521,19 +520,18 @@ void VUMeter::buildImage(void) {
 		m_img = new Image(Image::RGB, w, h, false);
 		Graphics g(*m_img);
 
-		GradientBrush brLower(m_minColour, 0, 0, m_thresholdColour, w * m_threshold, 0, false);
-        g.setBrush(&brLower);
+		ColourGradient brLower(m_minColour, 0, 0, m_thresholdColour, w * m_threshold, 0, false);
+        g.setGradientFill(brLower);
         g.fillRect(0, 0, int(w * m_threshold), h);
 
-        GradientBrush brUpper(m_thresholdColour, int(w * m_threshold), 0, m_maxColour, w, 0, false);
-        g.setBrush(&brUpper);
+        ColourGradient brUpper(m_thresholdColour, int(w * m_threshold), 0, m_maxColour, w, 0, false);
+        g.setGradientFill(brUpper);
         g.fillRect(int(w * m_threshold), 0, w, h);
 
         if (m_segments)
         {
             // Break up our image into segments
-            SolidColourBrush b(m_backgroundColour);
-            g.setBrush(&b);
+            g.setColour(m_backgroundColour);
             g.fillRect (0, 0, w, m_markerWidth);
             g.fillRect (0, h-m_markerWidth, w, m_markerWidth);
             for (int i = 0; i <= m_segments; i++)
@@ -544,18 +542,17 @@ void VUMeter::buildImage(void) {
 		Graphics g(*m_img);
 
         int hSize = (int) (h * m_threshold);
-        GradientBrush brLower(m_minColour, 0, h, m_thresholdColour, 0, h - hSize, false);
-        g.setBrush(&brLower);
+        ColourGradient brLower(m_minColour, 0, h, m_thresholdColour, 0, h - hSize, false);
+        g.setGradientFill(brLower);
         g.fillRect(0, h - hSize, w, hSize);
 
-        GradientBrush brUpper(m_thresholdColour, 0, h - hSize, m_maxColour, 0, 0, false);
-        g.setBrush(&brUpper);
+        ColourGradient brUpper(m_thresholdColour, 0, h - hSize, m_maxColour, 0, 0, false);
+        g.setGradientFill(brUpper);
         g.fillRect(0, 0, w, h - hSize);
 
         if (m_segments) {
             // Break up our image into segments
-            SolidColourBrush b(m_backgroundColour);
-            g.setBrush(&b);
+            g.setColour(m_backgroundColour);
             g.fillRect (0, 0, m_markerWidth, h);
             g.fillRect (w-m_markerWidth, 0, m_markerWidth, h);
             for (int i = 0; i <= m_segments; i++)
@@ -600,16 +597,15 @@ void VUMeter::buildImage(void) {
         Image img(Image::RGB, w, h, false);
         Graphics g2(img);
 
-        GradientBrush brLower(m_minColour, 0, 0, m_thresholdColour, w * m_threshold, 0, false);
-        g2.setBrush(&brLower);
+        ColourGradient brLower(m_minColour, 0, 0, m_thresholdColour, w * m_threshold, 0, false);
+        g2.setGradientFill(brLower);
         g2.fillRect(0, 0, int(w * m_threshold), h);
 
-        GradientBrush brUpper(m_thresholdColour, int(w * m_threshold), 0, m_maxColour, w, 0, false);
-        g2.setBrush(&brUpper);
+        ColourGradient brUpper(m_thresholdColour, int(w * m_threshold), 0, m_maxColour, w, 0, false);
+        g2.setGradientFill(brUpper);
         g2.fillRect(int(w * m_threshold), 0, w, h);
 
-        ImageBrush ib(&img, 0, 0, 1.0);
-        g.setBrush(&ib);
+        g.setTiledImageFill(img, 0, 0, 1.0);
 
         // Stroke the arc with the gradient
         g.strokePath(p, PathStrokeType(strokeWidth));
@@ -699,7 +695,7 @@ void VUMeter::paint (Graphics& g) {
 
     // Bevel outline for the entire draw area
 	if (m_inset)
-		g.drawBevel(0, 0, getWidth(), getHeight(), 
+		LookAndFeel::drawBevel(g, 0, 0, getWidth(), getHeight(), 
 			m_inset, 
 			m_raised?Colours::white.withAlpha(0.9f):Colours::black.withAlpha(0.9f), 
 			m_raised?Colours::black.withAlpha(0.9f):Colours::white.withAlpha(0.9f));
@@ -709,33 +705,33 @@ void VUMeter::paint (Graphics& g) {
     if (m_meterType == Horizontal) {
         if (m_segments) {
             float val = float(int(m_value * m_segments)) / m_segments;
-            g.drawImage(m_img, m_inset, m_inset, w * val, h, 0, 0, w * val, h);
+            g.drawImage(*m_img, m_inset, m_inset, w * val, h, 0, 0, w * val, h);
         } else
-            g.drawImage(m_img, m_inset, m_inset, w * m_value, h, 0, 0, w * m_value, h);
+            g.drawImage(*m_img, m_inset, m_inset, w * m_value, h, 0, 0, w * m_value, h);
     } else if (m_meterType == Vertical) {
 		int hSize;
         if (m_segments)
             hSize = h * float(int(m_value * m_segments)) / m_segments;
         else
             hSize = h * m_value;
-        g.drawImage(m_img, m_inset, m_inset + h - hSize, w, hSize, 0, h - hSize, m_img->getWidth(), hSize);
+        g.drawImage(*m_img, m_inset, m_inset + h - hSize, w, hSize, 0, h - hSize, m_img->getWidth(), hSize);
     } else if (m_meterType == Analog) {
 		if (m_background)
-			g.drawImage(m_background, m_inset, m_inset, w, h, 0, 0, m_background->getWidth(), m_background->getHeight());
+			g.drawImage(*m_background, m_inset, m_inset, w, h, 0, 0, m_background->getWidth(), m_background->getHeight());
 		else if (m_img)
-			g.drawImage(m_img, m_inset, m_inset, w, h, 0, 0, m_img->getWidth(), m_img->getHeight());
+			g.drawImage(*m_img, m_inset, m_inset, w, h, 0, 0, m_img->getWidth(), m_img->getHeight());
     
         float angle = 4.71238898 + (m_value * (m_maxPosition - m_minPosition) + m_minPosition) * -3.14159265;
 		if (m_needleLength) {
 			g.setColour(m_needleColour);
-			g.drawArrow(
-				m_needleCenter.getX() + m_inset, 
-				m_needleCenter.getY() + m_inset, 
-				sin(angle)*m_needleLength + m_needleCenter.getX() + m_inset, 
-				cos(angle)*m_needleLength + m_needleCenter.getY() + m_inset, 
-				m_needleWidth, 
-				m_arrowLength, 
-				m_arrowWidth);
+//			g.drawArrow(
+//				m_needleCenter.getX() + m_inset, 
+//				m_needleCenter.getY() + m_inset, 
+//				sin(angle)*m_needleLength + m_needleCenter.getX() + m_inset, 
+//				cos(angle)*m_needleLength + m_needleCenter.getY() + m_inset, 
+//				m_needleWidth, 
+//				m_arrowLength, 
+//				m_arrowWidth);
 
 			if (m_needleDropShadow) {
 				int dropX, dropY, dropPointX, dropPointY;
@@ -761,29 +757,29 @@ void VUMeter::paint (Graphics& g) {
 					dropPointY = m_dropDistance;
 				}
 				g.setColour(Colours::black.withAlpha(0.2f));
-				g.drawArrow(
-					m_needleCenter.getX() + m_inset + dropX, 
-					m_needleCenter.getY() + m_inset + dropY, 
-					sin(angle)*m_needleLength + m_needleCenter.getX() + m_inset + dropPointX, 
-					cos(angle)*m_needleLength + m_needleCenter.getY() + m_inset + dropPointY, 
-					m_needleWidth, 
-					m_arrowLength, 
-					m_arrowWidth);
+//				g.drawArrow(
+//					m_needleCenter.getX() + m_inset + dropX, 
+//					m_needleCenter.getY() + m_inset + dropY, 
+//					sin(angle)*m_needleLength + m_needleCenter.getX() + m_inset + dropPointX, 
+//					cos(angle)*m_needleLength + m_needleCenter.getY() + m_inset + dropPointY, 
+//					m_needleWidth, 
+//					m_arrowLength, 
+//					m_arrowWidth);
 			}
 		} else {					// Contrasting arrow for built-in analog meter
 			g.setColour(m_backgroundColour.contrasting(1.0f).withAlpha(0.9f));
-			g.drawArrow(
-				w/2 + m_inset, 
-				h - m_segments + m_inset, 
-				sin(angle)*jmax (w/2, h/2) + w/2 + m_inset, 
-				cos(angle)*jmax (w/2, h/2) + h - m_segments + m_inset, 
-				m_needleWidth, 
-				m_needleWidth*2, 
-				m_needleWidth*2);
+//			g.drawArrow(
+//				w/2 + m_inset, 
+//				h - m_segments + m_inset, 
+//				sin(angle)*jmax (w/2, h/2) + w/2 + m_inset, 
+//				cos(angle)*jmax (w/2, h/2) + h - m_segments + m_inset, 
+//				m_needleWidth, 
+//				m_needleWidth*2, 
+//				m_needleWidth*2);
 		}
     	if (m_overlay) {
 		    g.setOpacity(1.0f);
-			g.drawImage(m_overlay, m_inset, m_inset, w, h, 0, 0, m_overlay->getWidth(), m_overlay->getHeight());
+			g.drawImage(*m_overlay, m_inset, m_inset, w, h, 0, 0, m_overlay->getWidth(), m_overlay->getHeight());
 		}
     }
 }

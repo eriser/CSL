@@ -165,7 +165,7 @@ void RemoteStream::nextBuffer(Buffer &outputBuffer) throw(CException) {
 	}
 											// Copy the output buffer samples
 	for (unsigned i = 0; i < outputBuffer.mNumChannels; i++) {
-		out = (unsigned char *) outputBuffer.mBuffers[i];
+		out = (unsigned char *) outputBuffer.buffer(i];
 		offset = RS_PACKET_SIZE + (mCurrentFrame * sizeof(sample)) 
 						+ (i * mBufferSize * sizeof(sample));
 		buf = ((unsigned char *) (mIoBuffers[mCurrentBuffer])) + offset;
@@ -180,7 +180,7 @@ void RemoteStream::nextBuffer(Buffer &outputBuffer) throw(CException) {
 	if (split) {							// if we have to read the start of the other buffer
 		toCopy = (frames * sizeof(sample)) - toCopy;
 		for (unsigned i = 0; i < outputBuffer.mNumChannels; i++) {
-			out = (unsigned char *) outputBuffer.mBuffers[i];
+			out = (unsigned char *) outputBuffer.buffer(i];
 			offset = RS_PACKET_SIZE + (i * mBufferSize * sizeof(sample));
 			buf = ((unsigned char *) (mIoBuffers[mCurrentBuffer])) + offset;
 			memcpy(out, buf, toCopy);

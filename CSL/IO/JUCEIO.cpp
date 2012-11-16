@@ -75,7 +75,7 @@ void JUCEIO::audioDeviceIOCallback (const float** inData, int numIns,
 			return;
 		}
 		for (unsigned i = 0; i < mNumInChannels; i++)
-			mInputBuffer.mBuffers[i] = (SampleBuffer) inData[i];
+			mInputBuffer.setBuffer(i, (SampleBuffer) inData[i]);
 		mInputBuffer.mNumFrames = numSamples;
 	}
 	if (mNumOutChannels > 0) {
@@ -85,7 +85,7 @@ void JUCEIO::audioDeviceIOCallback (const float** inData, int numIns,
 			return;
 		}
 		for (unsigned i = 0; i < numOuts; i++)
-			mOutputBuffer.mBuffers[i] = (SampleBuffer) outData[i];
+			mOutputBuffer.setBuffer(i, (SampleBuffer) outData[i]);
 		mOutputBuffer.mNumFrames = numSamples;	
 		pullInput(mOutputBuffer, NULL);
 		mNumFramesPlayed += numSamples;

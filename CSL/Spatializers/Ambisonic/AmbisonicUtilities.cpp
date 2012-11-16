@@ -113,8 +113,8 @@ void AmbisonicMixer::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw(
 				input->nextBuffer(*mInBuffer);
 				
 				for (c = 0; c < mNumChannels; c++) {			// loops through channels
-					outPtr = outputBuffer.mBuffers[c];
-					inPtr = mInBuffer->mBuffers[c];
+					outPtr = outputBuffer.buffer(c);
+					inPtr = mInBuffer->buffer(c);
 					for (k = 0; k < numFrames; k++)	// loops through sample buffers
 						*outPtr++ += *inPtr++;	
 				}
@@ -124,7 +124,7 @@ void AmbisonicMixer::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw(
 		// after mixing, scale down our encoded output by the number of encoded sources to avoid clipping:
 		// for each actual audio output channel (not each ambisonic channel of the greater order)...
 		for (c = 0; c < mNumChannels; c++) {
-			outPtr = outputBuffer.mBuffers[c]; // reset the outPtr to the beginning of this channel in the outputbuffer
+			outPtr = outputBuffer.buffer(c); // reset the outPtr to the beginning of this channel in the outputbuffer
 
 			for (i = 0; i < numFrames; i++) // ...scale this channels' output buffer down
 				*outPtr++ *= mInvNumInputs; 
@@ -317,11 +317,11 @@ void AmbisonicRotator::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) thro
 	
 	// assign our in & out pointers to their respective channels of input & output buffers
 	for (i = 0; i < mNumChannelsGreaterOrder; i++) {
-		mOutPtr[i] =  outputBuffer.mBuffers[mChannelIndex[i]];	
+		mOutPtr[i] =  outputBuffer.buffer(mChannelIndex[i]);	
 	}
 
 	for (i = 0; i < numChannels; i++) {
-		mInPtr[i] =  inputBuffer->mBuffers[mInputChannelIndex[i]];
+		mInPtr[i] =  inputBuffer->buffer(mInputChannelIndex[i]);
 	}
 	
 	//	First, copy the input encoded audio to the output, ready for rotations if required
@@ -333,7 +333,7 @@ void AmbisonicRotator::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) thro
 	if (mShouldTilt) {	
 		//	reset outPtr to the begining of the buffer
 		for (i = 0; i < numChannels; i++)
-			mOutPtr[i] = outputBuffer.mBuffers[mChannelIndex[i]];
+			mOutPtr[i] = outputBuffer.buffer(mChannelIndex[i]);
 
 		// set the sin & cosines of i multiples of the tilt angles
 		for (i = 0; i < greaterOrder; i++) {
@@ -350,7 +350,7 @@ void AmbisonicRotator::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) thro
 	if (mShouldTurn) {
 		//	reset outPtr to the begining of the buffer
 		for (i = 0; i < numChannels; i++)
-			mOutPtr[i] = outputBuffer.mBuffers[mChannelIndex[i]];
+			mOutPtr[i] = outputBuffer.buffer(mChannelIndex[i]);
 
 		// set the sin & cosines of i multiples of the tilt angles
 		for (i = 0; i < greaterOrder; i++) {
@@ -367,7 +367,7 @@ void AmbisonicRotator::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) thro
 	if (mShouldRotate) {
 		//	reset outPtr to the begining of the buffer
 		for (i = 0; i < numChannels; i++)
-			mOutPtr[i] = outputBuffer.mBuffers[mChannelIndex[i]];
+			mOutPtr[i] = outputBuffer.buffer(mChannelIndex[i]);
 
 		// set the sin & cosines of i multiples of the tilt angles
 		for (i = 0; i < greaterOrder; i++) {

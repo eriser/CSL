@@ -20,14 +20,17 @@ Mixer::Mixer() : UnitGenerator(), Scalable(1, 0) {
 }
 
 Mixer::Mixer(unsigned chans) : UnitGenerator(), Scalable(1, 0) {
+	mNumChannels = chans;
 	allocateOpBuffer(chans);
 }
 
 Mixer::Mixer(UnitGenerator & aa) : UnitGenerator(), Scalable(aa, 0) {
+	mNumChannels = 1;
 	allocateOpBuffer(1);
 }
 
 Mixer::Mixer(unsigned chans, UnitGenerator & aa) : UnitGenerator(), Scalable(aa, 0) {
+	mNumChannels = chans;
 	allocateOpBuffer(chans);
 }
 
@@ -38,29 +41,82 @@ Mixer::~Mixer() {
 // add a new input to the list
 
 void Mixer::addInput(UnitGenerator & inp) {
-	 mSources.push_back(& inp);
+	mSources.push_back(&inp);
+	mScaleValues.push_back(1.0f);
+	inp.addOutput((UnitGenerator *) this);	// be sure to add me as an output of the other guy
 }
 
 void Mixer::addInput(UnitGenerator * inp) {
-	 mSources.push_back(inp);
+	mSources.push_back(inp);
+	mScaleValues.push_back(1.0f);
+	inp->addOutput((UnitGenerator *) this);	// be sure to add me as an output of the other guy
+}
+
+void Mixer::addInput(UnitGenerator & inp, float ampl) {
+	mSources.push_back(&inp);
+	mScaleValues.push_back(ampl);
+	inp.addOutput((UnitGenerator *) this);	// be sure to add me as an output of the other guy
+}
+
+void Mixer::addInput(UnitGenerator * inp, float ampl) {
+	mSources.push_back(inp);
+	mScaleValues.push_back(ampl);
+	inp->addOutput((UnitGenerator *) this);	// be sure to add me as an output of the other guy
 }
 
 // delete from the list
 
 void Mixer::removeInput(UnitGenerator & inp) {
-	for (UGenVector::iterator pos = mSources.begin(); pos != mSources.end(); ++pos) {
-		if (*pos == & inp) {
-			mSources.erase(pos);
+//	logMsg("	Mixer: rem %x", &inp);
+	for (unsigned i = 0; i < mSources.size(); i++) {
+		if (mSources[i] == &inp) {
+			mSources.erase(mSources.begin() + i);
+			mScaleValues.erase(mScaleValues.begin() + i);
 			return;
 		}
 	}
+	throw RunTimeError("Error removing mixer input: not found.");
+}
+
+void Mixer::removeInput(UnitGenerator * inp) {
+//	logMsg("	Mixer: rem %x", inp);
+	for (unsigned i = 0; i < mSources.size(); i++) {
+		if (mSources[i] == inp) {
+			mSources.erase(mSources.begin() + i);
+			mScaleValues.erase(mScaleValues.begin() + i);
+			return;
+		}
+	}
+	throw RunTimeError("Error removing mixer input: not found.");
+}
+
+///< number of active inputs
+
+unsigned Mixer::getNumInputs(void) {
+	return mSources.size();
+}
+
+
+// change the scale value
+
+void Mixer::scaleInput(UnitGenerator & inp, float val) {
+	for (unsigned i = 0; i < mSources.size(); i++) {
+		if (mSources[i] == & inp) {
+			mScaleValues[i] = val;
+			return;
+		}
+	}
+	logMsg("Mixer scaleInput -- input not found");
 }
 
 // free all the inputs
 
 void Mixer::deleteInputs() {
-	for (UGenVector::iterator pos = mSources.begin(); pos != mSources.end(); ++pos)
-		delete * pos;
+	for (unsigned i = 0; i < mSources.size(); i++) {
+		delete mSources[i];
+		mSources.erase(mSources.begin() + i);
+		mScaleValues.erase(mScaleValues.begin() + i);
+	}
 }
 
 // Allocate an input operation buffer
@@ -75,63 +131,86 @@ void Mixer::allocateOpBuffer(unsigned chans) {
 
 unsigned Mixer::activeSources() {
 	unsigned answer = 0;
-	for (UGenVector::iterator pos = mSources.begin(); pos != mSources.end(); ++pos) {
-		UnitGenerator * input = *pos;
-		if (input->isActive()) 
+	for (unsigned i = 0; i < mSources.size(); i++) 
+		if ((mSources[i]) && (mSources[i]->isActive()))
 			answer++;
-	}
 	return answer;
 }
+
+//bool Mixer::isActive() {
+//	for (UGenVector::iterator pos = mSources.begin(); pos != mSources.end(); ++pos) {
+//		if ((*pos)->isActive()) 
+//			return true;
+//	}
+//	return false;
+//}
 
 // Here's the mixing part -- fill the buffer with the next num_frames values
 
 void Mixer::nextBuffer(Buffer & outputBuffer) throw (CException) {
 	SampleBuffer out1, out2, opp;
+	unsigned numIns = mSources.size();
 	unsigned numFrames = outputBuffer.mNumFrames;
 	unsigned j, k, ich;
+//	unsigned ins = mSources.size();
 
-//	printf("mix: next_b %d\n", numFrames);
-	outputBuffer.zeroBuffers();		// clear output buffer
-	mOpBuffer.mNumFrames = numFrames;
-	for (UGenVector::iterator pos = mSources.begin(); pos != mSources.end(); ++pos) {
-		UnitGenerator * input = *pos;
-//		printf("%d=%x  ", i, input); fflush(stdout);
+//	logMsg("Mixer %x - nxt_b %d - %d in - S %d", this, numFrames, numIns, outputBuffer.mSequence);
+	mOpBuffer.copyHeaderFrom(outputBuffer);
+	outputBuffer.zeroBuffers();							// clear output buffer
+
+	for (int i = 0; i < numIns; i++) {
+		UnitGenerator * input = mSources[i];
+//		printf("\t\tmix in %d = %x  ", i, input); fflush(stdout);
 		if (input->isActive()) {						// if active input, get a buffer and sum it to output
 			ich = input->numChannels();
-//			printf("mix: next_b %d, inp %x active, %d ch\n", numFrames, input, ich);
-
+//			printf("\tnext_b %d, inp %x active, %d ch\n", numFrames, input, ich);
+			float scal = mScaleValues[i];
 			mOpBuffer.mNumChannels = ich;
-			input->nextBuffer(mOpBuffer);				// get the input's nextBuffer
+			mOpBuffer.mSequence = outputBuffer.mSequence;
+			mOpBuffer.zeroBuffers();					// clear operation buffer
 			
+			input->nextBuffer(mOpBuffer);				// get the input's nextBuffer
+
 			if (ich == mNumChannels) {					// if input and mixer have same # of channels
 				for (j = 0; j < ich; j++)	{			// j loops through channels
-					out1 = outputBuffer.mBuffers[j];
-					opp = mOpBuffer.mBuffers[j];
-					if ((out1 == 0) || (opp == 0))
-						return;
-					for (k = 0; k < numFrames; k++)		// k loops through sample buffers
-						*out1++ += *opp++;				// summing samples into the output buffer
+					out1 = outputBuffer.buffer(j);
+					opp = mOpBuffer.buffer(j);
+//					if ((out1 == 0) || (opp == 0))
+//						return;
+					if (scal == 1.0f) {
+						for (k = 0; k < numFrames; k++)	// k loops through sample buffers
+							*out1++ += *opp++;			// summing samples into the output buffer
+					} else {
+						for (k = 0; k < numFrames; k++)	// k loops through sample buffers
+							*out1++ += (*opp++ * scal);	// summing samples into the output buffer
+					}
 				}
 			}											// special case: mix mono to stereo
 			else if ((ich == 1) && (mNumChannels == 2)) {
-				out1 = outputBuffer.mBuffers[0];
-				out2 = outputBuffer.mBuffers[1];
-				opp = mOpBuffer.mBuffers[0];
-				for (k = 0; k < numFrames; k++) {		// k loops through sample buffers
-					*out1++ += *opp;					// sum mono-to-stereo
-					*out2++ += *opp++;
-				}
+				out1 = outputBuffer.buffer(0);
+				out2 = outputBuffer.buffer(1);
+				opp = mOpBuffer.buffer(0);
+				if (scal == 1.0f)
+					for (k = 0; k < numFrames; k++) {	// k loops through sample buffers
+						*out1++ += *opp;				// sum mono-to-stereo
+						*out2++ += *opp++;
+					}
+				else
+					for (k = 0; k < numFrames; k++) {	// k loops through sample buffers
+						*out1++ += *opp * scal;				// sum mono-to-stereo
+						*out2++ += *opp++ * scal;
+					}
 			} else {									// ??? -- channel # mismatch
 				logMsg(kLogError, "Error in mix: in = %d ch, out = %d ch\n", ich, mNumChannels);
 			}
-		}
+		}					// end of isActive()
 	}						// end of input loop, process scale/offset
-#ifdef DO_MIX_AS_SCALABLE
+#ifdef DO_MIX_AS_SCALABLE			// not defined at present
 	DECLARE_SCALABLE_CONTROLS;
 	LOAD_SCALABLE_CONTROLS;
 	sample samp;			// loop through output buffer per-channel applying scale/offset
 	for (j = 0; j < mNumChannels; j++) {
-		out1 = outputBuffer.mBuffers[j];
+		out1 = outputBuffer.buffer(j];
 		for (k = 0; k < numFrames; k++)	 {
 			samp = *out1;
 			samp = (samp * scaleValue) + offsetValue;
@@ -144,6 +223,8 @@ void Mixer::nextBuffer(Buffer & outputBuffer) throw (CException) {
 		offsetValue = offsetPort->nextValue();
 	}
 #endif
+	mOpBuffer.mAreBuffersZero = false;
+
 }
 
 // print info about this instance
@@ -206,13 +287,16 @@ void Panner::setPosition(float pan) {
 // To get my next buffer, get a buffer from the input, and then "process" it...
 
 void Panner::nextBuffer(Buffer &outputBuffer) throw (CException) {
-	SampleBuffer out1 = outputBuffer.mBuffers[0];
-	SampleBuffer out2 = outputBuffer.mBuffers[1];
-	unsigned numFrames = outputBuffer.mNumFrames;
-
 	if (outputBuffer.mNumChannels != 2)
 		logMsg(kLogError, "Panner output ch = %d", outputBuffer.mNumChannels);
+	SampleBuffer out1 = outputBuffer.buffer(0);
+	SampleBuffer out2 = outputBuffer.buffer(1);
+	unsigned numFrames = outputBuffer.mNumFrames;
 
+//	logMsg("	Panner: checking (%d - %d %d)", mNumOutputs, mSequence, outputBuffer.mSequence);
+	if (checkFanOut(outputBuffer)) return;			// check if we're doing fan-out
+
+//	logMsg("	Panner: nxt_b %d", numFrames);
 	DECLARE_SCALABLE_CONTROLS;						// declare the scale/offset buffers and values
 	LOAD_SCALABLE_CONTROLS;
 
@@ -229,8 +313,8 @@ void Panner::nextBuffer(Buffer &outputBuffer) throw (CException) {
 		UPDATE_SCALABLE_CONTROLS;								// update the dynamic scale/offset
 		posValue = (posPort->nextValue()) * 0.5;
 	}
+	handleFanOut(outputBuffer);				// process possible fan-out
 }
-
 
 // NtoMPanner -- Many variations on the constructor
 
@@ -339,7 +423,7 @@ void NtoMPanner::nextBuffer(Buffer &outputBuffer) throw (CException) {
 	SampleBuffer inL = mInputPtr;
 	SampleBuffer inR = NULL;
 	if (mInCh > 1)
-		inR = mInputs[CSL_INPUT]->mBuffer->mBuffers[1];
+		inR = mInputs[CSL_INPUT]->mBuffer->buffer(1);
 //	outputBuffer.zeroBuffers();
 	for (unsigned i = 0; i < numFrames; i++) {			// now do the output loop -- per frame
 		l_samp = *inL++;								// get input sample(s)
@@ -349,7 +433,7 @@ void NtoMPanner::nextBuffer(Buffer &outputBuffer) throw (CException) {
 			o_samp = l_samp * a_scale * l_weights[j];	// scale input sample
 			if (mInCh > 1)								// right channel if stereo
 				o_samp += r_samp * a_scale * r_weights[j];
-			outputBuffer.mBuffers[j][i] = o_samp;   // write output sample
+			outputBuffer.setBuffer(j, i, o_samp);   // write output sample
 		}
 	}
 }
@@ -424,8 +508,8 @@ void StereoWidth::nextBuffer(Buffer & outputBuffer) throw (CException) {
 	Effect::pullInput(outputBuffer);
 
 	// we'll process in place in the output buffer
-	SampleBuffer outL = outputBuffer.mBuffers[0];
-	SampleBuffer outR = outputBuffer.mBuffers[1];
+	SampleBuffer outL = outputBuffer.buffer(0);
+	SampleBuffer outR = outputBuffer.buffer(1);
 
 	float gain = mGain;
 	// equal power panning -- of sorts
@@ -440,7 +524,7 @@ void StereoWidth::nextBuffer(Buffer & outputBuffer) throw (CException) {
 #ifdef DEBUG
 	static int count = 0;
 	if (count < 1) {
-		printf("Pan L/R %f/%f \tWidth Factor/Gain %f/%f\n", panL, panR, widthFactor, widthGainFactor);
+		printf("Pan L/R %f/%f \tWidth Factor/Gain %f\n", panL, panR, widthFactor);
 		count = 100;
 	} else count--;
 #endif

@@ -2,13 +2,13 @@
 // Stripped Juce top-level window code, based on the hello world example
 //
 
-#include "juce.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 
 Component * createCSLComponent();					// extern function that creates the window
 
 class CSLWindow  : public DocumentWindow {
 public:
-    CSLWindow() : DocumentWindow (T("CSL 5.0 Demos"), 
+    CSLWindow() : DocumentWindow ("CSL 5.0 Demos", 
 				Colours::lightgrey, DocumentWindow::allButtons, true) {
 		setContentComponent (createCSLComponent());	// create app window
 		setResizable (true, false);
@@ -44,11 +44,11 @@ public:
     }
 
     const String getApplicationName() {
-        return T("JUCE/CSL");
+        return "JUCE/CSL";
     }
 
     const String getApplicationVersion() {
-        return T("1.0");
+        return "1.0";
     }
 
     bool moreThanOneInstanceAllowed() {
@@ -60,15 +60,15 @@ public:
 
 // This macro creates the application's main() function..
 
-// START_JUCE_APPLICATION (JUCECSLApplication)
+START_JUCE_APPLICATION (JUCECSLApplication)
 
 // I do this by hand so that I can keep argc/argv
 
-extern unsigned argCnt;						// globals for argc/v
-extern char **argVals;
+//extern unsigned argCnt;						// globals for argc/v
+//extern const char **argVals;
 
-int main (int argc, char* argv[]) {
-	argCnt = argc;
-	argVals = argv;
-	return JUCE_NAMESPACE::JUCEApplication::main (argc, argv, new JUCECSLApplication());
-}
+//int main (int argc, const char* argv[]) {
+//	argCnt = argc;
+//	argVals = argv;
+//	return JUCE_NAMESPACE::JUCEApplication::main (argc, argv /*, new JUCECSLApplication() */);
+//}

@@ -8,7 +8,9 @@
 #define CSL_ThreadUtilities_H
 
 #include "CSL_Types.h"
-#include "juce.h"			// JUCE core
+#ifdef USE_JTHREADS
+#include <juce.h>			// JUCE core
+#endif
 
 namespace csl {
 

@@ -14,99 +14,7 @@
 
 using namespace csl;
 
-#ifdef USE_FFTREAL		// the FFTReal-based version
-
-// FFTR_Wrapper = FFTReal-based concrete implementation
-
-FFTR_Wrapper::FFTR_Wrapper(unsigned size, CSL_FFTType type, CSL_FFTDir forward) 
-		: Abst_FFT_W(size, type, forward),
-		  mFFT(size) {
-	SAFE_MALLOC(mTempBuf, sample, size + 1);
-//	logMsg("FFTReal %d", size);	
-}
-
-FFTR_Wrapper::~FFTR_Wrapper() {
-	SAFE_FREE(mTempBuf);
-}
-
-// execute = run the transform
-
-void FFTR_Wrapper::nextBuffer(Buffer & in, Buffer & out) throw (CException) {
-	if (mDirection == CSL_FFT_FORWARD) {			// mDirection == CSL_FFT_FORWARD
-		SampleBuffer ioPtr = in.mBuffers[0];		// set input data ptr 
-
-		mFFT.do_fft(mTempBuf, ioPtr);				// perform FFT
-
-//		do_fft (flt_t f [], const flt_t x []) -- this is the fcn signature
-//			- x: pointer on the source array (time).
-//			- f: pointer on the destination array (frequencies). 
-//				 f [0...length(x)/2] = real values, 
-//				 f [length(x)/2+1...length(x)-1] = imaginary values of coeff 1...length(x)/2-1. 
-
-		if (mType == CSL_FFT_COMPLEX) {				// raw: copy complex points to output
-			SampleComplexPtr cxPtr = (SampleComplexPtr) out.mBuffers[0];
-			SampleBuffer rPtr = mTempBuf;
-			SampleBuffer iPtr = mTempBuf + (mSize / 2) ; // + 1;
-			float normFactor = 1.0 / sqrt((double) mSize);
-			for (int j = 0; j < mSize / 2; j++) {
-				ComplexPtr cplx = cxPtr[j];
-				cx_r(cplx) = *rPtr++ * normFactor;
-				cx_i(cplx) = *iPtr++ * normFactor;
-			}
-		} 
-		else if (mType == CSL_FFT_REAL) {			// real: write magnitude to mono output
-			ioPtr = out.mBuffers[0];				// output pointer
-			SampleBuffer rPtr = mTempBuf;
-			SampleBuffer iPtr = mTempBuf + (mSize / 2) ; // + 1;
-			for (int j = 0; j < mSize / 2; j++)
-				*ioPtr++ = hypotf(*rPtr++, *iPtr++);
-		} 
-		else if (mType == CSL_FFT_MAGPHASE) {		// complex: write mag/phase to buffer[0]/[1]
-			SampleBuffer rPtr = mTempBuf;
-			SampleBuffer iPtr = mTempBuf + (mSize / 2);
-			SampleBuffer inOutPh = in.mBuffers[1];
-			for (int j = 0; j < mSize / 2; j++) {
-				*ioPtr++ = hypotf(*rPtr, *iPtr);
-				if (*rPtr == 0.0f) {
-					if (*iPtr >= 0.0f) 
-						*inOutPh++ = CSL_PIHALF;
-					else
-						*inOutPh++ = CSL_PI + CSL_PIHALF;
-				} else {
-					*inOutPh++ = atan(*iPtr / *rPtr);
-				}
-				rPtr++;
-				iPtr++;
-			} // end of loop
-		}
-	} else {										// mDirection == CSL_FFT_INVERSE
-													// assume CSL_FFT_COMPLEX format
-													// copy complex spectrum to un-packed IFFT format
-		SampleComplexPtr ioPtr = (SampleComplexPtr) in.mBuffers[0];
-		SampleBuffer rPtr = mTempBuf;				// copy data to FFTReal format
-		SampleBuffer iPtr = mTempBuf + (mSize / 2);
-		
-		for (int j = 0; j < mSize / 2; j++) {		// loop to unpack complex array
-			ComplexPtr cplx = ioPtr[j];
-			*rPtr++ = cx_r(cplx);
-			*iPtr++ = cx_i(cplx);
-		}
-		SampleBuffer oPtr = out.mBuffers[0];					// output pointer
-
-		mFFT.do_ifft(mTempBuf, oPtr);
-
-//		 do_ifft (const flt_t f [], flt_t x [])
-//			- f: pointer on the source array (frequencies).
-//				 f [0...length(x)/2] = real values,
-//				 f [length(x)/2+1...length(x)] = imaginary values of coeff 1...length(x)-1.
-//			- x: pointer on the destination array (time).
-
-	}
-}
-
-#endif
-
-/////////////////////////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
 
 #ifdef USE_FFTW			// the FFTW-based version
 
@@ -137,30 +45,29 @@ FFTW_Wrapper::~FFTW_Wrapper() {
 /// run the transform
 
 void FFTW_Wrapper::nextBuffer(Buffer & in, Buffer & out) throw (CException) {	
-	SampleBuffer ioPtr;								// data I/O ptr 
 	
-	if (mDirection == CSL_FFT_FORWARD) {	// mDirection == CSL_FFT_FORWARD
+	if (mDirection == CSL_FFT_FORWARD) {			// mDirection == CSL_FFT_FORWARD
 													// copy input into sample buffer
-		memcpy(mSampBuf, in.mBuffers[0], mSize * sizeof(sample));
+		memcpy(mSampBuf, in.buffer(0), mSize * sizeof(sample));
+//		printf("\t%x  -  %x\n", in.buffer(0), out.buffer(0));
 		
-		fftwf_execute(mPlan);						// GO
+		fftwf_execute(mPlan);						//// GO ////
 		
-		ioPtr = out.mBuffers[0];					// out buffer
+		SampleBuffer ioPtr = out.buffer(0);			// out buffer
 		fftwf_complex * spPtr = mSpectBuf;			// spectrum ptr
+		
 		if (mType == CSL_FFT_REAL) {				// real: write magnitude to mono output
-			for (int j = 0; j < mSize; j++) {
+			for (unsigned j = 0; j < mCSize; j++, spPtr++)
 				*ioPtr++ = hypotf((*spPtr)[0], (*spPtr)[0]);
-				spPtr++;
-			}
-			
-		} else if (mType == CSL_FFT_COMPLEX) {		// copy cmplx ptr to output
-			memcpy(out.mBuffers[0], mSpectBuf, (mCSize * sizeof(fftwf_complex)));
+				
+		} else if (mType == CSL_FFT_COMPLEX) {		// copy complex ptr to output
+			memcpy(out.buffer(0), mSpectBuf, (mCSize * sizeof(fftwf_complex)));
 				
 		} else if (mType == CSL_FFT_MAGPHASE) {		// write mag/phase to buffer[0]/[1]
-			SampleBuffer inOutPh = in.mBuffers[1];
-			for (int j = 0; j < in.mNumFrames; j++) {
-		//		printf("re:%f cx:%f ", (*spPtr)[0], (*spPtr)[1]);
-				*ioPtr++ = hypotf((*spPtr)[0], (*spPtr)[1]);
+			SampleBuffer inOutPh = out.buffer(1);
+			for (unsigned j = 0; j < in.mNumFrames; j++) {
+		//		fprintf(stderr, "re:%f cx:%f ", (*spPtr)[0], (*spPtr)[1]);
+				*ioPtr++ = hypotf((*spPtr)[0], (*spPtr)[1]);		// write magnitude
 				spPtr++;
 				if ((*spPtr)[0] == 0.0f) {
 					if ((*spPtr)[1] >= 0.0f) 
@@ -168,23 +75,119 @@ void FFTW_Wrapper::nextBuffer(Buffer & in, Buffer & out) throw (CException) {
 					else
 						*inOutPh++ = CSL_PI + CSL_PIHALF;
 				} else {
-					*inOutPh++ = atan((*spPtr)[1] / (*spPtr)[0]);
+					*inOutPh++ = atan((*spPtr)[1] / (*spPtr)[0]);	// write phase
 				}
 			}
 		}
-	} else {								// mDirection == CSL_FFT_INVERSE
+	} else {										// mDirection == CSL_FFT_INVERSE
 													// copy data into spectrum
-		memcpy(mSpectBuf, in.mBuffers[0], (mCSize * sizeof(fftwf_complex)));
+		memcpy(mSpectBuf, in.buffer(0), (mCSize * sizeof(fftwf_complex)));
 
 		fftwf_execute(mPlan);						// GO
 													// copy real output
-		memcpy(out.mBuffers[0], mSampBuf, (mSize * sizeof(sample)));
+		memcpy(out.buffer(0), mSampBuf, (mSize * sizeof(sample)));
 	}
 }
 
 #endif // FFTW
 
-/////////////////////////////////////////////////////////////////////
+//-------------------------------------------------------------------------------------------------//
+
+#ifdef USE_FFTREAL		// the FFTReal-based version
+
+// FFTR_Wrapper = FFTReal-based concrete implementation
+
+FFTR_Wrapper::FFTR_Wrapper(unsigned size, CSL_FFTType type, CSL_FFTDir forward) 
+		: Abst_FFT_W(size, type, forward), mFFT(size) {
+	SAFE_MALLOC(mTempBuf, sample, size + 1);
+//	logMsg("FFTReal %d", size);	
+}
+
+FFTR_Wrapper::~FFTR_Wrapper() {
+	SAFE_FREE(mTempBuf);
+}
+
+// execute = run the transform
+
+void FFTR_Wrapper::nextBuffer(Buffer & in, Buffer & out) throw (CException) {
+	if (mDirection == CSL_FFT_FORWARD) {			// mDirection == CSL_FFT_FORWARD
+		SampleBuffer ioPtr = in.buffer(0);		// set input data ptr 
+//		printf("\t%x  -  %x\n", in.buffer(0), out.buffer(0));
+
+		mFFT.do_fft(mTempBuf, ioPtr);				// perform FFT
+
+//		do_fft (flt_t f [], const flt_t x []) -- this is the fcn signature
+//			- x: pointer on the source array (time).
+//			- f: pointer on the destination array (frequencies). 
+//				 f [0...length(x)/2] = real values, 
+//				 f [length(x)/2+1...length(x)-1] = imaginary values of coeff 1...length(x)/2-1. 
+
+		if (mType == CSL_FFT_COMPLEX) {				// raw: copy complex points to output
+			SampleComplexPtr cxPtr = (SampleComplexPtr) out.buffer(0);
+			SampleBuffer rPtr = mTempBuf;
+			SampleBuffer iPtr = mTempBuf + (mSize / 2) ; // + 1;
+			float normFactor = 1.0 / sqrt((double) mSize);
+			for (unsigned j = 0; j < mSize / 2; j++) {
+				ComplexPtr cplx = cxPtr[j];
+				cx_r(cplx) = *rPtr++ * normFactor;
+				cx_i(cplx) = *iPtr++ * normFactor;
+			}
+		} 
+		else if (mType == CSL_FFT_REAL) {			// real: write magnitude to mono output
+			ioPtr = out.buffer(0);					// output pointer
+			SampleBuffer rPtr = mTempBuf;
+			SampleBuffer iPtr = mTempBuf + (mSize / 2) ; // + 1;
+			for (unsigned j = 0; j < mSize / 2; j++)
+				*ioPtr++ = hypotf(*rPtr++, *iPtr++);
+		} 
+		else if (mType == CSL_FFT_MAGPHASE) {		// complex: write mag/phase to buffer[0]/[1]
+			ioPtr = out.buffer(0);					// output pointer
+			SampleBuffer rPtr = mTempBuf;
+			SampleBuffer iPtr = mTempBuf + (mSize / 2);
+			SampleBuffer inOutPh = out.buffer(1);
+			for (unsigned j = 0; j < mSize / 2; j++) {
+				*ioPtr++ = hypotf(*rPtr, *iPtr);
+				if (*rPtr == 0.0f) {
+					if (*iPtr >= 0.0f) 
+						*inOutPh++ = CSL_PIHALF;
+					else
+						*inOutPh++ = CSL_PI + CSL_PIHALF;
+				} else {
+					*inOutPh++ = atan(*iPtr / *rPtr);
+				}
+				rPtr++;
+				iPtr++;
+			} // end of loop
+		}
+	} else {										// mDirection == CSL_FFT_INVERSE
+													// assume CSL_FFT_COMPLEX format
+													// copy complex spectrum to un-packed IFFT format
+		SampleComplexPtr ioPtr = (SampleComplexPtr) in.buffer(0);
+		SampleBuffer rPtr = mTempBuf;				// copy data to FFTReal format
+		SampleBuffer iPtr = mTempBuf + (mSize / 2);
+		
+		for (unsigned j = 0; j < mSize / 2; j++) {		// loop to unpack complex array
+			ComplexPtr cplx = ioPtr[j];
+			*rPtr++ = cx_r(cplx);
+			*iPtr++ = cx_i(cplx);
+		}
+		SampleBuffer oPtr = out.buffer(0);					// output pointer
+
+		mFFT.do_ifft(mTempBuf, oPtr);
+
+//		 do_ifft (const flt_t f [], flt_t x [])
+//			- f: pointer on the source array (frequencies).
+//				 f [0...length(x)/2] = real values,
+//				 f [length(x)/2+1...length(x)] = imaginary values of coeff 1...length(x)-1.
+//			- x: pointer on the destination array (time).
+
+	}
+}
+
+#endif
+
+//-------------------------------------------------------------------------------------------------//
+
 
 #ifdef USE_KISSFFT
 
@@ -208,7 +211,7 @@ KISSFFT_Wrapper::~KISSFFT_Wrapper() {
 void KISSFFT_Wrapper::nextBuffer(Buffer & in, Buffer & out) throw (CException) {
 
 	if (mDirection == CSL_FFT_FORWARD) {			// mDirection == CSL_FFT_FORWARD
-		SampleBuffer ioPtr = in.mBuffers[0];		// input data ptr 
+		SampleBuffer ioPtr = in.buffer(0);		// input data ptr 
 		SampleComplexPtr cxPtr = inBuf;
 		for (int j = 0; j < mSize; j++) {			// loop to pack complex array
 			*cxPtr[0] = *ioPtr++;
@@ -224,7 +227,7 @@ void KISSFFT_Wrapper::nextBuffer(Buffer & in, Buffer & out) throw (CException) {
 
 		kiss_fft(mFFT, (const kiss_fft_cpx *) inBuf, (kiss_fft_cpx *) outBuf);
 
-		ioPtr = out.mBuffers[0];					// output pointer
+		ioPtr = out.buffer(0);					// output pointer
 		if (mType == CSL_FFT_REAL) {				// real: write magnitude to mono output
 			SampleBuffer rPtr = mTempBuf;
 			SampleBuffer iPtr = mTempBuf + (mSize / 2);
@@ -237,10 +240,10 @@ void KISSFFT_Wrapper::nextBuffer(Buffer & in, Buffer & out) throw (CException) {
 		}
 	} else {										// mDirection == CSL_FFT_INVERSE
 		
-		kiss_fft(mFFT, (const kiss_fft_cpx *) in.mBuffers[0], (kiss_fft_cpx *) outBuf);
+		kiss_fft(mFFT, (const kiss_fft_cpx *) in.buffer(0), (kiss_fft_cpx *) outBuf);
 
 		SampleComplexPtr cxPtr = outBuf;
-		SampleBuffer ioPtr = out.mBuffers[0];
+		SampleBuffer ioPtr = out.buffer(0);
 		for (int j = 0; j < mSize; j++)				// loop to unpack complex array
 			*ioPtr++ = cxPtr[j][0];
 	}

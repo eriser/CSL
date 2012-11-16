@@ -20,6 +20,7 @@ typedef enum {
 	kBinaural,		///< HRTF 2-channel panning
 	kVBAP,			///< Vector Base Amplitude Panning 
 	kAmbisonic,		///< Full 3D Ambisonics
+	kSimple,		///< Simple panning/filtering spatializer
 	kWFS			///< Wave Field Synthesis
 } PannerType;
 
@@ -41,7 +42,7 @@ public:
 
 	virtual void update(void *arg);	///< called when the speaker layout changes, so panners update precalculated data.
 
-	virtual void nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException); ///< fill the buffer with data :-)
+	virtual void nextBuffer(Buffer &outputBuffer /*, unsigned outBufNum */) throw (CException); ///< fill the buffer with data :-)
 
 private:
 	SpatialPanner *mPanner;
@@ -51,6 +52,7 @@ private:
 									/// If null, it will use the default layout by calling 
 									/// SpeakerLayout::defaultSpeakerLayout();
 	SpeakerLayout *mSpeakerLayout; 
+	PannerType mType;
 };
 
 

@@ -40,8 +40,8 @@ using namespace csl;
 extern IO * theIO;							// global IO object accessed by other threads
 Label* gCPULabel;							// CPU % label...
 AudioDeviceManager * gAudioDeviceManager;	// global JUCE audio device mgr
-unsigned argCnt;							// globals for argc/v from cmd-line
-char **argVals;
+//unsigned argCnt;							// globals for argc/v from cmd-line
+//const char **argVals;
 VoidFcnPtrN * gFcn;							// test function ptr
 
 #define WRITE_TO_FILE						// support file recording
@@ -109,12 +109,12 @@ CSLAbstComponent::CSLAbstComponent()
 													   true /* select default device */));
 	if (error.isNotEmpty())
 		AlertWindow::showMessageBox (AlertWindow::WarningIcon,
-									 T("CSL Demo"),
-									 T("Couldn't open an output device!\n\n") + error);
+									 "CSL Demo",
+									 "Couldn't open an output device!\n\n" + error);
 										// get the audio device
 	AudioIODevice* audioIO = mAudioDeviceManager.getCurrentAudioDevice();
-	unsigned sRate = (unsigned) audioIO->getCurrentSampleRate();
-	unsigned bufSize = audioIO->getCurrentBufferSizeSamples();
+//	unsigned sRate = (unsigned) audioIO->getCurrentSampleRate();
+//	unsigned bufSize = audioIO->getCurrentBufferSizeSamples();
 
 #ifdef READ_IO_PROPS					// overwrite the system frame rate and block size from the
 										//  selected hardware interface at startup time
@@ -183,7 +183,7 @@ void CSLAbstComponent::audioDeviceIOCallback (const float** inputChannelData,
 		outBuffer.setSize(totalNumOutputChannels, numSamples);
 								// copy JUCE data ptrs
 		for (unsigned i = 0; i < totalNumOutputChannels; i++)
-			outBuffer.mBuffers[i] = outputChannelData[i];
+			outBuffer.setBuffer(i, outputChannelData[i]);
 
 		try {					//////
 								// Set up the input pointers and
@@ -191,7 +191,7 @@ void CSLAbstComponent::audioDeviceIOCallback (const float** inputChannelData,
 								//////
 			theIO->mInputBuffer.setSize(totalNumInputChannels, numSamples);
 			for (unsigned i = 0; i < totalNumInputChannels; i++)
-				theIO->mInputBuffer.mBuffers[i] = (sample *)inputChannelData[i];
+				theIO->mInputBuffer.setBuffer(i, (sample *)inputChannelData[i]);
 			theIO->pullInput(outBuffer);
 		} catch (csl::CException e) {
 			logMsg(kLogError, "Error running CSL: graph: %s\n", e.what());
@@ -210,9 +210,9 @@ void CSLAbstComponent::audioDeviceIOCallback (const float** inputChannelData,
 			if ( ! gFileBuffer)
 				return;
 								// get cache ptrs & copy outbuf
-			csl::sample * sPtr = gFileBuffer->mBuffers[0] + gSampIndex;
+			csl::sample * sPtr = gFileBuffer->buffer(0) + gSampIndex;
 			memcpy(sPtr, outputChannelData[0], (numSamples * sizeof(csl::sample)));
-			sPtr = gFileBuffer->mBuffers[1] + gSampIndex;
+			sPtr = gFileBuffer->buffer(1) + gSampIndex;
 			memcpy(sPtr, outputChannelData[1], (numSamples * sizeof(csl::sample)));
 								// update ptrs
 			gSampIndex += numSamples;
@@ -323,20 +323,19 @@ CSLSignalComponent::CSLSignalComponent ()
       loopButton (0),
       recordButton (0)
 {
-    addAndMakeVisible (playButton = new TextButton (T("playNote")));
-    playButton->setButtonText (T("Play/Stop"));
+    addAndMakeVisible (playButton = new TextButton ("playNote"));
+    playButton->setButtonText ("Play/Stop");
     playButton->addButtonListener (this);
 
-    addAndMakeVisible (quitButton = new TextButton (T("quitAction")));
-    quitButton->setButtonText (T("Quit"));
+    addAndMakeVisible (quitButton = new TextButton ("quitAction"));
+    quitButton->setButtonText ("Quit");
     quitButton->addButtonListener (this);
 
-    addAndMakeVisible (prefsButton = new TextButton (T("new button")));
-    prefsButton->setButtonText (T("Audio Prefs"));
+    addAndMakeVisible (prefsButton = new TextButton ("new button"));
+    prefsButton->setButtonText ("Audio Prefs");
     prefsButton->addButtonListener (this);
 
-    addAndMakeVisible (cpuLabel = new Label (T("new label"),
-                                             T("0.0%")));
+    addAndMakeVisible (cpuLabel = new Label("new label", "0.0%"));
     cpuLabel->setFont (Font (Font::getDefaultSansSerifFontName(), 15.0000f, Font::bold));
     cpuLabel->setJustificationType (Justification::centredRight);
     cpuLabel->setEditable (false, false, false);
@@ -344,23 +343,23 @@ CSLSignalComponent::CSLSignalComponent ()
     cpuLabel->setColour (TextEditor::backgroundColourId, Colour (0x0));
 
     addAndMakeVisible (VUMeterL = new VUMeter());
-    VUMeterL->setName (T("new component"));
+    VUMeterL->setName ("new component");
 
     addAndMakeVisible (VUMeterR = new VUMeter());
-    VUMeterR->setName (T("new component"));
+    VUMeterR->setName ("new component");
 
-	addAndMakeVisible (amplitudeSlider = new Slider (T("new slider")));
+	addAndMakeVisible (amplitudeSlider = new Slider ("new slider"));
     amplitudeSlider->setRange (-5, 5, 0);
     amplitudeSlider->setSliderStyle (Slider::LinearVertical);
     amplitudeSlider->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
     amplitudeSlider->addListener (this);
 
-    addAndMakeVisible (loopButton = new ToggleButton (T("new toggle button")));
-    loopButton->setButtonText (T("Loop"));
+    addAndMakeVisible (loopButton = new ToggleButton ("new toggle button"));
+    loopButton->setButtonText ("Loop");
     loopButton->addButtonListener (this);
 
-    addAndMakeVisible (recordButton = new ToggleButton (T("new toggle button")));
-    recordButton->setButtonText (T("Record"));
+    addAndMakeVisible (recordButton = new ToggleButton ("new toggle button"));
+    recordButton->setButtonText ("Record");
     recordButton->addButtonListener (this);
 	
 	amplitudeSlider->setValue(-0.2);	// GUI settings
@@ -473,7 +472,7 @@ void CSLSignalComponent::buttonClicked (Button* buttonThatWasClicked)
 														false, false);
 											// ...and show it in a DialogWindow...
 		audioSettingsComp.setSize (500, 400);
-		DialogWindow::showModalDialog (T("Audio Settings"),
+		DialogWindow::showModalDialog ("Audio Settings",
 									   &audioSettingsComp,
 									   this,
 									   Colours::azure,

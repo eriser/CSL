@@ -21,7 +21,7 @@ namespace csl {
 //	float mPosition;
 //	UnitGenerator *mRoot;
 //	bool mPositionChanged;		//< true if this source's position has changed
-//	
+//
 //};
 
 /// Temp Spatial Sound Source
@@ -68,7 +68,7 @@ public:
 	void dump();
 
 protected:
-	CPoint *mPosition;					///< source position
+	CPoint * mPosition;					///< source position
 	bool mPositionChanged;				///< true if this source's position has changed recently
 
 #ifdef DIRECTIONAL_SOURCES

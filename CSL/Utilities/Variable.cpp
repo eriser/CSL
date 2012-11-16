@@ -11,7 +11,7 @@ using namespace csl;
 // Fill the first channel of the buffer with the constant value
 
 void StaticVariable:: nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	SampleBuffer buffer = outputBuffer.mBuffers[outBufNum];
+	SampleBuffer buffer = outputBuffer.buffer(outBufNum);
 	unsigned numFrames = outputBuffer.mNumFrames;
 
 	for (unsigned i = 0; i < numFrames; i++)
@@ -24,7 +24,7 @@ void DynamicVariable:: nextBuffer(Buffer & outputBuffer, unsigned outBufNum) thr
 	Effect::pullInput(outputBuffer);
 	unsigned numFrames = outputBuffer.mNumFrames;
 	unsigned i;
-	SampleBuffer outp = outputBuffer.mBuffers[outBufNum];
+	SampleBuffer outp = outputBuffer.buffer(outBufNum);
 	switch(mMode) {
 	case kOpTimes:
 		for (i = 0; i < numFrames; i++)	*outp++ *= mValue;
@@ -129,7 +129,7 @@ RandomVariable::~RandomVariable() {
 
 void RandomVariable:: nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
 	unsigned numFrames = outputBuffer.mNumFrames;
-	SampleBuffer outp = outputBuffer.mBuffers[outBufNum];
+	SampleBuffer outp = outputBuffer.buffer(outBufNum];
 	
 	for (unsigned i = 0; i < numFrames; i++)
 		*outp++ = nextFrame(outputBuffer);

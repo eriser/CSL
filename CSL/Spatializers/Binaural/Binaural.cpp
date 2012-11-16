@@ -64,15 +64,15 @@ BinauralPanner::~BinauralPanner() {
 
 // Returns a pointer to an alocated cache data for its own use.
 
-BinauralSourceCache * BinauralPanner::cache() {
-	return (new BinauralSourceCache(this)); 
+void * BinauralPanner::cache() {
+	return (void *)(new BinauralSourceCache(this)); 
 }
 
 //
 // BinauralPanner::nextBuffer() does the heavy lifting of the block-wise convolution
 //
 
-void BinauralPanner::nextBuffer(Buffer & outputBuffer, unsigned mOutBufNum) throw (CException) {
+void BinauralPanner::nextBuffer(Buffer & outputBuffer) throw (CException) {
 
 	HRTFDatabase * hrtfDatabase = HRTFDatabase::Database();
 	unsigned numFrames = outputBuffer.mNumFrames;
@@ -107,14 +107,14 @@ void BinauralPanner::nextBuffer(Buffer & outputBuffer, unsigned mOutBufNum) thro
 
 			source->nextBuffer(mInBuf);							// get input from the source
 			
-																// debugging: copy input to output
-//			memcpy(outputBuffer.mBuffers[0], mInBuf.mBuffers[0], numFrames * sizeof(sample));
-//			memcpy(outputBuffer.mBuffers[1], mInBuf.mBuffers[0], numFrames * sizeof(sample));
+////////														// debugging: copy input to output
+//			memcpy(outputBuffer.buffer(0), mInBuf.buffer(0), numFrames * sizeof(sample));
+//			memcpy(outputBuffer.buffer(1), mInBuf.buffer(0), numFrames * sizeof(sample));
 //			return;
-																// Get the cached data	
+////////														// Get the cached data	
 			BinauralSourceCache * tcache = (BinauralSourceCache *) mCache[i]; 
 																// set input complex fft pointer
-			mTmpBuf.mBuffers[0] = (SampleBuffer) tcache->mInSpect[mBlockInd];
+			mTmpBuf.setBuffer(0, (SampleBuffer) tcache->mInSpect[mBlockInd]);
 			mInBuf.mNumFrames = winSize;						// dbl length
 
 			mInFFT.nextBuffer(mInBuf, mTmpBuf);					// Calculate input FFT into cache->mInSpect
@@ -164,18 +164,18 @@ void BinauralPanner::nextBuffer(Buffer & outputBuffer, unsigned mOutBufNum) thro
 //			memcpy(mHOutR, cache->mInSpect[mBlockInd], hrtfLength * sizeof(SampleComplex));
 															// Output IFFT stage
 			mTmpBuf.mNumFrames = winSize;					// set up output buffer
-			mTmpBuf.mBuffers[0] = (SampleBuffer) mHOutL;	// IFFT input = summation buffer
-			mOutBuf.mBuffers[0] = mIFFTOutL;				// IFFT out = sample buffer
+			mTmpBuf.setBuffer(0, (SampleBuffer) mHOutL);	// IFFT input = summation buffer
+			mOutBuf.setBuffer(0, mIFFTOutL);				// IFFT out = sample buffer
 
 			mOutFFT.nextBuffer(mTmpBuf, mOutBuf);			// do left IFFT
 
-			mTmpBuf.mBuffers[0] = (SampleBuffer) mHOutR;
-			mOutBuf.mBuffers[0] = mIFFTOutR;
+			mTmpBuf.setBuffer(0, (SampleBuffer) mHOutR);
+			mOutBuf.setBuffer(0, mIFFTOutR);
 
 			mOutFFT.nextBuffer(mTmpBuf, mOutBuf);			// do right IFFT
 
-			SampleBuffer outL = outputBuffer.mBuffers[0];	// Get pointers to output buffers (stereo)
-			SampleBuffer outR = outputBuffer.mBuffers[1];
+			SampleBuffer outL = outputBuffer.buffer(0);	// Get pointers to output buffers (stereo)
+			SampleBuffer outR = outputBuffer.buffer(1);
 			SampleBuffer ifftL = mIFFTOutL;					// IFFT real out data ptrs
 			SampleBuffer ifftR = mIFFTOutR;
 			SampleBuffer cacheL = tcache->mPrevOutL;			// previous real output caches

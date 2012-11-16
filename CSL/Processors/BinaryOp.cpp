@@ -40,12 +40,13 @@ bool BinaryOp::isFixed() {
 	return inputIsFixed() && operandIsFixed();
 }
 
-inline bool BinaryOp::inputIsFixed() {
-	return (Effect::inPort())->isFixed();
-}
+// Set the operand from a fixed float
 
-inline bool BinaryOp::operandIsFixed() {
-	return mInputs[CSL_OPERAND]->isFixed();
+void BinaryOp::setOperand(float op) {
+	Port * opPort = mInputs[CSL_OPERAND];
+	if (opPort->mUGen != 0)
+		throw RunTimeError("Can't set value of UGen port");
+	opPort->mValue = op;
 }
 
 // print info about this instance
@@ -71,7 +72,7 @@ void AddOp::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CExcept
 #ifdef CSL_DEBUG
 	logMsg("AddOp nextBuffer");						// for verbose debugging (define CSL_DEBUG in CSL_Core.h)
 #endif
-	SampleBuffer outputBufferPtr = outputBuffer.mBuffers[outBufNum];
+	SampleBuffer outputBufferPtr = outputBuffer.buffer(outBufNum);
 	unsigned numFrames = outputBuffer.mNumFrames;
 	DECLARE_OPERAND_CONTROLS;						// Declare and load the operand
 	LOAD_OPERAND_CONTROLS;
@@ -92,7 +93,7 @@ void MulOp::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CExcept
 #ifdef CSL_DEBUG
 	logMsg("MulOp nextBuffer");								// for verbose debugging (define CSL_DEBUG in CSL_Core.h)
 #endif
-	SampleBuffer outputBufferPtr = outputBuffer.mBuffers[outBufNum];
+	SampleBuffer outputBufferPtr = outputBuffer.buffer(outBufNum);
 	unsigned numFrames = outputBuffer.mNumFrames;
 	DECLARE_OPERAND_CONTROLS;							// Declare and load the operand
 	LOAD_OPERAND_CONTROLS;

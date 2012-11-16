@@ -11,14 +11,47 @@
 //			and	 http://mysite.verizon.net/mikews/vumeters.zip
 //
 
-#include "juce.h"
+// in CSL_Types.h
+
+//// struct used for the JUCE pop-up menu of tests (see the test files)
+
+//	typedef struct {
+//		char * name;			// test name (menu item)
+//		VoidFcnPtrN * fcn;		// test void fcn ptr
+//		char * comment;			// test comment
+//	} testStruct;
+
+// in the test files
+
+// test list for Juce GUI
+
+//testStruct oscTestList[] = {
+//	"Sweep test",				testSweep,			"Test a sine with swept freq and volume swell",
+//	"Simple sines",				testSimpleSines,	"Test some simple sine oscilators",
+//	"Standard waveforms",		testBasicWaves,		"Demonstrate the standard wave forms",
+//	"Scaled sine",				testScaledSin,		"Play a scaled-quiet sine wave",
+//	"Wavetable interpolation",	testWavetableInterpolation,	"Show truncated/interpolated wave tables",
+//	"AM/FM sines",				testAMFMSin,				"Play an AM and FM sine wave",
+//	"Dump AM/FM sines",			dumpAMFMSin,				"Dump the graph of the AM/FM sine",
+//	"SumOfSines cached",		testSumOfSinesCached,		"Play a sum-of-sines additive oscillator",
+//	"SumOfSines non-cached",	testSumOfSinesNonCached,	"Play an uncached inharmonic sum-of-sines", 
+//	"SumOfSines build",			testSumOfSinesSteps,		"Build up a harmonic series on a sum-of-sines",
+//	"SumOfSines 1/f",			testSumOfSines1F,			"Play a 1/f spectrum sum-of-sines",
+//	"Wavetable from file",		testWaveTableFromFile,		"Play a wave table from a sound file",
+//	"SHARC SOS",				test_SHARC,					"Load/print the SHARC timbre database, play example",
+//	"Vector SHARC",				test_SHARC2,				"Show vector cross-fade of SHARC spectra",
+//	NULL,						NULL,				NULL
+//};
+
+
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "CSL_Types.h"
 
 // Note that defining RANGE_SLIDER requires a change to the privacy of class Slider's members;
 // comment out line 705 of ~/Code/juce/src/juce_appframework/gui/components/controls/juce_Slider.h
 // (This line says "private:")
 
-#define RANGE_SLIDER
+//#define RANGE_SLIDER
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -156,7 +189,7 @@ public:
 			Image* overlay, 
 			float minPosition, 
 			float maxPosition, 
-			Point& needleCenter,
+			Point<int>& needleCenter,
 			int needleLength,
 			int needleWidth=2,
 			int arrowLength=4,
@@ -211,7 +244,7 @@ private:
 	Image* m_overlay;
 	float m_minPosition;
 	float m_maxPosition;
-	Point m_needleCenter;
+	Point<int> m_needleCenter;
 	int m_needleLength;
 	int m_needleWidth;
 	int m_arrowLength;

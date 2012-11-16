@@ -137,7 +137,7 @@ void testWavetableInterpolation() {
 		accum += incr;
 	}
 	Buffer oscBuff(1, TABLE_SIZE);
-	oscBuff.mBuffers[0] = sineTable;
+	oscBuff.setBuffer(0, sineTable);
 	oscBuff.mAreBuffersAllocated = true;
 	Osc wav(oscBuff);
 	wav.setScale(0.4);
@@ -257,12 +257,12 @@ void testSumOfSinesNonCached() {
 /// Load an oscillator's wave table from a file -- a single cycle of the vowel "oo" from the word "moon"
 
 void testWaveTableFromFile() {
-	SoundFile fi(CGestalt::dataFolder(), "oo_table.aiff");
+	SoundFile fi(CGestalt::dataFolder() + "oo_table.aiff");
 	fi.openForRead();
 	logMsg("Loading sound file %s = %d frames @ %d Hz", fi.path().c_str(), fi.duration(), fi.playbackRate());
 //	fi.seekTo(0, kPositionStart);
 	Buffer oscBuff(1, fi.duration());
-	oscBuff.mBuffers[0] = fi.mWavetable.monoBuffer(0);
+	oscBuff.setBuffer(0, fi.mWavetable.monoBuffer(0));
 	oscBuff.mAreBuffersAllocated = true;
 	Osc wav(oscBuff);
 	logMsg("playing wavetable from file...");

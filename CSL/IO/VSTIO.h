@@ -15,7 +15,7 @@
 namespace csl {
 
 ///
-/// VSTIO is an IO that answersw the VST processReplacing() call by calling its CSL graph
+/// VSTIO is an IO that answers the VST processReplacing() call by calling its CSL graph
 ///
 
 class VSTIO : public IO, public AudioEffectX {

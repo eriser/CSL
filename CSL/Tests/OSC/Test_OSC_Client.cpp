@@ -21,7 +21,7 @@ void noteLoop(lo_address & ad);					// fcn protptype
 
 // Main fcn sends out NUM_NOTES OSC messages to localhost port CGestalt::outPort()
 
-main(int argc, char ** Argv) {
+int main(int argc, char ** Argv) {
 	char pNam[CSL_WORD_LEN];					// string for port number
 	
 	sprintf(pNam, "%d", CGestalt::outPort());

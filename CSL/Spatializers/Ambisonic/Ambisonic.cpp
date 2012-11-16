@@ -98,9 +98,7 @@ unsigned AmbisonicUnitGenerator::orderToVerticalChannels(const AmbisonicOrder to
 /*******************CHANNEL INDEXER FUNCTIONS*******************/
 
 void AmbisonicUnitGenerator::channelIndexer(unsigned *indexArray) {
-	
 	AmbisonicOrder torder = mOrder;
-
 	unsigned *channelIndex = indexArray;
 	// how many channels it would need *if* it was a uniform order (hOrder == vOrder)
 	unsigned numChannelsGreaterOrder = orderToChannels(greaterOrder(torder));
@@ -274,8 +272,8 @@ void AmbisonicEncoder::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) thro
 //	}
 	// Start encoding audio from zeroth order; higher orders cascade from this function
 	for (unsigned i = 0; i < mNumChannels; i++) {
-		SampleBuffer inPtr = inputBuffer->mBuffers[0];	// Reset the input pointer
-		SampleBuffer outPtr = outputBuffer.mBuffers[i];	// Set a pointer to the output buffer
+		SampleBuffer inPtr = inputBuffer->buffer(0);	// Reset the input pointer
+		SampleBuffer outPtr = outputBuffer.buffer(i);	// Set a pointer to the output buffer
 		
 		for (unsigned j = 0; j < numFrames; j++) {		
 						// Actual audio processing: encode sound sources following the Furse-Malham encoding convention
@@ -643,24 +641,20 @@ void AmbisonicDecoder::makeInPhase(unsigned tgreaterOrder)
 {
 	unsigned numSpeakers = mSpeakerLayout->numSpeakers();
 	
-	// hard-coded gain coefficients for in phase decoding (parameters specified up to 4th order):
-	sample inPhaseParameters[][5] = { {1.0,	1.0,	1.0,	1.0,	1.0},		
-	// n = 0, M = 0, 1, 2, 3, 4 
-	{0.f,	0.333,	0.5,	0.6,	0.667},		
-	// n = 1, M = 0, 1, 2, 3, 4 
-	{0.f,	0.f,	0.1,	0.2,	0.286},		
-	// n = 2, M = 0, 1, 2, 3, 4 
-	{0.f,	0.f,	0.f,	0.029,	0.071},		
-	// n = 3, M = 0, 1, 2, 3, 4 
-	{0.f,	0.f,	0.f,	0.f,	0.008},		
-	// n = 4, M = 0, 1, 2, 3, 4
+	// hard-coded gain coefficients for in phase decoding (parameters specified up to 4th order)
+	
+	sample inPhaseParameters[][5] = { // n = 0, 1, 2, 3, 4, M = 0, 1, 2, 3, 4 
+				{1.0,	1.0,	1.0,	1.0,	1.0},		
+				{0.f,	0.333,	0.5,	0.6,	0.667},		
+				{0.f,	0.f,	0.1,	0.2,	0.286},		
+				{0.f,	0.f,	0.f,	0.029,	0.071},		
+				{0.f,	0.f,	0.f,	0.f,	0.008},		
 	};
 		
 	// calculate gain factors for each order
 	unsigned M = tgreaterOrder; // the order we are assuming as the context
 	
 	for (unsigned i = 1; i < mNumChannels; i++) { // skip W channel as its factor is always 1
-		
 		for (unsigned l = 0; l < numSpeakers; l++) {
 			// channelsToUniformOrder(i)+1 is a convenient way to get n (the order of each ambisonic channel), but it is not defined for W
 			mDecodingMatrix[l][i] *= inPhaseParameters[channelsToUniformOrder(i)+1][M];
@@ -698,11 +692,11 @@ void AmbisonicDecoder::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) thro
 	// since all equations for all speakers & encoded channels are the same, they can be merged into a single loop:
 	for (unsigned n = 0; n < numChannels; n++) {  // for each input ambisonic channel to be used
 		// get pointers to the encoded input channels (according to the channel indexer to accomodate hybrid orders)
-		SampleBuffer inPtr = inputBuffer->mBuffers[mIOChannelMap[n]];	
+		SampleBuffer inPtr = inputBuffer->buffer(mIOChannelMap[n]);	
 
 		// for each speaker, for each order, for each sample & encoded channel
 		for (unsigned l = 0; l < numSpeakers; l++) {
-			SampleBuffer outPtr = outputBuffer.mBuffers[l]; // get a pointer to the output channel
+			SampleBuffer outPtr = outputBuffer.buffer(l); // get a pointer to the output channel
 			
 			// for each frame of the buffer
 			for (unsigned i = 0; i < numFrames; i++) {

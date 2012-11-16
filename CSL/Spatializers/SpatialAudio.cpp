@@ -6,6 +6,7 @@
 /// @todo Observe the layout for changes, just in case it's deleted, to grab the default, avoiding dangling pointers.
 
 #include "SpatialAudio.h"
+#include "SimplePanner.h"
 
 #ifdef USE_VBAP
 	#include "VBAP.h"
@@ -36,12 +37,13 @@ Spatializer::~Spatializer() {
 
 void Spatializer::addSource(SpatialSource &soundSource) {
 //	logMsg("Spatializer::addSource");	
-										// create a new distance simulator passing it the source.
-	DistanceSimulator *distanceProcessor = new DistanceSimulator(soundSource); 
-	
-	mPanner->addSource(*distanceProcessor);				// Add the source to the panner.
-	
-	mInputsHashMap[&soundSource] = distanceProcessor;	// Add the pointers to the map.
+	if (mType == kSimple) {
+		mPanner->addSource(soundSource);			// Add the source to the panner.
+	} else {										// create a new distance simulator passing it the source.
+		DistanceSimulator *distanceProcessor = new DistanceSimulator(soundSource); 
+		mPanner->addSource(*distanceProcessor);				// Add the source to the panner.
+		mInputsHashMap[&soundSource] = distanceProcessor;	// Add the pointers to the map.
+	}
 }
 	
 // delete from the list, shifting if necessary
@@ -51,11 +53,13 @@ void Spatializer::removeSource(SpatialSource &soundSource) {
 	logMsg("Panner::removeSource");
 #endif
 	SpatialSource *tempSourcePtr = mInputsHashMap[&soundSource];
-	if (tempSourcePtr) // If not null then remove it form the panner.
+	if (tempSourcePtr) {	// If not null then remove it form the panner.
 		mPanner->removeSource(*tempSourcePtr);
-		
-				// now remove it from the map.
-	mInputsHashMap.erase(&soundSource);
+							// now remove it from the map.
+		mInputsHashMap.erase(&soundSource);
+	} else {
+		mPanner->removeSource(soundSource);
+	}
 }
 
 void Spatializer::update(void * arg) {
@@ -64,12 +68,15 @@ void Spatializer::update(void * arg) {
 
 void Spatializer::setPanningMode(PannerType panType) {
 	SpatialPanner *tempPanner; // Placeholder for the panner until everything is setup.
-	PannerType type = panType;
-	if (type == kAutomatic) {
+	mType = panType;
+	if (mType == kAutomatic) {
 				// Call the panner expert system, so that it decides which panner to instantiate.
-		type = kVBAP;
+		mType = kVBAP;
 	} else {
-		switch(type) {
+		switch(mType) {
+		case kSimple:
+			tempPanner = new SimplePanner();
+			break;
 #ifdef USE_HRTF
 		case kBinaural:
 			tempPanner = new BinauralPanner();
@@ -100,7 +107,7 @@ void Spatializer::setPanningMode(PannerType panType) {
 	map <SpatialSource *, DistanceSimulator *>::iterator idx; 
 						// Add all the sources to the new panner
 	for (idx = mInputsHashMap.begin(); idx != mInputsHashMap.end(); ++idx)
-		mPanner->addSource(*(idx->second));
+		tempPanner->addSource(*(idx->second));
 
 						// NOTE: This is not thread safe. In multithreaded apps, this could make it crash!
 						/// @todo make all spat framework thread safe.
@@ -112,11 +119,12 @@ void Spatializer::setPanningMode(PannerType panType) {
 
 // the method Spatializer::nextBuffer calls the panner
 
-void Spatializer::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw(CException) {
+void Spatializer::nextBuffer(Buffer &outputBuffer /*, unsigned outBufNum */) throw(CException) {
 #ifdef CSL_DEBUG
 	logMsg("Spatializer::nextBuffer");
 #endif								// Ask the decoder to fill the buffer with the data to be processed
-	mPanner->nextBuffer(outputBuffer, outBufNum); 
+	outputBuffer.zeroBuffers();
+	mPanner->nextBuffer(outputBuffer); 
 }
 
 PannerType SpeakerLayoutExpert::findPannerFromLayout(SpeakerLayout *layout) {

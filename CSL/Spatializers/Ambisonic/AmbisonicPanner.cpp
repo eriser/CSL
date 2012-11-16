@@ -55,9 +55,6 @@ void AmbisonicPanner::removeSource(SpatialSource &soundSource) {
 //	}		
 }
 
-void *AmbisonicPanner::cache() {
-	return (void *)new float; // Returns a pointer to an alocated cache data for its own use.
-}
 
 void AmbisonicPanner::rotate(float amount) {
 	mRotator->setRotate(amount);
@@ -67,7 +64,7 @@ void AmbisonicPanner::rotate(float amount) {
 //
 //}
 
-void AmbisonicPanner::nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw(CException) {
+void AmbisonicPanner::nextBuffer(Buffer &outputBuffer /*, unsigned outBufNum */) throw(CException) {
 
 #ifdef CSL_DEBUG
 	logMsg("AmbisonicPanner::nextBuffer");

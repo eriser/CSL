@@ -54,7 +54,7 @@ public:
 											/// work-horse method reads & transforms input, 
 											/// sums previous data, and takes the IFFT for 
 											/// each of multiple sources
-	virtual void nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException);
+	void nextBuffer(Buffer &outputBuffer) throw (CException);
 
 	unsigned mNumBlocks;					///< # blocks per HRTF
 	unsigned mNumBlocksToSum;				///< # blocks to include in sum per HRTF
@@ -70,7 +70,7 @@ protected:
 	SampleBuffer mIFFTOutL, mIFFTOutR;		///< outputs of the IFFT
 
 	unsigned mBlockInd;						///< block index
-	BinauralSourceCache * cache();			///< Returns an instance of its cache data per sound source
+	void * cache();			///< Returns an instance of its cache data per sound source
 };
 
 
