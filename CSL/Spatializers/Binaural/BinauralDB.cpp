@@ -198,6 +198,7 @@ HRTFDatabase::HRTFDatabase(const char * folder) {
 	mHRTFLength = HRTF_BLOCK_SIZE ; // + 1;
 	mHRIRLength = HRIR_SIZE;
 	
+	logMsg("Loading the HRTFDatabase %s", folder);
 	if (strcasestr(folder, ".dat") != NULL) {	// if the name looks like a DB name
 		try {
 			loadFromDB(folder);

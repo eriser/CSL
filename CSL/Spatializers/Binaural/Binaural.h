@@ -70,7 +70,7 @@ protected:
 	SampleBuffer mIFFTOutL, mIFFTOutR;		///< outputs of the IFFT
 
 	unsigned mBlockInd;						///< block index
-	void * cache();			///< Returns an instance of its cache data per sound source
+	void * cache();							///< Returns an instance of its cache data per sound source
 };
 
 
