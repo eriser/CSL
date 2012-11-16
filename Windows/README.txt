@@ -1,3 +1,5 @@
+This is old -- see ../CSL_JUCE for builds using introjucer
+
 CSL 5.0g README file for MS-Windows
 
 A VisualStudio project is included that is known to work with Windows XP.

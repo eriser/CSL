@@ -1,4 +1,6 @@
 
+This is old -- see ../CSL_JUCE for builds using introjucer
+
 For CSL 5.0, we include a premake script for creating a makefile (just like JUCE uses). This has been tested and can compile the CSL JUCE demo app.
 
 To use this:
