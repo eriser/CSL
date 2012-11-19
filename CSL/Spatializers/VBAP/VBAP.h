@@ -19,7 +19,7 @@
 ///////////////// used for matrix.h //////////////////
 #define _NO_EXCEPTION
 
-#include "matrix.hpp"
+#include "matrix.h"
 //#include <cmatrix>
 
 #ifndef _NO_NAMESPACE

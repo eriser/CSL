@@ -98,8 +98,10 @@ void AudioWaveformDisplay::paint (Graphics& g) {
 		if ((x0 + x) >= bufferSize)
 			x0 = 0 - x;
 		const float level = circularBuffer[x0 + x];
+#ifndef WIN32
 		if ( ! std::isnormal(level)) continue;
-//		g.setPixel(x, (int) (halfHeight - (halfHeight * level)));
+#endif
+		//		g.setPixel(x, (int) (halfHeight - (halfHeight * level)));
 		g.drawLine ((float) x, halfHeight,
                             (float) x, halfHeight + (halfHeight * level));
 	}

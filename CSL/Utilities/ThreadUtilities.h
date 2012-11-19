@@ -8,8 +8,9 @@
 #define CSL_ThreadUtilities_H
 
 #include "CSL_Types.h"
+
 #ifdef USE_JTHREADS
-#include <juce.h>			// JUCE core
+#include "../JuceLibraryCode/JuceHeader.h"			// JUCE core
 #endif
 
 namespace csl {
@@ -20,7 +21,7 @@ namespace csl {
 
 class CThread : public juce::Thread {
 public:
-	CThread() : juce::Thread(T("CSL Thread")) { };
+	CThread() : juce::Thread("CSL Thread") { };
 	virtual ~CThread() { };
 	static CThread * MakeThread();	///< factory method
 

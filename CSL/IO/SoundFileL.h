@@ -13,7 +13,7 @@
 #include "SoundFile.h"			// abstract class header
 #include <sndfile.h>			// libsndfile header file
 								// NB: set these as compile-time flags now
-#ifndef WIN32
+#ifndef CSL_WINDOWS
 // #define USE_libMAD			// Support MP3 file reading using libMAD
 // #define USE_libFAAD			// Support AAC/MP4 file reading using libFAAD
 #endif

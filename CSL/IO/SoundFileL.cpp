@@ -9,6 +9,9 @@
 
 using namespace csl;
 
+#ifdef CSL_WINDOWS
+#define strcasestr strstr
+#endif
 
 /// Sound file name extensions we recognize - ToDo: should this be in a config file?
 

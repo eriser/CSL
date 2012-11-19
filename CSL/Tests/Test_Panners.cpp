@@ -447,10 +447,10 @@ testStruct panTestList[] = {
 	"HRTF horiz circles",	test_Binaural_horiz,	"Test the HRTF-based binaural panner",
 	"HRTF axial circles",	test_Binaural_vertAxial,"Play a HRTF-panner with axial circles",
 	"HRTF median circles",	test_Binaural_vertMedian,"Play a HRTF-panner with median circles",
-#endif
 	"Ambisonics",			test_Ambi_horiz,		"Test the Ambisonic-based spatial panner",
 	"Simple",				test_SimpleP,			"Test the simple spatial panner",
 	"VBAP",					test_VBAP_horiz,		"Test the VBAP-based spatial panner",
+#endif
 NULL,						NULL,			NULL
 };
 
