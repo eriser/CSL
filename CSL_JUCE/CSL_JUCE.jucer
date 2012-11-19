@@ -257,6 +257,18 @@
                        headerPath="/usr/local/include;../../../CSL/Includes" libraryPath="/usr/local/lib"/>
       </CONFIGURATIONS>
     </XCODE_MAC>
+    <VS2010 targetFolder="Builds/VisualStudio2010" libraryType="1" juceFolder="..\..\..\Documents\juce\modules"
+            extraDefs="USE_JUCE USE_VBAP USE_HRTF USE_AMBISONIC USE_FFTREAL USE_LSND"
+            userNotes="Remember to re-make the links in csl\Includes using remake.bat.&#10;&#10;Inastall libsndfile and the Windows pthreads libraries from http://www.sourceware.org/pthreads-win32.&#10;&#10;Add the libsndfile and pthreads libraries to the build by hand (not sure how to do this with IntroJucer).&#10;&#10;Delete the following (UNIX-only) files from the project:&#10;    SHARC.cpp&#10;    Spatializers: Ambisonics, Binaural, VBAP, PME&#10;&#10;I generally turn off all warnings (/W0)">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="2" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="CSL_JUCE" headerPath="..\..\..\CSL\Includes;..\..\..\..\libsndfile\include;..\..\..\..\pthreads\Pre-built.2\include"
+                       libraryPath="..\..\..\..\libsndfile\lib;..\..\..\..\pthreads\Pre-built.2\dll\x64"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="2" targetName="CSL_JUCE" headerPath="..\..\..\CSL\Includes;..\..\..\..\libsndfile;..\..\..\..\pthreads"
+                       libraryPath="..\..\..\..\libsndfile\lib;..\..\..\..\pthreads\Pre-built.2\dll\x86"/>
+      </CONFIGURATIONS>
+    </VS2010>
   </EXPORTFORMATS>
   <JUCEOPTIONS/>
 </JUCERPROJECT>

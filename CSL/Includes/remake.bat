@@ -7,3 +7,5 @@ copy ..\Instruments\*.h .
 copy ..\IO\*.h .
 copy ..\Spatializers\*.h .
 copy ..\Spatializers\Ambisonic\*.h .
+copy ..\Spatializers\Binaural\*.h .
+copy ..\Spatializers\VBAP\*.h .
