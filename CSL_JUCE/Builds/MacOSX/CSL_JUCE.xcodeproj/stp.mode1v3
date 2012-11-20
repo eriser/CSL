@@ -346,7 +346,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Granulator.cpp</string>
+								<string>Test_Oscillators.cpp</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -354,11 +354,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Granulator.cpp</string>
+										<string>Test_Oscillators.cpp</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>4CC6063A165B14A4007E8791</string>
+										<string>4CC60653165B1EF4007E8791</string>
 										<key>history</key>
 										<array>
 											<string>4CAC55901655897800DD5293</string>
@@ -389,7 +389,6 @@
 											<string>4CC60577165B031E007E8791</string>
 											<string>4CC60578165B031E007E8791</string>
 											<string>4CC60594165B03AE007E8791</string>
-											<string>4CC605B5165B050D007E8791</string>
 											<string>4CC605B6165B050D007E8791</string>
 											<string>4CC605B8165B050D007E8791</string>
 											<string>4CC605C1165B0536007E8791</string>
@@ -412,7 +411,8 @@
 											<string>4CC60623165B1397007E8791</string>
 											<string>4CC6062D165B1461007E8791</string>
 											<string>4CC6062E165B1461007E8791</string>
-											<string>4CC6062F165B1461007E8791</string>
+											<string>4CC60651165B1EF4007E8791</string>
+											<string>4CC60652165B1EF4007E8791</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -470,9 +470,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>4CC6057B165B031E007E8791</string>
+				<string>4CC60654165B1EF4007E8791</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>4CC6057C165B031E007E8791</string>
+				<string>4CC60655165B1EF4007E8791</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -593,7 +593,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>375067812.76851302</real>
+	<real>375070452.763363</real>
 	<key>ToolbarConfigUserDefaultsMinorVersion</key>
 	<string>2</string>
 	<key>ToolbarDisplayMode</key>
@@ -611,11 +611,7 @@
 	<key>WindowOrderList</key>
 	<array>
 		<string>1C530D57069F1CE1000CFCEE</string>
-		<string>4CC60586165B031E007E8791</string>
-		<string>4CC60587165B031E007E8791</string>
-		<string>1CD10A99069EF8BA00B06720</string>
 		<string>4CB651E016557BF400A2CF34</string>
-		<string>1C78EAAD065D492600B07095</string>
 		<string>/Volumes/Content/Code/CSL5.2/CSL_JUCE/Builds/MacOSX/CSL_JUCE.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
@@ -640,7 +636,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Granulator.cpp</string>
+								<string></string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -657,8 +653,6 @@
 							<string>370pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -698,7 +692,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>4CB651E016557BF400A2CF34</string>
-				<string>4CC6057D165B031E007E8791</string>
+				<string>4CC60647165B1EF1007E8791</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -711,7 +705,7 @@
 			<key>WindowToolGUID</key>
 			<string>4CB651E016557BF400A2CF34</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>
@@ -853,14 +847,12 @@
 							<key>Dock</key>
 							<array>
 								<dict>
-									<key>BecomeActive</key>
-									<true/>
 									<key>ContentConfiguration</key>
 									<dict>
 										<key>PBXProjectModuleGUID</key>
 										<string>1CDD528C0622207200134675</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>CSL_Core.cpp</string>
+										<string>CSL_Types.h</string>
 										<key>StatusBarVisibility</key>
 										<true/>
 									</dict>
@@ -881,6 +873,8 @@
 							<string>428pt</string>
 						</dict>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -916,8 +910,8 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C530D57069F1CE1000CFCEE</string>
-				<string>4CC60598165B03AE007E8791</string>
-				<string>4CC60599165B03AE007E8791</string>
+				<string>4CC6064F165B1EF1007E8791</string>
+				<string>4CC60650165B1EF1007E8791</string>
 				<string>1CDD528C0622207200134675</string>
 				<string>1CD0528E0623707200166675</string>
 			</array>
