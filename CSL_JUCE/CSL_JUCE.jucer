@@ -269,6 +269,17 @@
                        libraryPath=""/>
       </CONFIGURATIONS>
     </VS2010>
+    <LINUX_MAKE targetFolder="Builds/Linux" juceFolder="../../JuceLibraryCode/modules"
+                extraDefs="USE_JUCE USE_VBAP USE_HRTF USE_AMBISONIC USE_FFTREAL USE_JSND"
+                extraCompilerFlags="-w">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="CSL_JUCE" headerPath="/usr/local/include;../../../CSL/Includes"
+                       defines="DEBUG"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
+                       targetName="CSL_JUCE" headerPath="/usr/local/include;../../../CSL/Includes"/>
+      </CONFIGURATIONS>
+    </LINUX_MAKE>
   </EXPORTFORMATS>
   <JUCEOPTIONS/>
 </JUCERPROJECT>

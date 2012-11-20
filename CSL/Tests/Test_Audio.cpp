@@ -22,14 +22,15 @@ extern juce::AudioDeviceManager * gAudioDeviceManager;	// global JUCE audio devi
 void audio_dump() {
 	for (unsigned i = 0; i < gAudioDeviceManager->getAvailableDeviceTypes().size(); i++) {
 		logMsg("	AudioIODeviceType %s", 
-			gAudioDeviceManager->getAvailableDeviceTypes().getUnchecked(i)->getTypeName().toUTF8());
+			(const char *) gAudioDeviceManager->getAvailableDeviceTypes().getUnchecked(i)->getTypeName().toUTF8());
 		StringArray devs = gAudioDeviceManager->getAvailableDeviceTypes().getUnchecked(i)->getDeviceNames();
 		for (unsigned j = 0; j < devs.size(); j++) {
-			logMsg("		Device %s", devs[j].toUTF8() );
+			logMsg("		Device %s", (const char *) devs[j].toUTF8() );
 		}
 	}
 	AudioIODevice *  adm = gAudioDeviceManager->getCurrentAudioDevice();
-	logMsg("Current AudioIODevice = %s : %s", adm->getTypeName().toUTF8(), adm->getName().toUTF8());
+	logMsg("Current AudioIODevice = %s : %s", (const char *) adm->getTypeName().toUTF8(), 
+		(const char *) adm->getName().toUTF8());
 }
 
 // echo mic back using an InOut
