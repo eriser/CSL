@@ -118,7 +118,7 @@ String TooltipWindow::getTipFor (Component* const c)
 {
     if (c != nullptr
          && Process::isForegroundProcess()
-         && ! Component::isMouseButtonDownAnywhere())
+         && ! ModifierKeys::getCurrentModifiers().isAnyMouseButtonDown())
     {
         TooltipClient* const ttc = dynamic_cast <TooltipClient*> (c);
 
@@ -183,7 +183,7 @@ void TooltipWindow::timerCallback()
         // appear after a timeout..
         if (newTip.isNotEmpty()
              && newTip != tipShowing
-             && now > lastCompChangeTime + millisecondsBeforeTipAppears)
+             && now > lastCompChangeTime + (unsigned int) millisecondsBeforeTipAppears)
         {
             showFor (newTip);
         }

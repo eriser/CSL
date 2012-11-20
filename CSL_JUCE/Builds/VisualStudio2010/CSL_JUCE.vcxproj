@@ -37,12 +37,10 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CSL_JUCE</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);..\..\..\..\libsndfile\lib</LibraryPath>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CSL_JUCE</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath);..\..\..\..\libsndfile\lib;..\..\..\..\pthreads\Pre-built.2\dll\x86</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -55,8 +53,8 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\CSL\Includes;..\..\..\..\libsndfile\include;..\..\..\..\pthreads\Pre-built.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;DEBUG;_DEBUG;USE_JUCE;USE_VBAP;USE_HRTF;USE_AMBISONIC;USE_FFTREAL;USE_LSND;JUCER_VS2010_78A501D=1;USE_JTHREADS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\CSL\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;DEBUG;_DEBUG;USE_JUCE;USE_VBAP;USE_HRTF;USE_AMBISONIC;USE_FFTREAL;USE_JSND;USE_JTHREADS;JUCER_VS2010_78A501D=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader />
@@ -93,8 +91,8 @@
       <HeaderFileName />
     </Midl>
     <ClCompile>
-      <Optimization>MinSpace</Optimization>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\CSL\Includes;..\..\..\..\libsndfile;..\..\..\..\pthreads;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\CSL\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;USE_JUCE;USE_VBAP;USE_HRTF;USE_AMBISONIC;USE_FFTREAL;USE_LSND;JUCER_VS2010_78A501D=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -142,7 +140,6 @@
     <ClCompile Include="..\..\..\CSL\Sources\Oscillator.cpp" />
     <ClCompile Include="..\..\..\CSL\Sources\Spectral.cpp" />
     <ClCompile Include="..\..\..\CSL\Sources\KarplusString.cpp" />
-    <ClCompile Include="..\..\..\CSL\Sources\Granulator.cpp" />
     <ClCompile Include="..\..\..\CSL\Sources\Lorenz.cpp" />
     <ClCompile Include="..\..\..\CSL\Sources\OscillatorBL.cpp" />
     <ClCompile Include="..\..\..\CSL\Sources\WaveShaper.cpp" />
@@ -159,10 +156,10 @@
     <ClCompile Include="..\..\..\CSL\Instruments\AdditiveInstrument.cpp" />
     <ClCompile Include="..\..\..\CSL\IO\FileIO.cpp" />
     <ClCompile Include="..\..\..\CSL\IO\SoundFile.cpp" />
-    <ClCompile Include="..\..\..\CSL\IO\SoundFileL.cpp" />
-    <ClCompile Include="..\..\..\CSL\IO\SoundFileJ.cpp">
+    <ClCompile Include="..\..\..\CSL\IO\SoundFileL.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\CSL\IO\SoundFileJ.cpp" />
     <ClCompile Include="..\..\..\CSL\IO\SoundFileMP3.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1229,6 +1226,7 @@
     <ClInclude Include="..\..\..\CSL\Utilities\FFT_Wrapper.h" />
     <ClInclude Include="..\..\..\CSL\Utilities\FFTReal.h" />
     <ClInclude Include="..\..\..\CSL\Utilities\CPoint.h" />
+    <ClInclude Include="..\..\..\CSL\Spatializers\matrix.hpp" />
     <ClInclude Include="..\..\..\CSL\Utilities\Variable.h" />
     <ClInclude Include="..\..\..\CSL\Utilities\RingBuffer.h" />
     <ClInclude Include="..\..\..\CSL\Utilities\ThreadUtilities.h" />
@@ -1239,6 +1237,7 @@
     <ClInclude Include="..\..\..\CSL\Sources\SimpleSines.h" />
     <ClInclude Include="..\..\..\CSL\Sources\Oscillator.h" />
     <ClInclude Include="..\..\..\CSL\Sources\Spectral.h" />
+    <ClInclude Include="..\..\..\CSL\Sources\SHARC.h" />
     <ClInclude Include="..\..\..\CSL\Sources\KarplusString.h" />
     <ClInclude Include="..\..\..\CSL\Sources\Granulator.h" />
     <ClInclude Include="..\..\..\CSL\Sources\Lorenz.h" />

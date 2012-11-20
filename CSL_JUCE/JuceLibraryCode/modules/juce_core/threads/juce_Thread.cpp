@@ -156,7 +156,7 @@ bool Thread::waitForThreadToExit (const int timeOutMilliseconds) const
     // Doh! So how exactly do you expect this thread to wait for itself to stop??
     jassert (getThreadId() != getCurrentThreadId() || getCurrentThreadId() == 0);
 
-    const uint32 timeoutEnd = Time::getMillisecondCounter() + timeOutMilliseconds;
+    const uint32 timeoutEnd = Time::getMillisecondCounter() + (uint32) timeOutMilliseconds;
 
     while (isThreadRunning())
     {
@@ -189,7 +189,7 @@ void Thread::stopThread (const int timeOutMilliseconds)
         {
             // very bad karma if this point is reached, as there are bound to be
             // locks and events left in silly states when a thread is killed by force..
- //           jassertfalse;
+//            jassertfalse;
             Logger::writeToLog ("!! killing thread by force !!");
 
             killThread();

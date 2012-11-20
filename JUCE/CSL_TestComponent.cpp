@@ -180,11 +180,11 @@ CSLComponent::CSLComponent ()
 {
     addAndMakeVisible (playButton = new TextButton ("playNote"));
     playButton->setButtonText ("Play/Stop");
-    playButton->addButtonListener (this);
+    playButton->addListener (this);
 
     addAndMakeVisible (quitButton = new TextButton ("quitAction"));
     quitButton->setButtonText ("Quit");
-    quitButton->addButtonListener (this);
+    quitButton->addListener (this);
 
     addAndMakeVisible (testCombo = new ComboBox ("test to run"));
     testCombo->setEditableText (false);
@@ -207,7 +207,7 @@ CSLComponent::CSLComponent ()
 
     addAndMakeVisible (prefsButton = new TextButton ("new button"));
     prefsButton->setButtonText ("Audio Prefs");
-    prefsButton->addButtonListener (this);
+    prefsButton->addListener (this);
 
     addAndMakeVisible (cpuLabel = new Label ("new label",
                                              "0.0%"));
@@ -240,7 +240,7 @@ CSLComponent::CSLComponent ()
 
     addAndMakeVisible (loopButton = new ToggleButton ("new toggle button"));
     loopButton->setButtonText ("Loop");
-    loopButton->addButtonListener (this);
+    loopButton->addListener (this);
 
     addAndMakeVisible (familyCombo = new ComboBox ("test family"));
     familyCombo->setEditableText (false);
@@ -260,7 +260,7 @@ CSLComponent::CSLComponent ()
 
     addAndMakeVisible (recordButton = new ToggleButton ("new toggle button"));
     recordButton->setButtonText ("Record");
-    recordButton->addButtonListener (this);
+    recordButton->addListener (this);
 
     //[UserPreSize]
 	oscilloscopeL->initialise(0, 20, 2, true);		// channel, rate, window, zeroX

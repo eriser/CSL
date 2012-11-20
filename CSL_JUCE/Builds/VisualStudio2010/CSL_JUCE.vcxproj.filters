@@ -372,9 +372,6 @@
     <ClCompile Include="..\..\..\CSL\Sources\KarplusString.cpp">
       <Filter>CSL_JUCE\CSL\Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\CSL\Sources\Granulator.cpp">
-      <Filter>CSL_JUCE\CSL\Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\CSL\Sources\Lorenz.cpp">
       <Filter>CSL_JUCE\CSL\Sources</Filter>
     </ClCompile>
@@ -1559,6 +1556,9 @@
     <ClInclude Include="..\..\..\CSL\Utilities\CPoint.h">
       <Filter>CSL_JUCE\CSL\Support</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\CSL\Spatializers\matrix.hpp">
+      <Filter>CSL_JUCE\CSL\Support</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\CSL\Utilities\Variable.h">
       <Filter>CSL_JUCE\CSL\Utilities</Filter>
     </ClInclude>
@@ -1587,6 +1587,9 @@
       <Filter>CSL_JUCE\CSL\Sources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\CSL\Sources\Spectral.h">
+      <Filter>CSL_JUCE\CSL\Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\CSL\Sources\SHARC.h">
       <Filter>CSL_JUCE\CSL\Sources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\CSL\Sources\KarplusString.h">

@@ -8,7 +8,7 @@ namespace BinaryData
 {
 
 //================== 4thFloorSpeakers.dat ==================
-static const unsigned char temp_72643901[] =
+static const unsigned char temp_483209f6[] =
 "// speaker layout, MAT 4th floor, 1 May, 2009\n"
 "\n"
 "// relative to sweet spot, centre of room, in inches / degrees\n"
@@ -38,10 +38,10 @@ static const unsigned char temp_72643901[] =
 "135\t\t45\t\t1\n"
 "225\t\t45\t\t1\n";
 
-const char* _4thFloorSpeakers_dat = (const char*) temp_72643901;
+const char* _4thFloorSpeakers_dat = (const char*) temp_483209f6;
 
 //================== Speaker_layout.dat ==================
-static const unsigned char temp_b63333d3[] =
+static const unsigned char temp_cfbabe08[] =
 "% This is a data file used to describe the layout of LSpeakers of the VBAP classes.\n"
 "% It is meant to be used by the VBAP::read_layout_file(\"filename\" ) method of the VBAP classes developed by\n"
 "% Doug McCoy for his Master's thesis at UCSB. \n"
@@ -60,7 +60,7 @@ static const unsigned char temp_b63333d3[] =
 "speaker:\t0\t\t90\n"
 "speaker:\t0\t\t-90\n";
 
-const char* Speaker_layout_dat = (const char*) temp_b63333d3;
+const char* Speaker_layout_dat = (const char*) temp_cfbabe08;
 
 
 const char* getNamedResource (const char*, int&) throw();

@@ -159,9 +159,9 @@
         <FILE id="RmJn1X" name="SoundFile.h" compile="0" resource="0" file="../CSL/IO/SoundFile.h"/>
         <FILE id="mApTCy" name="SoundFile.cpp" compile="1" resource="0" file="../CSL/IO/SoundFile.cpp"/>
         <FILE id="HbhhIn" name="SoundFileL.h" compile="0" resource="0" file="../CSL/IO/SoundFileL.h"/>
-        <FILE id="W9MTYB" name="SoundFileL.cpp" compile="1" resource="0" file="../CSL/IO/SoundFileL.cpp"/>
+        <FILE id="W9MTYB" name="SoundFileL.cpp" compile="0" resource="0" file="../CSL/IO/SoundFileL.cpp"/>
         <FILE id="LQFRPL" name="SoundFileJ.h" compile="0" resource="0" file="../CSL/IO/SoundFileJ.h"/>
-        <FILE id="Yiw93N" name="SoundFileJ.cpp" compile="0" resource="0" file="../CSL/IO/SoundFileJ.cpp"/>
+        <FILE id="Yiw93N" name="SoundFileJ.cpp" compile="1" resource="0" file="../CSL/IO/SoundFileJ.cpp"/>
         <FILE id="GfmqSP" name="SoundFileMP3.h" compile="0" resource="0" file="../CSL/IO/SoundFileMP3.h"/>
         <FILE id="cGUxrD" name="SoundFileMP3.cpp" compile="0" resource="0"
               file="../CSL/IO/SoundFileMP3.cpp"/>
@@ -259,14 +259,14 @@
     </XCODE_MAC>
     <VS2010 targetFolder="Builds/VisualStudio2010" libraryType="1" juceFolder="..\..\..\Documents\juce\modules"
             extraDefs="USE_JUCE USE_VBAP USE_HRTF USE_AMBISONIC USE_FFTREAL USE_LSND"
-            userNotes="Remember to re-make the links in csl\Includes using remake.bat.&#10;&#10;Inastall libsndfile and the Windows pthreads libraries from http://www.sourceware.org/pthreads-win32.&#10;&#10;Add the libsndfile and pthreads libraries to the build by hand (not sure how to do this with IntroJucer).&#10;&#10;Delete the following (UNIX-only) files from the project:&#10;    SHARC.cpp&#10;    Spatializers: Ambisonics, Binaural, VBAP, PME&#10;&#10;I generally turn off all warnings (/W0)">
+            userNotes="Remember to re-make the links in CSL\Includes using remake.bat.&#10;&#10;Add the libsndfile and pthreads libraries to the build by hand (not sure how to do this with IntroJucer).&#10;&#10;Delete the following (UNIX-only) files from the project:&#10;    SHARC.cpp&#10;    Spatializers: Ambisonics, Binaural, VBAP, PME&#10;    Granulator&#10;    SoundFileL&#10;&#10;I generally turn off all warnings (/W0)">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="2" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="CSL_JUCE" headerPath="..\..\..\CSL\Includes;..\..\..\..\libsndfile\include;..\..\..\..\pthreads\Pre-built.2\include"
-                       libraryPath="..\..\..\..\libsndfile\lib;..\..\..\..\pthreads\Pre-built.2\dll\x64"/>
+                       isDebug="1" optimisation="1" targetName="CSL_JUCE" headerPath="..\..\..\CSL\Includes"
+                       libraryPath=""/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="2" targetName="CSL_JUCE" headerPath="..\..\..\CSL\Includes;..\..\..\..\libsndfile;..\..\..\..\pthreads"
-                       libraryPath="..\..\..\..\libsndfile\lib;..\..\..\..\pthreads\Pre-built.2\dll\x86"/>
+                       isDebug="0" optimisation="3" targetName="CSL_JUCE" headerPath="..\..\..\CSL\Includes"
+                       libraryPath=""/>
       </CONFIGURATIONS>
     </VS2010>
   </EXPORTFORMATS>

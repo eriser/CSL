@@ -53,8 +53,8 @@ public:
 
     /** Creates a pixel from a 32-bit argb value.
     */
-    PixelARGB (const uint32 argb_) noexcept
-        : argb (argb_)
+    PixelARGB (const uint32 argbValue) noexcept
+        : argb (argbValue)
     {
     }
 
@@ -77,10 +77,18 @@ public:
     forcedinline uint8 getGreen() const noexcept    { return components.g; }
     forcedinline uint8 getBlue() const noexcept     { return components.b; }
 
-//    forcedinline uint8& getAlpha() noexcept         { return components.a; }
-//    forcedinline uint8& getRed() noexcept           { return components.r; }
-//    forcedinline uint8& getGreen() noexcept         { return components.g; }
-//    forcedinline uint8& getBlue() noexcept          { return components.b; }
+   #if JUCE_GCC && ! JUCE_CLANG
+    // NB these are here as a workaround because GCC refuses to bind to packed values.
+    forcedinline uint8& getAlpha() noexcept         { return comps [indexA]; }
+    forcedinline uint8& getRed() noexcept           { return comps [indexR]; }
+    forcedinline uint8& getGreen() noexcept         { return comps [indexG]; }
+    forcedinline uint8& getBlue() noexcept          { return comps [indexB]; }
+   #else
+    forcedinline uint8& getAlpha() noexcept         { return components.a; }
+    forcedinline uint8& getRed() noexcept           { return components.r; }
+    forcedinline uint8& getGreen() noexcept         { return components.g; }
+    forcedinline uint8& getBlue() noexcept          { return components.b; }
+   #endif
 
     /** Blends another pixel onto this one.
 
@@ -269,16 +277,19 @@ private:
     struct Components
     {
        #if JUCE_BIG_ENDIAN
-        uint8 a : 8, r : 8, g : 8, b : 8;
+        uint8 a, r, g, b;
        #else
         uint8 b, g, r, a;
        #endif
-    } JUCE_PACKED; // STP change
+    } JUCE_PACKED;
 
     union
     {
         uint32 argb;
         Components components;
+       #if JUCE_GCC
+        uint8 comps[4];
+       #endif
     };
 }
 #ifndef DOXYGEN
@@ -416,11 +427,11 @@ public:
     forcedinline void multiplyAlpha (float) noexcept {}
 
     /** Sets the pixel's colour from individual components. */
-    void setARGB (const uint8, const uint8 r_, const uint8 g_, const uint8 b_) noexcept
+    void setARGB (const uint8, const uint8 red, const uint8 green, const uint8 blue) noexcept
     {
-        r = r_;
-        g = g_;
-        b = b_;
+        r = red;
+        g = green;
+        b = blue;
     }
 
     /** Premultiplies the pixel's RGB values by its alpha. */

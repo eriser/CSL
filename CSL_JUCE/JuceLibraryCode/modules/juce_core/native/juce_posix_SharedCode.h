@@ -67,9 +67,9 @@ void CriticalSection::exit() const noexcept
 class WaitableEventImpl
 {
 public:
-    WaitableEventImpl (const bool manualReset_)
+    WaitableEventImpl (const bool useManualReset)
         : triggered (false),
-          manualReset (manualReset_)
+          manualReset (useManualReset)
     {
         pthread_cond_init (&condition, 0);
 
@@ -205,7 +205,7 @@ File File::getCurrentWorkingDirectory()
 
     char localBuffer [1024];
     char* cwd = getcwd (localBuffer, sizeof (localBuffer) - 1);
-    int bufferSize = 4096;
+    size_t bufferSize = 4096;
 
     while (cwd == nullptr && errno == ERANGE)
     {
@@ -500,7 +500,7 @@ int FileOutputStream::writeInternal (const void* const data, const int numBytes)
 
     if (fileHandle != 0)
     {
-        result = ::write (getFD (fileHandle), data, numBytes);
+        result = ::write (getFD (fileHandle), data, (size_t) numBytes);
 
         if (result == -1)
             status = getResultForErrno();
@@ -512,8 +512,19 @@ int FileOutputStream::writeInternal (const void* const data, const int numBytes)
 void FileOutputStream::flushInternal()
 {
     if (fileHandle != 0)
+    {
         if (fsync (getFD (fileHandle)) == -1)
             status = getResultForErrno();
+
+       #if JUCE_ANDROID
+        // This stuff tells the OS to asynchronously update the metadata
+        // that the OS has cached aboud the file - this metadata is used
+        // when the device is acting as a USB drive, and unless it's explicitly
+        // refreshed, it'll get out of step with the real file.
+        const LocalRef<jstring> t (javaString (file.getFullPathName()));
+        android.activity.callVoidMethod (JuceAppActivity.scanFile, t.get());
+       #endif
+    }
 }
 
 Result FileOutputStream::truncate()
@@ -528,9 +539,7 @@ Result FileOutputStream::truncate()
 //==============================================================================
 String SystemStats::getEnvironmentVariable (const String& name, const String& defaultValue)
 {
-    const char* s = ::getenv (name.toUTF8());
-
-    if (s != nullptr)
+    if (const char* s = ::getenv (name.toUTF8()))
         return String::fromUTF8 (s);
 
     return defaultValue;
@@ -573,10 +582,16 @@ MemoryMappedFile::~MemoryMappedFile()
 }
 
 //==============================================================================
+#if JUCE_PROJUCER_LIVE_BUILD
+extern "C" const char* juce_getCurrentExecutablePath();
+#endif
+
 File juce_getExecutableFile();
 File juce_getExecutableFile()
 {
-   #if JUCE_ANDROID
+   #if JUCE_PROJUCER_LIVE_BUILD
+    return File (juce_getCurrentExecutablePath());
+   #elif JUCE_ANDROID
     return File (android.appFile);
    #else
     struct DLAddrReader
@@ -695,7 +710,7 @@ String juce_getOutputFromCommand (const String& command)
 class InterProcessLock::Pimpl
 {
 public:
-    Pimpl (const String& name, const int timeOutMillisecs)
+    Pimpl (const String& lockName, const int timeOutMillisecs)
         : handle (0), refCount (1)
     {
        #if JUCE_IOS
@@ -712,7 +727,7 @@ public:
              tempFolder = "/tmp";
         #endif
 
-        const File temp (tempFolder.getChildFile (name));
+        const File temp (tempFolder.getChildFile (lockName));
 
         temp.create();
         handle = open (temp.getFullPathName().toUTF8(), O_RDWR);
@@ -773,8 +788,7 @@ public:
     int handle, refCount;
 };
 
-InterProcessLock::InterProcessLock (const String& name_)
-    : name (name_)
+InterProcessLock::InterProcessLock (const String& nm)  : name (nm)
 {
 }
 
@@ -995,7 +1009,8 @@ public:
 
                 Array<char*> argv;
                 for (int i = 0; i < arguments.size(); ++i)
-                    argv.add (arguments[i].toUTF8().getAddress());
+                    if (arguments[i].isNotEmpty())
+                        argv.add (arguments[i].toUTF8().getAddress());
 
                 argv.add (nullptr);
 
@@ -1027,7 +1042,7 @@ public:
         {
             int childState;
             const int pid = waitpid (childPID, &childState, WNOHANG);
-            return pid > 0 && ! (WIFEXITED (childState) || WIFSIGNALED (childState));
+            return pid == 0 || ! (WIFEXITED (childState) || WIFSIGNALED (childState));
         }
 
         return false;
@@ -1037,11 +1052,15 @@ public:
     {
         jassert (dest != nullptr);
 
+        #ifdef fdopen
+         #error // the zlib headers define this function as NULL!
+        #endif
+
         if (readHandle == 0 && childPID != 0)
             readHandle = fdopen (pipeHandle, "r");
 
         if (readHandle != 0)
-            return fread (dest, 1, numBytes, readHandle);
+            return (int) fread (dest, 1, (size_t) numBytes, readHandle);
 
         return 0;
     }
@@ -1064,12 +1083,15 @@ bool ChildProcess::start (const String& command)
 {
     StringArray tokens;
     tokens.addTokens (command, true);
-    tokens.removeEmptyStrings (true);
+    return start (tokens);
+}
 
-    if (tokens.size() == 0)
+bool ChildProcess::start (const StringArray& args)
+{
+    if (args.size() == 0)
         return false;
 
-    activeProcess = new ActiveProcess (tokens);
+    activeProcess = new ActiveProcess (args);
 
     if (activeProcess->childPID == 0)
         activeProcess = nullptr;

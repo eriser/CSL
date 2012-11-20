@@ -353,6 +353,8 @@ done:
 
 // Play a grain cloud
 
+#ifndef CSL_WINDOWS
+
 #include <Granulator.h>
 
 void testGrainCloud() {
@@ -385,6 +387,8 @@ void testGrainCloud() {
 	cloud.isPlaying = false;
 	sleepSec(0.5);
 }
+
+#endif
 
 ///////////////// IFFT tests ////////
 
@@ -463,7 +467,9 @@ testStruct srcTestList[] = {
 	"WaveShaping synthesis",	testWaveShaper,			"Play 2 wave-shaper notes with envelopes",
 	"IFFT synthesis",			test_ifft,				"Make a sound with IFFT synthesis",
 	"Vector IFFT",				test_vector_ifft,		"Vector synthesis with 2 IFFTs",
+#ifndef CSL_WINDOWS
 	"Soundfile granulation",	testGrainCloud,			"Random sound file granulation example",
+#endif
 	NULL,						NULL,					NULL
 };
 
