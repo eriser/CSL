@@ -763,6 +763,7 @@ public:
 
 protected:									/// initialize overridden in subclasses
 	virtual void initialize(unsigned sr, unsigned bs, int is, int os, unsigned ic, unsigned oc) { };
+	float maxSampEver;
 };
 
 //-------------------------------------------------------------------------------------------------//

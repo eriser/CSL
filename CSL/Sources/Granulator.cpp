@@ -15,7 +15,9 @@ GrainPlayer::GrainPlayer(GrainCloud * cloud) : UnitGenerator(), mCloud(cloud) {
 	mNumChannels = 2;					// I'm always stereo
 }
 
-GrainPlayer::~GrainPlayer() { }
+GrainPlayer::~GrainPlayer() {
+	mCloud->isPlaying = false;
+}
 
 // The nextBuffer method does all the work of the synthesis, looping through the playing grains
 
@@ -107,8 +109,12 @@ GrainCloud::GrainCloud() {
 	mSamples = 0;
 }
 
+// stop threads and delete lists
+
 GrainCloud::~GrainCloud() {
-										// should delete mGrains here
+	spawnerThread->stopThread(100);
+	reaperThread->stopThread(100);
+	csl::sleepMsec(150);
 }
 
 // Grain creation loop: take the head item of silentGrains, fill it in based on the random ranges,
@@ -224,7 +230,6 @@ void GrainCloud::startThreads() {
 	reaperThread->createThread(reapGrains, this);
 	csl::sleepMsec(100);						// sleep for a bit
 	logMsg("Grain threads running");
-
 }
 
 // reset the list of grains to be all silent

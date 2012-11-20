@@ -172,13 +172,14 @@ void JSoundFile::readBufferFromFile(unsigned numFrames) {
 	}
 											// JUCE read fcn
 //	logMsg ("Sound file read %d", numFrames);
-//    if (mAFReader->read(mWavetable.mBuffers, myChannels, mCurrentFrame, numFrames, false)) {
-	if (1) {
+											// create a temp AudioSampleBuffer for the wavetable
+	AudioSampleBuffer asBuffer(mWavetable.buffers(), myChannels, numFrames);
+    mAFReader->read(&asBuffer, mCurrentFrame, numFrames, 0, true, true);
 		currentFrame += numFrames;	
-	} else {
-		logMsg (kLogError, "Sound file read error");
-		throw IOError("Sound file read error");
-	}
+//	} else {
+//		logMsg (kLogError, "Sound file read error");
+//		throw IOError("Sound file read error");
+//	}
 															// if we are past the end of the file...
 	if (currentFrame > (unsigned) mStop) {
 		unsigned numFramesRemaining = currentFrame - mStop;
@@ -188,7 +189,8 @@ void JSoundFile::readBufferFromFile(unsigned numFrames) {
 			while (numFramesRead < numFrames) {
 				currentFrame = seekTo(0, kPositionStart);
 															// call JUCE read function
-// TODO LMS commented out	mAFReader->read(mWavetable.mBuffers, myChannels, mCurrentFrame, numFrames, false);
+//				mAFReader->read(mWavetable.buffers(), myChannels, mCurrentFrame, numFrames, false);
+				mAFReader->read(&asBuffer, mCurrentFrame, numFrames, 0, true, true);
 			    currentFrame += numFramesRead;
 			}
 		} else {

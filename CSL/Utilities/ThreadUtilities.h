@@ -17,7 +17,7 @@ namespace csl {
 
 #ifdef USE_JTHREADS
 
-/// The abstract CSL Thread class
+/// The JUCE CSL Thread class
 
 class CThread : public juce::Thread {
 public:
@@ -34,18 +34,23 @@ protected:
 	void * mArgs;
 };
 
-#else // USE_JTHREADS
+#else // USE_PTHREADS
 
-/// The abstract CSL Thread class
+/// The PThreads CSL Thread class
 
 class CThread {
 public:
-	CThread() { };
-	virtual ~CThread() { };
+	CThread();
+	virtual ~CThread();
 	static CThread * MakeThread();	///< factory method
 
 	virtual int createThread(VoidFcnPtr * func, void * args) = 0;
 //	virtual int createRealtimeThread(VoidFcnPtr * func, void * args) = 0;
+	void stopThread	(int timeOutMilliseconds);	
+	
+	pthread_t mThread;
+	pthread_attr_t mAttributes;
+
 };
 
 /// Sync is a cross-thread synchronization object
@@ -86,9 +91,6 @@ class ThreadPthread : public CThread {
 public:
 	ThreadPthread();
 	~ThreadPthread();
-
-	pthread_t mThread;
-	pthread_attr_t mAttributes;
 
 	int createThread(VoidFcnPtr * func, void* args);	
 //	int createRealtimeThread(VoidFcnPtr * func, void* args);	

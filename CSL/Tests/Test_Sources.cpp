@@ -224,8 +224,12 @@ void testFMInstrument() {
 	FMInstrument * vox = new FMInstrument;
 	logMsg("Playing simple fm instrument...");
 	float dur = 6.0;
+	float m_freq = 160.0;
 	float * dPtr = & dur;
+	float * fPtr = & m_freq;
 	vox->setParameter(set_duration_f, 1, (void **) &dPtr, "f");
+	vox->setParameter(set_index_f, 1, (void **) &dPtr, "f");
+	vox->setParameter(set_m_freq_f, 1, (void **) &fPtr, "f");
 	vox->play();
 	runTest(*vox, dur);
 	logMsg("done.");

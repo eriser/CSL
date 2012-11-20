@@ -17,14 +17,13 @@
 		27C6848D89459C12B4733B7E /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4497EA1537CD1C22127959C4 /* CoreMIDI.framework */; };
 		2A5585D52C40F37C9CA04D4F /* CSL_Core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6F3B7ABB227CF6D7352A1B8 /* CSL_Core.cpp */; };
 		2D01519301875DCF30EEEB32 /* SndFileInstrument.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 83F0E0DEE7EA67940F4F571B /* SndFileInstrument.cpp */; };
-		2F3546E32B3C3075D6CE5B2E /* PME.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DABCC7693111B6936C80D367 /* PME.cpp */; };
 		33AD57AE675824872F1EB1A2 /* FFT_Wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68EF2338DD96B770CBD500F0 /* FFT_Wrapper.cpp */; };
-		3A641FC8DB2939D1E3B25E0A /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00632E0A26510E9AED3B0E01 /* Main.cpp */; };
 		437FCECF8B263AF10945679D /* juce_audio_utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = C55D7EACA53AA067A745BA2B /* juce_audio_utils.mm */; };
 		457D785CDE57C57F9A6C9E2E /* FFTReal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C75C6AD055EB8D0C2B1E1E59 /* FFTReal.cpp */; };
 		45B8B21C99EB1BBDA9D28C70 /* Test_Envelopes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB57B85DDFC730DD5372A459 /* Test_Envelopes.cpp */; };
 		49F2D3A76EA721A4B47223CB /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC5A4772C72BB3F91AB19660 /* Carbon.framework */; };
-		4FEAFEECA785B5E242CBF9EC /* SoundFileL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C808E1950C06A6E17DCC903A /* SoundFileL.cpp */; };
+		4CC60559165AD79B007E8791 /* SoundFileJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 103CBDDE0767FC2B2A1324D4 /* SoundFileJ.cpp */; };
+		4CC605BD165B0524007E8791 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00632E0A26510E9AED3B0E01 /* Main.cpp */; };
 		52C60FE1EB4950421AEE14F0 /* juce_audio_basics.mm in Sources */ = {isa = PBXBuildFile; fileRef = CA10115FBE7CD1EB6F933DFC /* juce_audio_basics.mm */; };
 		540E5A5A0A31ED1F5CFE1FE2 /* Granulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35769BC11EB2F236223D2A2C /* Granulator.cpp */; };
 		54FBCDC47A1AF94CE8367D78 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F08A220A3E9CDF0EC6D9E1A /* WebKit.framework */; };
@@ -2948,7 +2947,6 @@
 				0C083DE946B630BA19739208 /* SimplePanner.cpp in Sources */,
 				5652F87E3879A1F300E8A5B9 /* DistanceSimulator.cpp in Sources */,
 				C3986623D451295A3E681DE5 /* SpeakerLayout.cpp in Sources */,
-				2F3546E32B3C3075D6CE5B2E /* PME.cpp in Sources */,
 				AA2A57C487344D5FBE304483 /* PracticalSocket.cpp in Sources */,
 				E0FB54285D4C02A3A2B931B9 /* VBAP.cpp in Sources */,
 				13264C75FFD4D9BDEE544CF7 /* Ambisonic.cpp in Sources */,
@@ -2962,7 +2960,6 @@
 				ECC85D0405A43DC3E38EE846 /* AdditiveInstrument.cpp in Sources */,
 				91A4DBC42A57B8AA2DB037FD /* FileIO.cpp in Sources */,
 				F023E8998AC7314BD8C42A87 /* SoundFile.cpp in Sources */,
-				4FEAFEECA785B5E242CBF9EC /* SoundFileL.cpp in Sources */,
 				F2E0CBFE2068B9B4657B2441 /* OSC_support.cpp in Sources */,
 				592D79E2B7C12C1C43924356 /* Test_Support.cpp in Sources */,
 				A8DABD83E90C32D0B47A4DEC /* Test_Oscillators.cpp in Sources */,
@@ -2974,7 +2971,6 @@
 				B33ACA71D1D38F6A92BB70B2 /* Test_Audio.cpp in Sources */,
 				B5C4DA848EEFE12B71C104AC /* CSL_TestComponent.cpp in Sources */,
 				BA74ABF8F2E8F8DC9E223E19 /* JCSL_Widgets.cpp in Sources */,
-				3A641FC8DB2939D1E3B25E0A /* Main.cpp in Sources */,
 				ADAC17DA75220C132203D0A3 /* BinaryData.cpp in Sources */,
 				52C60FE1EB4950421AEE14F0 /* juce_audio_basics.mm in Sources */,
 				96680FFAE0550ED2F036699E /* juce_audio_devices.mm in Sources */,
@@ -2987,6 +2983,8 @@
 				7DAA57535335A44E994D7694 /* juce_graphics.mm in Sources */,
 				608EACA49A6A85BC88CF3B6F /* juce_gui_basics.mm in Sources */,
 				9B6D8756F0C9877DAC6777F9 /* juce_gui_extra.mm in Sources */,
+				4CC60559165AD79B007E8791 /* SoundFileJ.cpp in Sources */,
+				4CC605BD165B0524007E8791 /* Main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3010,7 +3008,7 @@
 					USE_HRTF,
 					USE_AMBISONIC,
 					USE_FFTREAL,
-					USE_LSND,
+					USE_JSND,
 					"JUCER_XCODE_MAC_F6D2F4CF=1",
 				);
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -3022,12 +3020,10 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"/usr/local/lib\"",
-				);
+				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = "-lsndfile";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
 				SDKROOT_ppc = macosx10.5;
 			};
 			name = Debug;

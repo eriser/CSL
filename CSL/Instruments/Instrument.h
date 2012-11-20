@@ -36,7 +36,7 @@
 #define set_c_freq_f	115
 #define set_m_freq_f	116
 
-#define set_vib_depth_f	120		// Vibrato, attack-chiff
+#define set_vib_depth_f	120			// Vibrato, attack-chiff
 #define set_chiff_amt_f	121
 #define set_chiff_time_f 122
 

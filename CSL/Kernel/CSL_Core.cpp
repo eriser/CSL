@@ -521,7 +521,7 @@ void UnitGenerator::addOutput(UnitGenerator * ugen) {
 //	logMsg("UnitGenerator::addOutput %x to %x", ugen, this);
 	mOutputs.push_back(ugen);				// if adding the 2nd output, set up fan-out cache
 	if ((mNumOutputs == 1) && (mOutputCache == 0)) {
-		mOutputCache = new Buffer(mNumChannels, CGestalt::maxBufferFrames());
+		mOutputCache = new Buffer(mNumChannels, CGestalt::blockSize());
 		mOutputCache->allocateBuffers();
 	}
 	mNumOutputs++;
@@ -1272,7 +1272,7 @@ void IO::pullInput(Buffer & outBuffer, SampleBuffer out) throw(CException) {
 	static struct timeval * mte = & mThen;
 	static struct timeval * mno = & mNow;
 	GET_TIME(mte);
-	float maxSampEver = 0.0f;
+	maxSampEver = 0.0f;
 #endif
 //	unsigned numFrames = outBuffer.mNumFrames;
 //	unsigned numChans = outBuffer.mNumChannels;

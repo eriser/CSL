@@ -286,11 +286,11 @@ CSLComponent::CSLComponent ()
 									 "Couldn't open an output device!\n\n" + error);
 										// get the audio device
 	AudioIODevice* audioIO = mAudioDeviceManager.getCurrentAudioDevice();
-	unsigned sRate = (unsigned) audioIO->getCurrentSampleRate();
-	unsigned bufSize = audioIO->getCurrentBufferSizeSamples();
 
 #ifdef READ_IO_PROPS					// overwrite the system frame rate and block size from the
 										//  selected hardware interface at startup time
+	unsigned sRate = (unsigned) audioIO->getCurrentSampleRate();
+	unsigned bufSize = audioIO->getCurrentBufferSizeSamples();
 	theIO = new csl::IO(sRate, bufSize, -1, -1,			// still use the default # IO channels
 					CGestalt::numInChannels(), CGestalt::numOutChannels());
 #else									// reset the HW frame rate & block size to the CSL definition

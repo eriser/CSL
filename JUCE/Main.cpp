@@ -8,7 +8,7 @@ Component * createCSLComponent();					// extern function that creates the window
 
 class CSLWindow  : public DocumentWindow {
 public:
-    CSLWindow() : DocumentWindow ("CSL 5.0 Demos", 
+    CSLWindow() : DocumentWindow ("CSL 5.2 Demos", 
 				Colours::lightgrey, DocumentWindow::allButtons, true) {
 		setContentComponent (createCSLComponent());	// create app window
 		setResizable (true, false);

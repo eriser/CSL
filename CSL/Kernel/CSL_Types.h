@@ -87,7 +87,7 @@
 	#define CSL_mSndFileFrames 2000000		///< default file cache size = 2 MB
 	#define CSL_mMaxSndFileFrames 2000000	///< max file cache size = 2 MB
 #else										///  normal hosts
-	#define CSL_mBlockSize 2048				///< I/O block size (set to 64-2048 in typical usage)
+	#define CSL_mBlockSize 512				///< I/O block size (set to 64-2048 in typical usage)
 	#define CSL_mMaxBufferFrames 8192		///< max block size (set large for zooming scopes)
 	#define CSL_mSndFileFrames 20480000		///< default file cache size = 20 MFrames (~ 2 min)
 	#define CSL_mMaxSndFileFrames 64000000	///< max file cache size = 64 MB (set to a large value)
@@ -117,13 +117,15 @@
 #define OUT_SFILE_NAME "XX_csl.aiff"		///< csl output file name temlpate
 //#define OUT_SFILE_NAME "CSLXX.aiff"		///< csl output file name temlpate
 
+// Data folder and init file locations
+
 #ifdef CSL_WINDOWS
 	#define CSL_DATA_DIR "..\\..\\..\\CSL_Data\\"	///< folder where the CSL data can be found
 	#define CSL_INIT_FILE "..\\..\\..\\csl.ini"		///< where to store the CSL init file
 #else
-	#define CSL_DATA_DIR "~/Code/CSL/CSL_Data/"		///< folder where the CSL data can be found
+	#define CSL_DATA_DIR "~/Code/CSL_Data/"			///< folder where the CSL data can be found
 	#define CSL_INIT_FILE "~/.cslrc"				///< where to store the CSL init file
-//	#define DO_TIMING								///< Gather performance timing (not on Windows)
+	#define DO_TIMING								///< Gather performance timing (not on Windows)
 #endif
 
 //// Which Soundfile class to use? (choose with a compiler option, e.g., -DUSE_LSND)

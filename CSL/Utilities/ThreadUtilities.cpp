@@ -33,12 +33,22 @@ void CThread::run() {
 	(*mFunc)(mArgs);				// call my function
 }
 
-#else
+#else // PTHREADS
 
 // This CThread uses pthreads
 
+CThread::CThread() : mThread(NULL) { }
+
+CThread::~CThread() { 
+	pthread_cancel(mThread);
+}
+
 CThread * CThread::MakeThread() { 
 	return new ThreadPthread(); 
+}
+
+void CThread::stopThread	(int timeOutMilliseconds) {
+	pthread_cancel(mThread);
 }
 
 Synch *Synch::MakeSynch() { return new SynchPthread(); }
@@ -83,9 +93,9 @@ ThreadPthread::~ThreadPthread() {
 //		pthread_cancel(mThread);
 }
 
-#else
+#else // UNIX
 
-ThreadPthread::ThreadPthread() : CThread(), mThread(NULL) { 
+ThreadPthread::ThreadPthread() : CThread() { 
 	pthread_attr_init(&mAttributes);
 }
 
