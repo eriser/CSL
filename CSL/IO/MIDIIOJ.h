@@ -11,7 +11,7 @@
 #include "CGestalt.h"
 #include "ThreadUtilities.h"
 #include "Instrument.h"
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "JuceHeader.h"
 //#include "src/juce_appframework/audio/midi/juce_MidiBuffer.h"
 //#include "src/juce_appframework/audio/midi/juce_MidiFile.h"
 //#include "src/juce_appframework/audio/midi/juce_MidiMessage.h"

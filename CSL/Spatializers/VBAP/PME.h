@@ -15,8 +15,8 @@
 
 //#ifdef DO_TIMING					// Here are the macros and globals for the timing code
 #include <sys/time.h>
-#define GET_TIME(val) if (gettimeofday(val, 0) != 0) cout << "Output: Error reading current time" << endl;
-#define SUB_TIMES(t1, t2) (((t1->tv_sec - t2->tv_sec) * 1000000) + (t1->tv_usec - t2->tv_usec))
+//#define GET_TIME(val) if (gettimeofday(val, 0) != 0) cout << "Output: Error reading current time" << endl;
+//#define SUB_TIMES(t1, t2) (((t1->tv_sec - t2->tv_sec) * 1000000) + (t1->tv_usec - t2->tv_usec))
 //#endif
 
 using namespace csl;

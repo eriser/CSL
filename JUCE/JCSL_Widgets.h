@@ -44,7 +44,7 @@
 //};
 
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "JuceHeader.h"
 #include "CSL_Types.h"
 
 // Note that defining RANGE_SLIDER requires a change to the privacy of class Slider's members;

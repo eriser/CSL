@@ -9,9 +9,11 @@
 #include <string.h>		// for bzero / memset
 #include <stdlib.h>		// for malloc
 #include <math.h>
+
 #ifdef USE_LSND
 #include <samplerate.h>	// libsamplerate header file
 #endif
+
 using namespace csl;
 
 #ifdef WIN32

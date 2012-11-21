@@ -9,7 +9,7 @@
 
 #include "SoundFile.h"
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "JuceHeader.h"
 
 namespace csl {
 

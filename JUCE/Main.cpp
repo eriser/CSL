@@ -2,7 +2,7 @@
 // Stripped Juce top-level window code, based on the hello world example
 //
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "JuceHeader.h"
 
 Component * createCSLComponent();					// extern function that creates the window
 

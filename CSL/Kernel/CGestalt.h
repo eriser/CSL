@@ -20,8 +20,10 @@
 #include <string>
 
 #ifdef USE_JUCE
-#include "../JuceLibraryCode/JuceHeader.h"
-using namespace juce;
+#include "JuceHeader.h"
+#include "modules/juce_core/time/juce_Time.h"
+
+//using namespace juce;
 #else
 #include <sys/time.h>
 #endif

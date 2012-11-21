@@ -22,7 +22,7 @@
         <FILE id="BqLA6Y" name="FFTReal.cpp" compile="1" resource="0" file="../CSL/Utilities/FFTReal.cpp"/>
         <FILE id="wmxlxd" name="CPoint.h" compile="0" resource="0" file="../CSL/Utilities/CPoint.h"/>
         <FILE id="Gm2dzE" name="CPoint.cpp" compile="1" resource="0" file="../CSL/Utilities/CPoint.cpp"/>
-        <FILE id="l7ALnL" name="matrix.hpp" compile="0" resource="0" file="../CSL/Spatializers/matrix.hpp"/>
+        <FILE id="krlpGF" name="matrix.h" compile="0" resource="0" file="../CSL/Spatializers/matrix.h"/>
       </GROUP>
       <GROUP id="{CB655542-8A5A-2E4D-846B-3A1BFAAD6B42}" name="Utilities">
         <FILE id="Lr7Ymm" name="Variable.h" compile="0" resource="0" file="../CSL/Utilities/Variable.h"/>
@@ -226,9 +226,6 @@
         <FILE id="ixk9QQ" name="Main.cpp" compile="1" resource="0" file="../JUCE/Main.cpp"/>
       </GROUP>
     </GROUP>
-    <GROUP id="{4611F7FB-BA9E-D77C-209D-1FD4A38C4175}" name="Source">
-      <FILE id="dIJ1AO" name="Main.cpp" compile="0" resource="0" file="Source/Main.cpp"/>
-    </GROUP>
   </MAINGROUP>
   <MODULES>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="1"/>
@@ -246,8 +243,8 @@
   </MODULES>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" juceFolder="/Volumes/Content/Code/juce2/modules"
-               extraDefs="USE_JUCE USE_VBAP USE_HRTF USE_AMBISONIC USE_FFTREAL USE_LSND"
-               extraLinkerFlags="-lsndfile">
+               extraDefs="USE_JUCE USE_VBAP USE_HRTF USE_AMBISONIC USE_FFTREAL USE_JSND"
+               extraLinkerFlags="-lsndfile" objCExtraSuffix="uqDLjJ">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="64BitIntel"
                        isDebug="1" optimisation="1" targetName="CSL_Demo" headerPath="/usr/local/include;../../../CSL/Includes"
@@ -258,8 +255,7 @@
       </CONFIGURATIONS>
     </XCODE_MAC>
     <VS2010 targetFolder="Builds/VisualStudio2010" libraryType="1" juceFolder="..\..\..\Documents\juce\modules"
-            extraDefs="USE_JUCE USE_VBAP USE_HRTF USE_AMBISONIC USE_FFTREAL USE_LSND"
-            userNotes="Remember to re-make the links in CSL\Includes using remake.bat.&#10;&#10;Add the libsndfile and pthreads libraries to the build by hand (not sure how to do this with IntroJucer).&#10;&#10;Delete the following (UNIX-only) files from the project:&#10;    SHARC.cpp&#10;    Spatializers: Ambisonics, Binaural, VBAP, PME&#10;    Granulator&#10;    SoundFileL&#10;&#10;I generally turn off all warnings (/W0)">
+            extraDefs="USE_JUCE USE_FFTREAL USE_JSND" userNotes="Remember to re-make the links in CSL\Includes using remake.bat.&#10;&#10;Add the libsndfile and pthreads libraries to the build by hand (not sure how to do this with IntroJucer).&#10;&#10;Delete the following (UNIX-only) files from the project:&#10;    SHARC.cpp&#10;    Spatializers: Ambisonics, Binaural, VBAP, PME&#10;    Granulator&#10;    SoundFileL&#10;&#10;I generally turn off all warnings (/W0)">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="2" generateManifest="1" winArchitecture="32-bit"
                        isDebug="1" optimisation="1" targetName="CSL_JUCE" headerPath="..\..\..\CSL\Includes"

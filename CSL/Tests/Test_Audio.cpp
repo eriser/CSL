@@ -6,7 +6,7 @@
 
 #ifdef USE_JUCE
 	#include "Test_Support.h"
-	#include "../JuceLibraryCode/JuceHeader.h"
+	#include "JuceHeader.h"
 #else
 	#define USE_TEST_MAIN			// use the main() function in test_support.h
 	#include "Test_Support.cpp"		// include all of CSL core and the test support functions
