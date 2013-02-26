@@ -262,7 +262,7 @@ void testWaveTableFromFile() {
 	logMsg("Loading sound file %s = %d frames @ %d Hz", fi.path().c_str(), fi.duration(), fi.playbackRate());
 //	fi.seekTo(0, kPositionStart);
 	Buffer oscBuff(1, fi.duration());
-	oscBuff.setBuffer(0, fi.mWavetable.monoBuffer(0));
+	oscBuff.setBuffer(0, fi.mWavetable.buffer(0));
 	oscBuff.mAreBuffersAllocated = true;
 	Osc wav(oscBuff);
 	logMsg("playing wavetable from file...");

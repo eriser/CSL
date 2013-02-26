@@ -129,7 +129,7 @@ class HRTFDatabase {
 public:
 	~HRTFDatabase() { };
 	
-	static HRTFDatabase * Database();		///< accessor for the singleton instance
+	static HRTFDatabase * Database();		///< accessor for the singleton instance (lazy init)
 	static void Destroy();					///< free the instance
 	static void Reload(char * folder);		///< load the singleton from the given data folder
 	static void convertDB(const char *listname) throw (CException);		///< bulk-convert DBs
@@ -151,7 +151,6 @@ public:
 	
 protected:
 	HRTFDatabase(const char * folder);		///< constructor that loads from a folder (protected)
-//	HRTFDatabase(HRTFVector hrtfs);
 											/// load a set of HRTFs from a folder or a file list file
 	void loadFromFolder (const char *folder) throw (CException);
 	void loadFromFile(const char *filename) throw (CException);

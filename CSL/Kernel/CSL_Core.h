@@ -1,4 +1,5 @@
 ///
+///
 /// CSL_Core.h -- the specification file for the core classes of CSL version 5
 ///
 ///	See the copyright notice and acknowledgment of authors in the file COPYRIGHT
@@ -6,33 +7,50 @@
 /// What's here:
 ///
 /// Core Classes
+///
 ///		Buffer -- the multi-channel sample buffer class (passed around between generators and IO guys)
+///
 ///		BufferCMap --  a sample buffer with channel map and count (used for many-channel processing)
+///
 ///		Port -- used to represent signal and control inputs and outputs in named maps; 
 ///			holds a UnitGenerator and its buffer
+///
 ///		UnitGenerator -- an object that can fill a buffer with samples, the central abstraction of CSL DSP
 ///
 ///	Mix-in classes (added to UnitGenerator)
+///
 ///		Controllable -- superclass of the mix-ins that add control or signal inputs (held in maps)
+///
 ///		Effect -- A (controllable) UnitGenerator subclass that process an input port (e.g., filters, panners). 
 ///			All effects inherit from me.
+///
 ///		Scalable -- A (controllable) mix-in that adds scale (multiplicative) and offset (additive) 
 ///			inputs (used by most common UGens)
+///
 ///		Phased -- a (controllable) mix-in for generators with frequency inputs and persistent phase accumulators
 ///			All of these mix-in classes add macros for handling their special named control ports, as in
 ///			DECLARE_PHASED_CONTROLS, LOAD_PHASED_CONTROLS, and UPDATE_PHASED_CONTROLS
+///
 ///		Writeable -- a mix-in for generators that one can write into a buffer on
+///
 ///		Seekable -- a mix-in for generators that one can position (seek) as a stream
+///
 ///		Cacheable -- a mix-in for generators that can cache their past output values (of any size)
 ///
 /// Channel/Buffer processing
+///
 ///		FanOut -- 1-in n-out fan-out object (now built in to UnitGenerator)
+///
 ///		Splitter -- splits a stream into multiple 1-channel outputs
+///
 ///		Joiner -- joins multiple 1-channel inputs into a single stream
+///
 ///		Interleaver -- general inderleaver/de-interleaver
 ///
 /// I/O
+///
 ///		IO -- the input/output stream/driver, its utility functions and virtual constructors
+///
 ///		IODevice -- a holder for a sound interface with name, id, # IO channels, etc.
 ///
 
@@ -81,6 +99,7 @@ typedef enum {
 /// Note that this is a "record" class in that its members are all public and it has no accessor
 /// functions or complicated methods. It does handle sample buffer allocation and has
 /// Boolean members to determine what its pointer state is.
+///
 /// Note also that Buffers are *not* thread-safe; they hand out pointers (sample*)
 /// that are assumed to be volatile.
 ///
@@ -130,15 +149,16 @@ public:									/// Constructors: default is mono and default-size
 	virtual SampleBuffer samplePtrFor(unsigned channel, unsigned offset, unsigned maxFrame);
 	
 											/// convenience accessors for sample buffers
-	virtual SampleBuffer monoBuffer(unsigned bufNum) { return mBuffers[bufNum]; }
-	virtual SampleBuffer buffer(unsigned bufNum) { return mBuffers[bufNum]; }
+	virtual SampleBuffer buffer(unsigned bufNum);
 	virtual SampleBuffer * buffers() { return mBuffers; }
 											/// Set the buffer pointer (rare; used in joiners)
 	virtual void setBuffers(SampleBuffer * sPtr) { mBuffers = sPtr; };
 	virtual void setBuffer(unsigned bufNum, SampleBuffer sPtr) { mBuffers[bufNum] = sPtr; };
 	virtual void setBuffer(unsigned bufNum, unsigned offset, sample samp) { *((mBuffers[bufNum]) + offset) = samp; };
 
-/// Buffer Sample Processing (optional)
+	void normalize(float maxVal);			///< normalize the buffer(s) to the give max val
+	
+/// Buffer Sample Processing (optional).
 /// One could also easily add Buffer operators, such as (Buffer + Buffer) or (Buffer * Buffer)
 
 #ifdef CSL_DSP_BUFFER						
@@ -161,6 +181,7 @@ protected:
 
 ///
 /// BufferCMap is a Sample buffer with channel map and count.
+///
 /// The map is so that one can have (e.g.,) a buffer that stands for 3 channels within an 8-channel space
 ///
 
@@ -175,7 +196,7 @@ public:
 	std::vector<int> mChannelMap;			///< the map between virtual and real channels
 
 											/// Pointer accessor uses channel map
-	SampleBuffer monoBuffer(unsigned bufNum) { return mBuffers[mChannelMap[bufNum]]; }
+	SampleBuffer buffer(unsigned bufNum) { return mBuffers[mChannelMap[bufNum]]; }
 };
 
 ///
@@ -281,6 +302,7 @@ protected:				// My data members
 /// Port -- used to represent constant, control-rate or signal inputs and outputs in named maps;
 /// holds a UnitGenerator and its buffer, OR a single floating-point value (in which case the
 /// UGen pointer is set to NULL and mPtrIncrement = 0).
+///
 /// The nextValue() message is used to get the dynamic or static value.
 ///
 
@@ -367,8 +389,11 @@ protected:
 //-------------------------------------------------------------------------------------------------//
 ///
 /// Scalable -- mix-in class with scale and offset control inputs (may be constants or generators).
+///
 /// This uses the mInput map keys CSL_SCALE and CSL_OFFSET.
+///
 /// Most actual unit generators inherit this as well as UnitGenerator.
+///
 /// We use Controllable as a virtual superclass so that we can mix it in twice (in classes that are also Phased)
 ///
 
@@ -393,6 +418,7 @@ public:
 };
 
 /// Macros for all the Scalable UnitGenerators (note that these don't end with ";")
+///
 /// Note that these make some assumptions about variable names declared in the method;
 
 /// Declare the pointer to scale/offset buffers (if used) and current scale/offset values
@@ -430,6 +456,7 @@ public:
 //-------------------------------------------------------------------------------------------------//
 ///
 /// Effect -- mix-in for classes that have unit generators as inputs (like filters).
+///
 /// Note that this always uses a separate buffer for the input.
 ///
 
@@ -458,7 +485,9 @@ protected:
 //-------------------------------------------------------------------------------------------------//
 ///
 /// Phased -- a mix-in for objects with phase accumulators (local float) and frequency controls (an input port).
+///
 /// This puts an item named CSL_FREQUENCY in the Controllable parent mInputs map.
+///
 /// We use Controllable as a virtual superclass so that we can mix it in twice (in classes that are also Scalable)
 ///
 
@@ -571,9 +600,11 @@ public:
 /////////////// Utility UnitGenerator Classes ///////////////////////
 
 ///
-/// A fan-out generator for DSP graphs with loops
+/// A fan-out generator for DSP graphs with loops.
+///
 /// This takes a single input, and provides mNumFanOuts outputs;
 /// it only calls its input every mNumFanOuts frames.
+///
 /// This behavior is now standard on UnitGenerators, using their mOutputs UGenVector
 /// (see UnitGenerators::nextBuffer).
 ///
@@ -704,9 +735,11 @@ typedef enum {
 //-------------------------------------------------------------------------------------------------//
 ///
 /// IO -- the abstract I/O scheduling class; subclasses interface to specific I/O APIs.
+///
 ///	An IO object has a graph (a ptr to a UGen), and it registers itself with some call-back API
 ///	(like PortAudio, CoreAudio, Jack, VST, JUCE), setting up a callback function that in turn
 ///	calls the nextBuffer() method of its graph root.
+///
 /// One creates an IO with the desired rate, block size (optional) I/O device keys, and the	number of
 /// in and out channels; you then set its root to be your DSP graph and send it start/stop messages.
 ///

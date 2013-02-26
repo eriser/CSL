@@ -15,8 +15,6 @@
 
 #include "BinauralDB.h"
 
-//#include <iostream>
-
 using namespace csl;
 using namespace std;
 
@@ -94,7 +92,7 @@ HRTF::HRTF(char * filename, FFTWrapper & fft) {
 	for (unsigned i = 0; i < mNumFFTBlocks; i++) {
 		mInBuf.zeroBuffers();					// clear buffer (no zero-padding needed this way)
 		memcpy(mInBuf.buffer(0), 				// copy samples from file to buffer
-				(hrirFile.mWavetable.monoBuffer(0)) + (i * framesPerBlock), 
+				(hrirFile.mWavetable.buffer(0)) + (i * framesPerBlock), 
 				(framesPerBlock * sizeof(sample)));
 		mOutBuf.setBuffer(0, (SampleBuffer) mHrtfL[i]);
 
@@ -102,7 +100,7 @@ HRTF::HRTF(char * filename, FFTWrapper & fft) {
 
 		mInBuf.zeroBuffers();
 		memcpy(mInBuf.buffer(0), 
-				(hrirFile.mWavetable.monoBuffer(1)) + (i * framesPerBlock), 
+				(hrirFile.mWavetable.buffer(1)) + (i * framesPerBlock), 
 				(framesPerBlock * sizeof(sample)));
 		mOutBuf.setBuffer(0, (SampleBuffer) mHrtfR[i]);
 
@@ -206,7 +204,6 @@ HRTFDatabase::HRTFDatabase(const char * folder) {
 			logMsg(kLogError, "Loading the HRTFDatabase: %s\n", ex.mMessage.c_str());	
 			exit(0);
 		}
-		
 	} else if (folder[strlen(folder) - 1] == '/') {	// if the name looks like a folder name
 		try {
 			char realFolder[CSL_NAME_LEN] = "";
@@ -224,7 +221,6 @@ HRTFDatabase::HRTFDatabase(const char * folder) {
 			logMsg(kLogError, "Loading the HRTFDatabase: %s\n", ex.mMessage.c_str());	
 			exit(0);
 		}
-		
 	} else {									// if the name looks like the list file name
 		try {
 //			logMsg("Loading HRTF files from %s", folder);

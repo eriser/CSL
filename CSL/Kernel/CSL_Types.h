@@ -247,9 +247,9 @@ typedef unsigned long Timestamp;
 //// struct used for the JUCE pop-up menu of tests (see the test files)
 
 typedef struct {
-	char * name;			// test name (menu item)
+	const char * name;		// test name (menu item)
 	VoidFcnPtrN * fcn;		// test void fcn ptr
-	char * comment;			// test comment
+	const char * comment;	// test comment
 } testStruct;
 
 

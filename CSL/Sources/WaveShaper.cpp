@@ -25,7 +25,7 @@ WaveShaper::WaveShaper(float frequency, unsigned sel, unsigned size)
 void WaveShaper::initWaveTable(unsigned sel) {
 	mTransferFunction.setSize(1, mTableSize);
 	mTransferFunction.allocateBuffers();
-	sample * sampPtr = mTransferFunction.monoBuffer(0);
+	sample * sampPtr = mTransferFunction.buffer(0);
 	sample val = -1.0;
 	sample incr = 2.0 / mTableSize;
 	switch (sel) {

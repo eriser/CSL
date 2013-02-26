@@ -28,7 +28,7 @@ SimpleSine::~SimpleSine() { }			///< Destructor is a no-op
 
 void SimpleSine::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
 
-	sample * buffer = outputBuffer.monoBuffer(outBufNum);			// get pointer to the selected output channel
+	sample * buffer = outputBuffer.buffer(outBufNum);			// get pointer to the selected output channel
 
 	float phaseIncrement = mFrequency * CSL_TWOPI / mFrameRate;	// calculate the phase increment
 
@@ -63,7 +63,7 @@ SineAsPhased::~SineAsPhased() { }		///< Destructor is a no-op
 #ifdef NOT_THIS_WAY		// This is the really verbose way; see below for how to use the macros to make this easier
 
 void SineAsPhased::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	sample * buffer = outputBuffer.monoBuffer(outBufNum);		// get pointer to the selected output channel
+	sample * buffer = outputBuffer.buffer(outBufNum);		// get pointer to the selected output channel
 	float rateRecip = CSL_TWOPI / mFrameRate;					// Calculate the phase increment multiplier
 	
 	Port * freqPort = mInputs[CSL_FREQUENCY];					// get the frequency control port from the map
@@ -74,7 +74,7 @@ void SineAsPhased::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (
 
 	if (freqDyn) {												// if we have a dynamic freq.
 		this->pullInput(freqPort, outputBuffer);				// pull its buffer (this calls its nextBuffer method)
-		freq = freqPort->mBuffer->monoBuffer(0);				// get the pointer to its buffer
+		freq = freqPort->mBuffer->buffer(0);				// get the pointer to its buffer
 		freqC = *freq++;										// grab the first value
 	} else														// otherwise
 		freqC = freqPort->mValue;								// get the port's constant value
@@ -98,7 +98,7 @@ void SineAsPhased::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (
 //			UPDATE_PHASED_CONTROLS;
 
 void SineAsPhased::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	sample * buffer = outputBuffer.monoBuffer(outBufNum);		// get pointer to the selected output channel
+	sample * buffer = outputBuffer.buffer(outBufNum);		// get pointer to the selected output channel
 	unsigned numFrames = outputBuffer.mNumFrames;				// the number of frames to fill
 	float rateRecip = CSL_TWOPI / mFrameRate;					// compute the phase increment scale
 	
@@ -143,7 +143,7 @@ SineAsScaled::~SineAsScaled() { }		///< Destructor is a no-op
 #ifdef NOT_THIS_WAY		// This is the really verbose way; see below for how to use the macros to make this easier
 
 void SineAsScaled::nextBuffer(Buffer & outBuf, unsigned outBufNum) throw (CException) {
-	sample * buffer = outputBuffer.monoBuffer(outBufNum);		// get pointer to the selected output channel
+	sample * buffer = outputBuffer.buffer(outBufNum);		// get pointer to the selected output channel
 	float rateRecip = CSL_TWOPI / mFrameRate;					// Calculate the phase increment multiplier
 
 	Port * freqPort = mInputs[CSL_FREQUENCY];					// get the frequency control port from the map
@@ -165,21 +165,21 @@ void SineAsScaled::nextBuffer(Buffer & outBuf, unsigned outBufNum) throw (CExcep
 
 	if (freqDyn) {												// if we have a dynamic freq.
 		this->pullInput(freqPort, outputBuffer);				// pull its buffer (this calls its nextBuffer method)
-		freq = freqPort->mBuffer->monoBuffer(0);				// get the pointer to its buffer
+		freq = freqPort->mBuffer->buffer(0);				// get the pointer to its buffer
 		freqC = *freq++;										// grab the first value
 	} else														// otherwise
 		freqC = freqPort->mValue;								// get the port's constant value
 
 	if (scaleDyn) {												// if we have a dynamic scale
 		this->pullInput(scalePort, outputBuffer);
-		scale = scalePort->mBuffer->monoBuffer(0);
+		scale = scalePort->mBuffer->buffer(0);
 		scaleC = *scale++;	
 	} else
 		scaleC = scalePort->mValue;
 
 	if (offsetDyn) {											// if we have a dynamic offset							
 		this->pullInput(offsetPort, outputBuffer);
-		offset = offsetPort->mBuffer->monoBuffer(0);
+		offset = offsetPort->mBuffer->buffer(0);
 		offsetC = *offset++;
 	} else
 		offsetC = offsetPort->mValue;
@@ -208,7 +208,7 @@ void SineAsScaled::nextBuffer(Buffer & outBuf, unsigned outBufNum) throw (CExcep
 //			UPDATE_SCALABLE_CONTROLS;
 
 void SineAsScaled::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	sample * buffer = outputBuffer.monoBuffer(outBufNum);	// get pointer to the selected output channel
+	sample * buffer = outputBuffer.buffer(outBufNum);	// get pointer to the selected output channel
 	float rateRecip = CSL_TWOPI / mFrameRate;
 	unsigned numFrames = outputBuffer.mNumFrames;			// the number of frames to fill
 	DECLARE_PHASED_CONTROLS;								// declare the frequency buffer and value as above

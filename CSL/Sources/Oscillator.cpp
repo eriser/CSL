@@ -110,7 +110,7 @@ void WavetableOscillator::fillSine() {
 	if ( ! sSineTable) {					// create shared sine table lazily
 		sSineTable = new Buffer(1, DEFAULT_WTABLE_SIZE);
 		sSineTable->allocateBuffers();		// make space
-		SampleBuffer ptr = sSineTable->monoBuffer(0);
+		SampleBuffer ptr = sSineTable->buffer(0);
 		float incr = CSL_TWOPI / DEFAULT_WTABLE_SIZE;
 		float accum = 0;					// sine fill loop
 		for (unsigned i = 0; i < DEFAULT_WTABLE_SIZE; i++) {
@@ -119,7 +119,7 @@ void WavetableOscillator::fillSine() {
 		}
 	}
 	mWavetable.setSize(1, DEFAULT_WTABLE_SIZE);
-	mWavetable.setBuffer(0, sSineTable->monoBuffer(0));		// point to the shared sine waveform
+	mWavetable.setBuffer(0, sSineTable->buffer(0));		// point to the shared sine waveform
 	mWavetable.mAreBuffersAllocated = true;					// fib a bit
 	mWavetable.mDidIAllocateBuffers = false;
 }
@@ -127,10 +127,10 @@ void WavetableOscillator::fillSine() {
 // Oscillate a buffer-full of the stored waveform
 
 void WavetableOscillator::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	SampleBuffer buffer = outputBuffer.monoBuffer(outBufNum);	// get pointer to the selected output channel
+	SampleBuffer buffer = outputBuffer.buffer(outBufNum);	// get pointer to the selected output channel
 	if ( ! mWavetable.mAreBuffersAllocated)						// lazy sine init
 		fillSine();
-	SampleBuffer waveform = mWavetable.monoBuffer(0);
+	SampleBuffer waveform = mWavetable.buffer(0);
 	unsigned tableLength = mWavetable.mNumFrames;
 	float rateRecip = (float) tableLength / (float) mFrameRate;
 	float phase = mPhase;									// get a local copy of the phase
@@ -199,7 +199,7 @@ CompOrCacheOscillator::CompOrCacheOscillator(bool whether, float frequency, floa
 void CompOrCacheOscillator::createCache(void) {
 	mUseCache = true;
 	mWavetable.allocateBuffers();
-	this->nextWaveInto(mWavetable.monoBuffer(0), mWavetable.mNumFrames, true);
+	this->nextWaveInto(mWavetable.buffer(0), mWavetable.mNumFrames, true);
 }
 
 // nextBuffer either calls the inherited wavetable method, or does the computation on-demand here
@@ -209,7 +209,7 @@ void CompOrCacheOscillator::nextBuffer(Buffer & outputBuffer, unsigned outBufNum
 		return WavetableOscillator::nextBuffer(outputBuffer, outBufNum);
 								// otherwise do the synthesis on demand
 	outputBuffer.zeroBuffers();
-	SampleBuffer buffer = outputBuffer.monoBuffer(outBufNum);
+	SampleBuffer buffer = outputBuffer.buffer(outBufNum);
 	this->nextWaveInto(buffer, outputBuffer.mNumFrames, false);
 }
 
@@ -223,7 +223,7 @@ Sine::Sine(float frequency, float ampl, float offset, float phase)
 // the computed sine's nextBuffer
 
 void Sine::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	SampleBuffer buffer = outputBuffer.monoBuffer(outBufNum);		// get pointer to the selected output channel
+	SampleBuffer buffer = outputBuffer.buffer(outBufNum);		// get pointer to the selected output channel
 	float rateRecip = CSL_TWOPI / mFrameRate;
 	unsigned numFrames = outputBuffer.mNumFrames;			// the number of frames to fill
 	float phase = mPhase;
@@ -257,7 +257,7 @@ FSine::FSine(float frequency, float ampl, float offset, float phase)
 // the computed sine's nextBuffer
 
 void FSine::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	SampleBuffer buffer = outputBuffer.monoBuffer(outBufNum);		// get pointer to the selected output channel
+	SampleBuffer buffer = outputBuffer.buffer(outBufNum);		// get pointer to the selected output channel
 	float rateRecip = CSL_TWOPI / mFrameRate;
 	unsigned numFrames = outputBuffer.mNumFrames;			// the number of frames to fill
 	float phase = mPhase;
@@ -289,7 +289,7 @@ Sawtooth::Sawtooth(float frequency, float ampl, float offset, float phase)
 			: Oscillator(frequency, ampl, offset, phase) { }
 
 void Sawtooth::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	SampleBuffer buffer = outputBuffer.monoBuffer(outBufNum);	// get pointer to the selected output channel
+	SampleBuffer buffer = outputBuffer.buffer(outBufNum);	// get pointer to the selected output channel
 	float rateRecip = 1.0f / mFrameRate;
 	unsigned numFrames = outputBuffer.mNumFrames;			// the number of frames to fill
 	float phase = mPhase;
@@ -320,7 +320,7 @@ Square::Square(float frequency, float ampl, float offset, float phase)
 			: Oscillator(frequency, ampl, offset, phase) { }
 
 void Square::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	SampleBuffer buffer = outputBuffer.monoBuffer(outBufNum);	// get pointer to the selected output channel
+	SampleBuffer buffer = outputBuffer.buffer(outBufNum);	// get pointer to the selected output channel
 	float rateRecip = 1.0f / mFrameRate;
 	unsigned numFrames = outputBuffer.mNumFrames;			// the number of frames to fill
 	float phase = mPhase;
@@ -361,7 +361,7 @@ Impulse::Impulse(float frequency, float ampl, float offset, float phase)
 // the computed Impulse's next_buffer
 
 void Impulse::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	SampleBuffer buffer = outputBuffer.monoBuffer(outBufNum);		// get pointer to the selected output channel
+	SampleBuffer buffer = outputBuffer.buffer(outBufNum);		// get pointer to the selected output channel
 	unsigned numFrames = outputBuffer.mNumFrames;			// the number of frames to fill
 	unsigned i, j;
 	unsigned count = mCounter;

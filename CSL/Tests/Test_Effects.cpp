@@ -484,7 +484,7 @@ public:											// created with an input UGen &scale coeff
 													// nextBuffer() gets input and operates on it
 	void nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
 		unsigned numFrames = outputBuffer.mNumFrames;				// get buffer length
-		csl::SampleBuffer out = outputBuffer.monoBuffer(outBufNum);	// get ptr to output channel
+		csl::SampleBuffer out = outputBuffer.buffer(outBufNum);	// get ptr to output channel
 		
 		Effect::pullInput(numFrames);				// get my input buffer
 		csl::SampleBuffer inPtr = mInputPtr;		// get a pointer to the input samples

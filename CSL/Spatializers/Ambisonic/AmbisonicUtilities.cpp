@@ -5,10 +5,11 @@
 //
 //	Utility classes used by HOA_Encoder, MOA_Encoder, AmbisonicRotator, MOA_Rotator, HOA_Decoder
 
+#include "AmbisonicUtilities.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "AmbisonicUtilities.h"
 
 using namespace csl;
 

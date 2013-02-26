@@ -3,7 +3,9 @@
 ///		system constants, logging, and utility methods; SAFE_MALLOC/SAFE_FREE macros
 ///		The logging system has a number of print methods that use the printf var-args format 
 ///		and can be filtered on verbosity.
+///
 ///		There's a variety of random-number functions.
+///
 ///		The timer sleep methods are interruptable with a global flag.
 ///
 /// The MVC Observer/Subject or dependency pattern classes are also here.
@@ -275,7 +277,9 @@ private:
 ///
 ///	Subclasses must override the update() method to do their stuff -- grabbing a data buffer, 
 /// operating on their model, or displaying something.
+///
 ///		The mPeriod is the requested period for updates.
+///
 ///		The mKey is an int value for the model's evaluate() function to filter updates
 ///		i.e., if the model implements evaluate(void*), and its return value is non-zero and 
 ///		matches the observer's key, then an update will be sent. An example of using this is

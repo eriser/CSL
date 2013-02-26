@@ -165,13 +165,13 @@ void JSoundFile::readBufferFromFile(unsigned numFrames) {
 											// if we are at the end of the file and not looping
 	if ((currentFrame >= (unsigned) mStop) && !mIsLooping) {
 		for (unsigned i = 0; i < mNumChannels; i++) {
-			sampleBufferPtr = mWavetable.monoBuffer(i);
+			sampleBufferPtr = mWavetable.buffer(i);
 			memset(sampleBufferPtr, 0, numFrames * sizeof(sample));
 		}
 		return;
 	}
 											// JUCE read fcn
-//	logMsg ("Sound file read %d", numFrames);
+	logMsg ("JSound file read %d", numFrames);
 											// create a temp AudioSampleBuffer for the wavetable
 	AudioSampleBuffer asBuffer(mWavetable.buffers(), myChannels, numFrames);
     mAFReader->read(&asBuffer, mCurrentFrame, numFrames, 0, true, true);
@@ -196,7 +196,7 @@ void JSoundFile::readBufferFromFile(unsigned numFrames) {
 		} else {
 			unsigned bytesToClear = numFramesRemaining * sizeof(sample);
 			for (unsigned i = 0; i < mNumChannels; i++) {
-				sampleBufferPtr = mWavetable.monoBuffer(i);
+				sampleBufferPtr = mWavetable.buffer(i);
 				memset(sampleBufferPtr, 0, bytesToClear);
 			}
 		}
@@ -209,7 +209,7 @@ void JSoundFile::readBufferFromFile(unsigned numFrames) {
 //	sample normFactor = 1.0 / (float) (32768 << 16);
 //	
 //	for (unsigned channelIndex = 0; channelIndex < mNumChannels; channelIndex++) {
-///		sampleBufferPtr = mWavetable.monoBuffer(channelIndex) + start;
+///		sampleBufferPtr = mWavetable.buffer(channelIndex) + start;
 //		intBufferPtr = mConvBuffer[channelIndex];
 //		for (unsigned j = 0; j < num; j++) {
 //			*sampleBufferPtr++ = ((float) *intBufferPtr++) * normFactor;

@@ -10,7 +10,7 @@ class CSLWindow  : public DocumentWindow {
 public:
     CSLWindow() : DocumentWindow ("CSL 5.2 Demos", 
 				Colours::lightgrey, DocumentWindow::allButtons, true) {
-		setContentComponent (createCSLComponent());	// create app window
+		setContentOwned(createCSLComponent(), true); // create app window
 		setResizable (true, false);
 		setVisible (true);
 		setUsingNativeTitleBar(true);
@@ -48,7 +48,7 @@ public:
     }
 
     const String getApplicationVersion() {
-        return "1.0";
+        return "5.2";
     }
 
     bool moreThanOneInstanceAllowed() {

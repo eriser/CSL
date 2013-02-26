@@ -12,7 +12,7 @@ using namespace csl;
 
 // Constructor takes the input UGen and optionally the flags, min and max.
 Clipper::Clipper(UnitGenerator & input, float min, float max, ClipperFlags flags)
-				: Effect(input), mMin(min), mMax(max), mFlags(flags) { }
+				: Effect(input), mFlags(flags), mMin(min), mMax(max) { }
 
 Clipper::~Clipper() { }
 

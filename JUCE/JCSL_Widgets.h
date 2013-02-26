@@ -11,39 +11,6 @@
 //			and	 http://mysite.verizon.net/mikews/vumeters.zip
 //
 
-// in CSL_Types.h
-
-//// struct used for the JUCE pop-up menu of tests (see the test files)
-
-//	typedef struct {
-//		char * name;			// test name (menu item)
-//		VoidFcnPtrN * fcn;		// test void fcn ptr
-//		char * comment;			// test comment
-//	} testStruct;
-
-// in the test files
-
-// test list for Juce GUI
-
-//testStruct oscTestList[] = {
-//	"Sweep test",				testSweep,			"Test a sine with swept freq and volume swell",
-//	"Simple sines",				testSimpleSines,	"Test some simple sine oscilators",
-//	"Standard waveforms",		testBasicWaves,		"Demonstrate the standard wave forms",
-//	"Scaled sine",				testScaledSin,		"Play a scaled-quiet sine wave",
-//	"Wavetable interpolation",	testWavetableInterpolation,	"Show truncated/interpolated wave tables",
-//	"AM/FM sines",				testAMFMSin,				"Play an AM and FM sine wave",
-//	"Dump AM/FM sines",			dumpAMFMSin,				"Dump the graph of the AM/FM sine",
-//	"SumOfSines cached",		testSumOfSinesCached,		"Play a sum-of-sines additive oscillator",
-//	"SumOfSines non-cached",	testSumOfSinesNonCached,	"Play an uncached inharmonic sum-of-sines", 
-//	"SumOfSines build",			testSumOfSinesSteps,		"Build up a harmonic series on a sum-of-sines",
-//	"SumOfSines 1/f",			testSumOfSines1F,			"Play a 1/f spectrum sum-of-sines",
-//	"Wavetable from file",		testWaveTableFromFile,		"Play a wave table from a sound file",
-//	"SHARC SOS",				test_SHARC,					"Load/print the SHARC timbre database, play example",
-//	"Vector SHARC",				test_SHARC2,				"Show vector cross-fade of SHARC spectra",
-//	NULL,						NULL,				NULL
-//};
-
-
 #include "JuceHeader.h"
 #include "CSL_Types.h"
 
@@ -85,7 +52,7 @@ public:
 	void setSamplesToAverage(unsigned val) { samplesToAverage = val; }
 	
 protected:
-    float * circularBuffer;			// This is the sample bufefr for the waveform display 
+    float * circularBuffer;			// This is the sample buffer for the waveform display 
 									// and the pixel buffer for the spectrum display
     float currentOutputLevel;
     int volatile bufferPos, bufferSize, numSamplesIn;

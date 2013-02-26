@@ -64,8 +64,8 @@ FMInstrument::FMInstrument(FMInstrument& in) :
 	Instrument(in),
 	mAEnv(in.mAEnv),
 	mIEnv(in.mIEnv),
-   	mMod(in.mMod),
    	mCar(in.mCar),
+   	mMod(in.mMod),
 	mPanner(in.mPanner) { }
 
 // The destructor frees the stuff we allocated

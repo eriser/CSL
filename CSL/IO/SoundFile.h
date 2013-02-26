@@ -239,7 +239,6 @@ public:									/// Constructor. Values not passed default to null.
 	virtual SampleBuffer samplePtrFor(unsigned channel, unsigned offset, unsigned maxFrame);
 	
 											/// convenience accessors for sample buffers
-	virtual SampleBuffer monoBuffer(unsigned bufNum) { return mBuffers[bufNum]; }
 	virtual SampleBuffer buffer(unsigned bufNum) { return mBuffers[bufNum]; }
 	
 											/// Set the buffer pointer (rare; used in joiners)

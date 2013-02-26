@@ -125,7 +125,7 @@ void testMonoFilePlayer() {
 
 	sfile.dump();														// print snd file info
 
-//	float * left = sfile.mWavetable.monoBuffer(0);						// dump the first few samples
+//	float * left = sfile.mWavetable.buffer(0);						// dump the first few samples
 //	for (unsigned j = 0; j < 1000; j += 4)								// 0 to 1000 by 4
 //		printf("\t\t%5.3f\n", left[j]);
 
@@ -140,8 +140,8 @@ void testStereoFilePlayer() {
 	SoundFile sfile(CGestalt::dataFolder() + "piano-tones.aiff");		// load a piano note
 	sfile.dump();														// print snd file info
 
-//	float * left = sfile.mSampleBuffer.monoBuffer(0);					// dump the first few samples
-//	float * rite = sfile.mSampleBuffer.monoBuffer(1);
+//	float * left = sfile.mSampleBuffer.buffer(0);					// dump the first few samples
+//	float * rite = sfile.mSampleBuffer.buffer(1);
 //	for (unsigned j = 0; j < 1000; j++)
 //		printf("\t\t%5.3f : %5.3f\n", *left++, *rite++);
 
@@ -292,7 +292,7 @@ void testSndFileInstrument() {
 
 // Add a sound file to the given UGenVector and Mixer, add a panner on it to the panner UGenVector
 
-void addSndtoBank(char * nam, UGenVector &snds, UGenVector &pans, Mixer &mix) {
+void addSndtoBank(const char * nam, UGenVector &snds, UGenVector &pans, Mixer &mix) {
 	SoundFile * sfile = new SoundFile(CGestalt::dataFolder() + nam);
 	snds.push_back(sfile);						// add strings to the vector of strings
 	Panner * pan = new Panner(*sfile);			// create stereo panners on the strings

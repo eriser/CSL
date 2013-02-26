@@ -137,7 +137,7 @@ public:
     //[UserVariables]   -- You can add your own custom variables in this section.
 
 	AudioDeviceManager mAudioDeviceManager;		// JUCE audio
-	csl::Buffer outBuffer;						// main CSL buffer
+	csl::Buffer outBuffer;						// main CSL buffer for output
 	GThread * playThread;						// test play and looper threads
 	LThread * loopThread;
 	int whichTests;								// test selector

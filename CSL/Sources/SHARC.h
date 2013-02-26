@@ -138,8 +138,8 @@ public:				// Data members
 	~SHARCLibrary();
 					// Accessing
 	char * * instrument_names();
-	SHARCInstrument * instrument_named(char * name);
-	SHARCSpectrum * spectrum_named(char * inst, char * spect);
+	SHARCInstrument * instrument_named(const char * name);
+	SHARCSpectrum * spectrum_named(const char * inst, char * spect);
 	void dump();
 					// For debugging
 	void dump_stats();
@@ -151,8 +151,8 @@ public:				// Data members
 	static SHARCLibrary * library();
 	static SHARCInstrument * instrument(char * instr);
 	static SHARCInstrument * instrument(unsigned instr);
-	static SHARCSpectrum * spectrum(char * instr, char * note);
-	static SHARCSpectrum * spectrum(char * instr, unsigned note);
+	static SHARCSpectrum * spectrum(const char * instr, char * note);
+	static SHARCSpectrum * spectrum(const char * instr, unsigned note);
 	static SHARCSpectrum * spectrum(unsigned instr, unsigned note);
 
 private:

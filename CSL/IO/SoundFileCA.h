@@ -19,15 +19,15 @@ namespace csl {
 
 class CASoundFile : public Abst_SoundFile {
 public:
-	CASoundFile(CFURLRef path);
-	CASoundFile(string path, int start = -1, int stop = -1);
-	CASoundFile(string folder, string path, int start = -1, int stop = -1);
+	CASoundFile(CFURLRef path, bool load = true);
+	CASoundFile(string path, int start = -1, int stop = -1, bool load = true);
 	CASoundFile(CASoundFile & otherSndFile);		///< Copy constructor -- shares sample buffer
 	~CASoundFile();
 
 	SoundFileFormat format();						///< get format
 	void dump();									///< log snd file props
-	void openForRead() throw (CException);			///< open file and get stats
+													///< open file and get stats; read it if "load"
+	void openForRead(bool load = true) throw (CException);
 													/// Open a file for write. 
 													/// Default values are some common format.
 	void openForWrite(SoundFileFormat format = kSoundFileFormatAIFF, 

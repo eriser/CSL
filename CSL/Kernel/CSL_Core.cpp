@@ -50,8 +50,16 @@ Buffer::~Buffer() {
 		freeBuffers();
 }
 
-// SetSize creates the vector of sample pointers, does not allocate the sample storage
+// sample pointer accessor
 
+SampleBuffer Buffer::buffer(unsigned bufNum) {
+	if (mNumChannels > bufNum)
+		return mBuffers[bufNum];
+	else
+		return 0;
+}
+
+// SetSize creates the vector of sample pointers, does not allocate the sample storage
 
 void Buffer::setSize(unsigned numChannels, unsigned numFrames) {
 	if (mAreBuffersAllocated && mDidIAllocateBuffers && (mNumChannels != numChannels) 
@@ -98,6 +106,8 @@ void Buffer::allocateBuffers() throw (MemoryError) {
 #ifdef FVERBOSE_MALLOC
 	logMsg("			Buffer::allocateBuffers(%x  %d  %d)", this, mNumChannels, mNumFrames);
 #endif
+	if (mBuffers == NULL)
+		mBuffers = new SampleBuffer[mNumChannels];	// reserve space for buffers
 	for (unsigned i = 0; i < mNumChannels; i++) {
 		SAFE_MALLOC(mBuffers[i], sample, mNumFrames);
 		memset(mBuffers[i], 0, mNumFrames * sizeof(sample));
@@ -212,7 +222,7 @@ void Buffer::copyFrom(Buffer & source) throw (RunTimeError) {
 	mBuffers = new SampleBuffer[mNumChannels];	// reserve space for buffers
 												// copy sample pointers
 	for (unsigned outBufNum = 0; outBufNum < mNumChannels; outBufNum++) {
-		mBuffers[outBufNum] = source.monoBuffer(outBufNum);
+		mBuffers[outBufNum] = source.buffer(outBufNum);
 	}
 	mAreBuffersZero = false;					// set flags
 	mAreBuffersAllocated = true;
@@ -232,7 +242,7 @@ void Buffer::copySamplesFrom(Buffer & source) throw (RunTimeError) {
 	mMonoBufferByteSize = mNumFrames * sizeof(sample);
 	for (unsigned outBufNum = 0; outBufNum < mNumChannels; outBufNum++) {			// copy loop
 		unsigned sBufNum = csl_min(outBufNum, (source.mNumChannels - 1));
-		memcpy(mBuffers[outBufNum], source.monoBuffer(sBufNum), mMonoBufferByteSize);
+		memcpy(mBuffers[outBufNum], source.buffer(sBufNum), mMonoBufferByteSize);
 	}
 	mAreBuffersZero = false;
 }
@@ -245,7 +255,7 @@ void Buffer::copyOnlySamplesFrom(Buffer & source) throw (RunTimeError) {
 	} 
 	for (unsigned outBufNum = 0; outBufNum < mNumChannels; outBufNum++) {
 		unsigned sBufNum = csl_min(outBufNum, (source.mNumChannels - 1));
-		memcpy(mBuffers[outBufNum], source.monoBuffer(sBufNum), mMonoBufferByteSize);
+		memcpy(mBuffers[outBufNum], source.buffer(sBufNum), mMonoBufferByteSize);
 	}
 }
 
@@ -259,8 +269,34 @@ void Buffer::copySamplesFromTo(Buffer & source, unsigned offset) throw (RunTimeE
 	} 
 	for (unsigned outBufNum = 0; outBufNum < mNumChannels; outBufNum++) {
 		unsigned sBufNum = csl_min(outBufNum, (source.mNumChannels - 1));
-		memcpy(mBuffers[outBufNum] + offset, source.monoBuffer(sBufNum), 
+		memcpy(mBuffers[outBufNum] + offset, source.buffer(sBufNum), 
 				(source.mNumFrames * sizeof(sample)));
+	}
+}
+
+// normalize the buffer(s) to the give max val
+
+void Buffer::normalize(float maxVal) {
+	float * bbuffer = NULL;
+	unsigned outBufNum, i;
+	unsigned numChans = mNumChannels;
+	unsigned numFrames = mNumFrames;
+	float maxSamp = 0.0f;
+	for (outBufNum = 0; outBufNum < numChans; outBufNum++) {
+		bbuffer = mBuffers[outBufNum];
+		for (i = 0; i < numFrames; i++) {
+			float samp = *bbuffer++;
+			if (samp > maxSamp)
+				maxSamp = samp;
+		}
+	}
+	float scaleV = maxVal / maxSamp;
+	for (outBufNum = 0; outBufNum < numChans; outBufNum++) {
+		bbuffer = mBuffers[outBufNum];
+		for (i = 0; i < numFrames; i++) {
+			*bbuffer *= scaleV;
+			bbuffer++;
+		}
 	}
 }
 
@@ -513,7 +549,7 @@ UnitGenerator::~UnitGenerator() {
 }
 
 void UnitGenerator::zeroBuffer(Buffer & outputBuffer, unsigned outBufNum) {
-	float * buffer = outputBuffer.monoBuffer(outBufNum);
+	float * buffer = outputBuffer.buffer(outBufNum);
 	memset(buffer, 0, outputBuffer.mMonoBufferByteSize);
 }
 
@@ -578,7 +614,7 @@ void UnitGenerator::handleFanOut(Buffer & outputBuffer) throw (CException) {
 void UnitGenerator::nextBuffer(Buffer & outputBuffer) throw (CException) {
 	unsigned numOutputChannels = outputBuffer.mNumChannels;
 	unsigned bufferByteSize = outputBuffer.mMonoBufferByteSize;
-	SampleBuffer buffer0 = outputBuffer.monoBuffer(0);
+	SampleBuffer buffer0 = outputBuffer.buffer(0);
 #ifdef CSL_DEBUG
 	logMsg("UnitGenerator::nextBuffer");
 #endif
@@ -589,7 +625,7 @@ void UnitGenerator::nextBuffer(Buffer & outputBuffer) throw (CException) {
 	case kCopy:								// compute 1 channel and copy it
 		this->nextBuffer(outputBuffer, 0);	// this is where most of the work gets done in CSL
 		for (unsigned i = 1; i < numOutputChannels; i += mNumChannels)
-			memcpy (outputBuffer.monoBuffer(i), buffer0, bufferByteSize);
+			memcpy (outputBuffer.buffer(i), buffer0, bufferByteSize);
 		break;
 	case kExpand:							// loop through the requested output channels
 		for (unsigned i = 0; i < numOutputChannels; i += mNumChannels)
@@ -626,7 +662,7 @@ Port::Port(UnitGenerator * ug) :
 				mValue(0),
 				mPtrIncrement(1) {
 	mBuffer->allocateBuffers();
-	mValuePtr = mBuffer->monoBuffer(0) - 1;		// set to -1 since nextValue does pre-increment
+	mValuePtr = mBuffer->buffer(0) - 1;		// set to -1 since nextValue does pre-increment
 }
 
 Port::Port(float value) :
@@ -660,7 +696,7 @@ void Port::checkBuffer() throw (LogicError) {
 
 void Port::resetPtr() {
 	if (mPtrIncrement)								// if I'm dynamic
-		mValuePtr = (mBuffer->monoBuffer(0)) - 1;	// set to -1 since nextValue does pre-increment
+		mValuePtr = (mBuffer->buffer(0)) - 1;	// set to -1 since nextValue does pre-increment
 }
 
 // Answer whether the receiver is active
@@ -720,7 +756,7 @@ void Controllable::pullInput(Port * thePort, unsigned numFrames) throw (CExcepti
 	theUG->nextBuffer(* theBuffer);			//////// and ask the UGen for nextBuffer()
 	
 	theBuffer->mIsPopulated = true;
-	thePort->mValuePtr = (thePort->mBuffer->monoBuffer(0)) - 1;
+	thePort->mValuePtr = (thePort->mBuffer->buffer(0)) - 1;
 	thePort->mValueIndex = 0;
 }
 
@@ -735,7 +771,7 @@ void Controllable::pullInput(Port * thePort, Buffer & theBuffer) throw (CExcepti
 	theUG->nextBuffer(theBuffer);			///////// and ask the UGen for nextBuffer()
 	
 	theBuffer.mIsPopulated = true;
-	thePort->mValuePtr = (theBuffer.monoBuffer(0)) - 1;
+	thePort->mValuePtr = (theBuffer.buffer(0)) - 1;
 	thePort->mValueIndex = 0;
 }
 
@@ -1051,8 +1087,8 @@ void Splitter::nextBuffer(Buffer & outputBuffer) throw (CException) {
 	if (buf == 0) 
 		throw LogicError("Missing buffer in channel splitter");
 	unsigned bufferByteSize = outputBuffer.mMonoBufferByteSize;
-	SampleBuffer dest = outputBuffer.monoBuffer(0);
-	SampleBuffer src = buf->monoBuffer(mCurrent);
+	SampleBuffer dest = outputBuffer.buffer(0);
+	SampleBuffer src = buf->buffer(mCurrent);
 	memcpy(dest, src, bufferByteSize);
 	mCurrent++;
 }
@@ -1095,7 +1131,7 @@ void Joiner::nextBuffer(Buffer & outputBuffer) throw (CException) {
 						// loop through the mono inputs
 	for (unsigned i = 0; i < mNumChannels; i++) {
 						// put the mono in samples into 1 channel of the output
-		tempBuffer.setBuffer(0, outputBuffer.monoBuffer(i));
+		tempBuffer.setBuffer(0, outputBuffer.buffer(i));
 						// get a buffer of mono samples from one of the inputs
 		mInputs[i]->mUGen->nextBuffer(tempBuffer);
 	}
@@ -1139,7 +1175,7 @@ void Interleaver::interleave(Buffer & output, SampleBuffer samples,
 
 	for (unsigned frame = 0; frame < numFrames; frame++) {
 		for (unsigned channel = 0; channel < numChannelsToInterleave; channel++)
-			*samples++ = output.monoBuffer(channel)[frame];
+			*samples++ = output.buffer(channel)[frame];
 		for (unsigned j = 0; j < numChannelsBeyond; j++)
 			*samples++ = 0;
 	}
@@ -1156,7 +1192,7 @@ void Interleaver::interleave(Buffer & output, short * samples, unsigned numFrame
 
 	for (unsigned frame = 0; frame < numFrames; frame++) {
 		for (unsigned channel = 0; channel < numChannelsToInterleave; channel++)
-			*samples++ = (short) ((output.monoBuffer(channel)[frame]) * 32767.0);
+			*samples++ = (short) ((output.buffer(channel)[frame]) * 32767.0);
 		for (unsigned j = 0; j < numChannelsBeyond; j++)
 			*samples++ = 0;
 	}
@@ -1174,7 +1210,7 @@ void Interleaver::interleaveAndRemap(Buffer & output, SampleBuffer samples, unsi
 
 	for (unsigned frame = 0; frame < numFrames; frame++) {
 		for (unsigned channel = 0; channel < numChannelsToInterleave; channel++)
-			*samples++ = output.monoBuffer(map[channel])[frame];
+			*samples++ = output.buffer(map[channel])[frame];
 		for (unsigned j = 0; j < numChannelsBeyond; j++)
 			*samples++ = 0;
 	}
@@ -1192,7 +1228,7 @@ void Interleaver::deinterleave(Buffer & output, SampleBuffer samples, unsigned n
 	unsigned i;
 
 	for (i = 0; i < numChannelsToDeinterleave; i++) {
-		currentOutputBuffer = output.monoBuffer(i);
+		currentOutputBuffer = output.buffer(i);
 		inputBuffer = samples + i;
 		for (unsigned j = 0; j < numFrames; j++, inputBuffer += numChannels) {
 			*currentOutputBuffer++ = *inputBuffer;
@@ -1200,7 +1236,7 @@ void Interleaver::deinterleave(Buffer & output, SampleBuffer samples, unsigned n
 	}
 	if (numOutputChannels > numChannelsToDeinterleave) {
 		for (i = numChannelsToDeinterleave; i < numOutputChannels; i++)
-			memset(output.monoBuffer(i), 0, output.mMonoBufferByteSize);
+			memset(output.buffer(i), 0, output.mMonoBufferByteSize);
 	}
 }
 
@@ -1216,7 +1252,7 @@ void Interleaver::deinterleave(Buffer & output, short * samples, unsigned numFra
 	unsigned i;
 
 	for (i = 0; i < numChannelsToDeinterleave; i++) {
-		currentOutputBuffer = output.monoBuffer(i);
+		currentOutputBuffer = output.buffer(i);
 		inputBuffer = samples + i;
 		for (unsigned j = 0; j < numFrames; j++, inputBuffer += numChannels) {
 			*currentOutputBuffer++ = ((float )*inputBuffer) / 32767.0f;
@@ -1224,7 +1260,7 @@ void Interleaver::deinterleave(Buffer & output, short * samples, unsigned numFra
 	}
 	if (numOutputChannels > numChannelsToDeinterleave) {
 		for (i = numChannelsToDeinterleave; i < numOutputChannels; i++)
-			memset(output.monoBuffer(i), 0, output.mMonoBufferByteSize);
+			memset(output.buffer(i), 0, output.mMonoBufferByteSize);
 	}
 }
 

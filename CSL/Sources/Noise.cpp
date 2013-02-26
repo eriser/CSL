@@ -54,7 +54,7 @@ void Noise::dump() {
 ///
 
 void WhiteNoise::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	sample* out = outputBuffer.monoBuffer(outBufNum);	// get ptr to output channel
+	sample* out = outputBuffer.buffer(outBufNum);	// get ptr to output channel
 	unsigned numFrames = outputBuffer.mNumFrames;			// get buffer length
 
 	DECLARE_SCALABLE_CONTROLS;				// declare the scale/offset buffers and values
@@ -145,7 +145,7 @@ sample PinkNoise::nextPink() {
 }
 
 void PinkNoise::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException) {
-	SampleBuffer out = outputBuffer.monoBuffer(outBufNum);
+	SampleBuffer out = outputBuffer.buffer(outBufNum);
 	unsigned numFrames = outputBuffer.mNumFrames;
 
 	DECLARE_SCALABLE_CONTROLS;							// declare the scale/offset buffers and values as above

@@ -27,32 +27,32 @@ using namespace csl;
 
 AdditiveInstrument::AdditiveInstrument() :	// initializers for the UGens
 		Instrument(),
-		mSOS(16, 0.75),							// SumOfSines init, 16 partials @ 1/f
 		mAEnv(0.25, 0.03, 0.06, 0.5, 0.15),		// set up standard ADSR (1/4-sec duration)
+		mSOS(16, 0.75),							// SumOfSines init, 16 partials @ 1/f
 		mPanner(mSOS, 0.0) {					// init the panner
 	this->init();
 }
 
 AdditiveInstrument::AdditiveInstrument(SumOfSines & sos) :	// initializers for the UGens
 		Instrument(),
-		mSOS(sos),								// SumOfSines init, 16 partials @ 1/f
 		mAEnv(0.25, 0.03, 0.06, 0.5, 0.15),		// set up standard ADSR (1/4-sec duration)
+		mSOS(sos),								// SumOfSines init, 16 partials @ 1/f
 		mPanner(mSOS, 0.0) {					// init the panner
 	this->init();
 }
 
 AdditiveInstrument::AdditiveInstrument(unsigned numHarms, float noise) :	// initializers for the UGens
 		Instrument(),
-		mSOS(numHarms, noise),					// SumOfSines init, numHarms partials @ 1/f
 		mAEnv(0.25, 0.03, 0.06, 0.5, 0.15),		// set up standard ADSR (1/4-sec duration)
+		mSOS(numHarms, noise),					// SumOfSines init, numHarms partials @ 1/f
 		mPanner(mSOS, 0.0) {					// init the panner
 	this->init();
 }
 
 AdditiveInstrument::AdditiveInstrument(SHARCSpectrum & spect) :
 		Instrument(),
-		mSOS(spect),								// SumOfSines init, 16 partials @ 1/f
 		mAEnv(0.25, 0.03, 0.06, 0.5, 0.15),		// set up standard ADSR (1/4-sec duration)
+		mSOS(spect),								// SumOfSines init, 16 partials @ 1/f
 		mPanner(mSOS, 0.0) {					// init the panner
 	this->init();
 }
@@ -166,7 +166,8 @@ void AdditiveInstrument::playOSC(int argc, void **argv, const char *types) {
 	mSOS.setFrequency(*fargs[2]);
 	mPanner.setPosition(*fargs[3]);
 	if (nargs == 8) {
-		printf("\t\ta %g d %g s %g r %g\t\ta %g d %g s %g r %g\n", fargs[6], fargs[7], fargs[8], fargs[9], fargs[10], fargs[11], fargs[12], fargs[13]);
+		printf("\t\ta %5.2f d %5.2f s %5.2f r %5.2f\t\ta %5.2f d %5.2f s %5.2f r %5.2f\n", 
+			fargs[6], fargs[7], fargs[8], fargs[9], fargs[10], fargs[11], fargs[12], fargs[13]);
 		mAEnv.setAttack(*fargs[4]);
 		mAEnv.setDecay(*fargs[5]);
 		mAEnv.setSustain(*fargs[6]);

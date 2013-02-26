@@ -21,7 +21,7 @@ using namespace csl;
 // Constructors
 
 FilterSpecification::FilterSpecification (unsigned numTaps, unsigned numBands, double *freqs, double *resps, double *weights)
-			: mNumTaps(numTaps), mNumBands(numBands), mFrequencies(NULL), mResponses(NULL), mWeights(NULL), mTapData(NULL) {
+			: mTapData(NULL), mNumTaps(numTaps), mNumBands(numBands), mFrequencies(NULL), mResponses(NULL), mWeights(NULL) {
 	setNumTaps(numTaps);
 	setFrequencies(freqs);
 	setResponses(resps);

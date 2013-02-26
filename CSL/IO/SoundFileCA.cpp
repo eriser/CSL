@@ -38,7 +38,7 @@ using namespace csl;
 // CASoundFile implementation
 //
 
-CASoundFile::CASoundFile(string tpath, int tstart, int tstop) 
+CASoundFile::CASoundFile(string tpath, int tstart, int tstop, bool doRead) 
 		: Abst_SoundFile(tpath, tstart, tstop),
 		  mURL(0) {
 					
@@ -46,22 +46,36 @@ CASoundFile::CASoundFile(string tpath, int tstart, int tstop)
 		mURL = CFURLCreateWithFileSystemPath (NULL, 
 				(CFStringCreateWithCString (NULL, tpath.c_str(), kCFStringEncodingMacRoman)), 
 			kCFURLPOSIXPathStyle, false);
+	if ( ! doRead)
+		return;
+	try {
+		openForRead(doRead);						// read and cache whole file
+		setToEnd();
+	} catch (CException & e) {
+//		logMsg(kLogError, "File open exception caught: %s", e.mMessage.c_str());
+		return;
+	}
 }
-
-CASoundFile::CASoundFile(string folder, string tpath, int start, int stop)
-		: Abst_SoundFile(folder, tpath, start, stop),
-		  mURL(0) { }
 
 CASoundFile::CASoundFile(CASoundFile & otherSndFile)
 		: Abst_SoundFile(otherSndFile),
 		  mURL(0) { }
 
-CASoundFile::CASoundFile(CFURLRef path)
+CASoundFile::CASoundFile(CFURLRef path, bool doRead)
 		: Abst_SoundFile(""),
 		  mURL(path) {
 	char theName[CSL_NAME_LEN];
 	CFStringGetCString (CFURLGetString(path), theName, CSL_NAME_LEN, kCFStringEncodingMacRoman);
 	mPath = string(theName);
+	if ( ! doRead)
+		return;
+	try {
+		openForRead(doRead);						// read and cache whole file
+		setToEnd();
+	} catch (CException & e) {
+//		logMsg(kLogError, "File open exception caught: %s", e.mMessage.c_str());
+		return;
+	}
 }
 
 CASoundFile::~CASoundFile() { /* no-op */ }
@@ -90,7 +104,7 @@ void CASoundFile::initFromSndfile() {
 
 // CASoundFile::openForRead()
 
-void CASoundFile::openForRead() throw (CException) {
+void CASoundFile::openForRead(bool load) throw (CException) {
 	OSStatus err = noErr;	
 	mMode = kSoundFileRead;
 	UInt32 propertySize, fileSize;
@@ -141,12 +155,11 @@ void CASoundFile::openForRead() throw (CException) {
 		logMsg(kLogError, "Cannot open sound file \"%s\"\n", mPath.c_str());
 		return;
 	}
-	if (mNumFrames <= CGestalt::maxSndFileFrames()) {		// read file if size < global max
+		
+	if (load && (mNumFrames <= CGestalt::maxSndFileFrames())) {		// read file if size < global max
 //		logMsg("Open/read sound file \"%s\" %d frames %g sec %d channels", 
 //				mPath.c_str(), duration(), durationInSecs(), channels());
-
-		this->readBufferFromFile(mNumFrames);				// read entire file
-
+		this->readBufferFromFile(mNumFrames);				//////// read entire file ////////
 		mCurrentFrame = mStart;
 	}
 }
@@ -174,7 +187,7 @@ void CASoundFile::readBufferFromFile(unsigned numFrames) {
 											// if we are at the end of the file and not looping
 	if ((currentFrame >= (unsigned) mStop) && !mIsLooping) {
 		for (unsigned i = 0; i < mNumChannels; i++) {
-			sampleBufferPtr = mWavetable.monoBuffer(i);
+			sampleBufferPtr = mWavetable.buffer(i);
 			memset(sampleBufferPtr, 0, numFrames * sizeof(sample));
 		}
 		return;
@@ -211,7 +224,7 @@ void CASoundFile::readBufferFromFile(unsigned numFrames) {
 	short sVal;
 //	printf("\nCASoundFile::readBufferFromFile: %d ch %d bps\n\n", myChannels, mBytesPerSample); 
 	if (myChannels == 1) {									// copy mono data
-		sample * sampPtr = mWavetable.buffer(0];			// this code is lifted from JUCE (AiffAudioFormat.cpp)
+		sample * sampPtr = mWavetable.buffer(0);			// this code is lifted from JUCE (AiffAudioFormat.cpp)
 		if (mBytesPerSample == 2) {							// 16-bit samples
 			sample scale = 1.0f / 32867.0f;
 			for (unsigned j = 0; j < fileSize; j++) {		// copy/scale sample data
@@ -267,7 +280,7 @@ void CASoundFile::readBufferFromFile(unsigned numFrames) {
 		} else {
 			unsigned bytesToClear = numFramesRemaining * sizeof(sample);
 			for (unsigned i = 0; i < mNumChannels; i++) {
-				sampleBufferPtr = mWavetable.monoBuffer(i);
+				sampleBufferPtr = mWavetable.buffer(i);
 				memset(sampleBufferPtr, 0, bytesToClear);
 			}
 		}

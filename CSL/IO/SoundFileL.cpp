@@ -380,14 +380,14 @@ void LSoundFile::nextBuffer(Buffer &outputBuffer) throw(CException) {
 		if (IS_UNSCALED) {							// and there's no scale/offset
 			unsigned numBytes = numFrames * sizeof(sample);			// buffer copy loop
 			for (unsigned i = 0; i < outputBuffer.mNumChannels; i++) {
-				SampleBuffer dataOutPtr = mWavetable.monoBuffer(csl_min(i, (mNumChannels - 1))) + currentFrame;
-				memcpy(outputBuffer.monoBuffer(i), dataOutPtr, numBytes);
+				SampleBuffer dataOutPtr = mWavetable.buffer(csl_min(i, (mNumChannels - 1))) + currentFrame;
+				memcpy(outputBuffer.buffer(i), dataOutPtr, numBytes);
 			}
 		} else {									// do full scaled/offset copy
 			sample samp;
 			for (unsigned i = 0; i < outputBuffer.mNumChannels; i++) {
-				SampleBuffer buffer = outputBuffer.monoBuffer(i);		// get pointer to the selected output channel
-				SampleBuffer dPtr = mWavetable.monoBuffer(csl_min(i, (mNumChannels - 1))) + currentFrame;
+				SampleBuffer buffer = outputBuffer.buffer(i);		// get pointer to the selected output channel
+				SampleBuffer dPtr = mWavetable.buffer(csl_min(i, (mNumChannels - 1))) + currentFrame;
 
 				for (unsigned i = 0; i < numFrames; i++) {			// sample loop
 					samp = (*dPtr++ * scaleValue) + offsetValue; 	// get and scale the file sample
@@ -409,13 +409,13 @@ void LSoundFile::nextBuffer(Buffer &outputBuffer) throw(CException) {
 #else								// else use Sample rate convertor
 		int answer;									// if we're doing SRC transposition
 		if (this->isCached()) 						// if playing from cache buffer
-			mSRateData.data_in = mWavetable.monoBuffer(0) + (currentFrame * mNumChannels);	
+			mSRateData.data_in = mWavetable.buffer(0) + (currentFrame * mNumChannels);	
 		else
-			mSRateData.data_in = mWavetable.monoBuffer(0);	
+			mSRateData.data_in = mWavetable.buffer(0);	
 		mSRateData.data_out = mSRateData.data_in;	// store for later
 		mSRateData.input_frames = numFrames;	
 		mSRateData.output_frames = numFrames;	
-		mSRateData.data_out = mSRConvBuffer.monoBuffer(0);	
+		mSRateData.data_out = mSRConvBuffer.buffer(0);	
 		mSRateData.end_of_input = 0;	
 		mSRateData.src_ratio = mRate;	
 		if (answer = src_set_ratio (mSRateConv, mRate))			// set the transposition ratio
@@ -426,7 +426,7 @@ void LSoundFile::nextBuffer(Buffer &outputBuffer) throw(CException) {
 			logMsg (kLogError, "SampleRateConvertor runtime error : %s\n", 
 						src_strerror (answer));
 						
-		mSRateData.data_out = mSRConvBuffer.monoBuffer(0);		// reset out ptr
+		mSRateData.data_out = mSRConvBuffer.buffer(0);		// reset out ptr
 		currentFrame += mSRateData.input_frames_used;			// input frames actually read
 		numFrames = mSRateData.output_frames_gen;				// output frames actually written
 #endif
@@ -445,11 +445,11 @@ void LSoundFile::writeBuffer(Buffer &inputBuffer) throw(CException) {
 		mWavetable.setSize(1, mNumChannels * numFrames);
 		mWavetable.allocateBuffers();
 												// call interleaver
-		mInterleaver.interleave(inputBuffer, mWavetable.monoBuffer(0), 
+		mInterleaver.interleave(inputBuffer, mWavetable.buffer(0), 
 					numFrames, mSFInfo->channels);
-		sf_writef_float(mSndfile, mWavetable.monoBuffer(0), numFrames);		// libsndfile write 
+		sf_writef_float(mSndfile, mWavetable.buffer(0), numFrames);		// libsndfile write 
 	} else {									// mono file write
-		sf_writef_float(mSndfile, inputBuffer.monoBuffer(0), numFrames);	// libsndfile write 
+		sf_writef_float(mSndfile, inputBuffer.buffer(0), numFrames);	// libsndfile write 
 	}
 	mCurrentFrame += numFrames;
 	return;
@@ -467,7 +467,7 @@ void LSoundFile::readBufferFromFile(unsigned numFrames) {
 	if ((myChannels > 1)) {					// read into temp buffer to multichannel files, then de-interleave
 		SAFE_MALLOC(sampleBufferPtr, sample, (myChannels * numFrames));
 	} else {
-		sampleBufferPtr = mWavetable.monoBuffer(0);
+		sampleBufferPtr = mWavetable.buffer(0);
 	}
 											// if we are at the end of the file and not looping
 	if ((currentFrame >= (unsigned) mStop) && !mIsLooping) {

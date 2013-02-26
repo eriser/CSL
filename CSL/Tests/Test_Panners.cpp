@@ -194,7 +194,7 @@ void testConvolver2() {
 									// make a simple IR with a few echoes
 	Buffer buf(1, IRLEN);
 	buf.allocateBuffers();
-	float * samp = buf.monoBuffer(0);
+	float * samp = buf.buffer(0);
 	for (unsigned i = 0; i < IRLEN; i += 5000)
 		samp[i] = 1 / (1 + (sqrt(i) / 5000));
 									// Create convolver; FFT size will be block size * 2
@@ -303,7 +303,7 @@ void test_Binaural_vertAxial() {
 void test_Binaural_vertMedian() {
 				// Open a mono soundfile
 	SoundFile sndfile(CGestalt::dataFolder() + "triangle_mono.aiff");
-	sndfile.openForRead();
+	sndfile.openForRead(true);
 	sndfile.dump();
 	sndfile.setToEnd();
 				// make the sound "Positionable"
@@ -383,7 +383,7 @@ void test_SimpleP() {
 void test_VBAP_horiz() {
 				// Open a mono soundfile
 	SoundFile sndfile(CGestalt::dataFolder() + "triangle_mono.aiff");
-	sndfile.openForRead();
+	sndfile.openForRead(true);
 	sndfile.dump();
 	sndfile.setToEnd();
 				// make the sound "Positionable"

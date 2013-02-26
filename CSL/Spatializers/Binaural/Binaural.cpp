@@ -2,8 +2,6 @@
 ///  Binaural.cpp -- HRTF-based binaural panner/spatializers
 ///
 /// Classes
-///		HRTF: holds the data that corresponds to an HRTF for a single position.
-///		HRTFDatabase: vector of HRTFs; implemented as a Singleton because it's large.
 ///		BinauralPanner: place sources in 3D using block-wise convolution with an HRTF.
 ///		BinauralSourceCache: used for caching previous state of spatial sources.
 ///

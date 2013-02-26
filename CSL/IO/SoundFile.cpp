@@ -240,7 +240,8 @@ bool Abst_SoundFile::isCached() {
 ///< answer if file has X samples in RAM
 
 bool Abst_SoundFile::isCached(unsigned samps) {	
-	return (mWavetable.mNumFrames < (mCurrentFrame + samps));
+//	logMsg("isCached : %d > %d + %d", mWavetable.mNumFrames, mCurrentFrame, samps);
+	return (mWavetable.mNumFrames >= (mCurrentFrame + samps));
 }
 
 // trigger the file to start
@@ -330,15 +331,15 @@ void Abst_SoundFile::nextBuffer(Buffer &outputBuffer) throw(CException) {
 			unsigned numBytes = numFrames * sizeof(sample);			// buffer copy loop
 			for (unsigned i = 0; i < outputBuffer.mNumChannels; i++) {
 				int which = csl_min(i, (mNumChannels - 1));
-				SampleBuffer sndPtr = mWavetable.monoBuffer(which) + currentFrame;
-				SampleBuffer outPtr = outputBuffer.monoBuffer(i);
+				SampleBuffer sndPtr = mWavetable.buffer(which) + currentFrame;
+				SampleBuffer outPtr = outputBuffer.buffer(i);
 				memcpy(outPtr, sndPtr, numBytes);					// here's the memcpy
 			}
 		} else {													// else loop applying scale/offset
 			sample samp;
 			for (unsigned i = 0; i < outputBuffer.mNumChannels; i++) {
-				SampleBuffer buffer = outputBuffer.monoBuffer(i);	// get pointer to the selected output channel
-				SampleBuffer dPtr = mWavetable.monoBuffer(csl_min(i, (mNumChannels - 1))) + currentFrame;
+				SampleBuffer buffer = outputBuffer.buffer(i);	// get pointer to the selected output channel
+				SampleBuffer dPtr = mWavetable.buffer(csl_min(i, (mNumChannels - 1))) + currentFrame;
 				for (unsigned j = 0; j < numFrames; j++) {			// here's the sample loop
 					samp = (*dPtr++ * scaleValue) + offsetValue; 	// get and scale the file sample
 					*buffer++ = samp;
@@ -426,7 +427,7 @@ void SoundCue::nextBuffer(Buffer &outputBuffer) throw(CException) {
 				*out++ = 0.0;
 			continue;
 		}	
-		SampleBuffer samps = (mFile->mWavetable.monoBuffer(0)) + (mCurrent * mFile->channels()) + h;
+		SampleBuffer samps = (mFile->mWavetable.buffer(0)) + (mCurrent * mFile->channels()) + h;
 		if ( ! mFile->isValid()) {		// if no file data
 			fprintf(stderr, "\tCannot play uncached sound file \"%s\"n", mName.c_str());
 			for (unsigned i = 0; i < numFrames; i++) 

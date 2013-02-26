@@ -13,13 +13,12 @@
 // See HOA_AmbisonicFramestream.h for descriptions of the the class members.
 
 #include "Ambisonic.h"
+#include "AmbisonicUtilities.h"
 
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 #include <iostream>
-
-#include "AmbisonicUtilities.h"
 
 #define AMBI_INVSQRT2 (1/1.414213562)
 #define INV_SQRT2 (1/1.414213562)
@@ -29,7 +28,6 @@ using std::cout;
 using std::endl;
 
 using namespace csl;
-
 
 /*******************CONSTRUCTORS & DESTRUCTOR*******************/
 

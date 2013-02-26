@@ -58,7 +58,7 @@ testStruct * allTests[] = {
 	audioTestList
 };
 
-char * allTestNames[] = {
+const char * allTestNames[] = {
 	"Oscillator Tests",
 	"Source Tests",
 	"Envelope Tests",
@@ -70,7 +70,7 @@ char * allTestNames[] = {
 	"Audio Tests"
 };
 
-char * allTestFiles[] = {
+const char * allTestFiles[] = {
 	"Test_Oscillators.cpp",
 	"Test_Sources.cpp",
 	"Test_Envelopes.cpp",
@@ -95,7 +95,7 @@ void dumpTestList() {
 #endif
 	for (unsigned i = 0; i < numSuites; i++) {
 		gTestList = allTests[i];
-		char * testName = allTestNames[i];
+		const char * testName = allTestNames[i];
 		printf("\n%s  -  %s\n", testName, allTestFiles[i]);
 //		printf("</ul>\n<li>%s</li>\n<ul>", testName);
 		for (unsigned j = 0; gTestList[j].name != NULL; j++) {
@@ -292,7 +292,9 @@ CSLComponent::CSLComponent ()
 	unsigned sRate = (unsigned) audioIO->getCurrentSampleRate();
 	unsigned bufSize = audioIO->getCurrentBufferSizeSamples();
 	theIO = new csl::IO(sRate, bufSize, -1, -1,			// still use the default # IO channels
-					CGestalt::numInChannels(), CGestalt::numOutChannels());
+					CGestalt::numInChannels(), 
+					CGestalt::numOutChannels());
+
 #else									// reset the HW frame rate & block size to the CSL definition
 	AudioDeviceManager::AudioDeviceSetup setup;
 	mAudioDeviceManager.getAudioDeviceSetup(setup);
@@ -300,8 +302,11 @@ CSLComponent::CSLComponent ()
 	setup.sampleRate = CGestalt::frameRate();
 	mAudioDeviceManager.setAudioDeviceSetup(setup,true);
 										// set up CSL IO
-	theIO = new csl::IO(CGestalt::frameRate(), CGestalt::blockSize(), -1, -1,
-					CGestalt::numInChannels(), CGestalt::numOutChannels());
+	theIO = new csl::IO(CGestalt::frameRate(),
+					CGestalt::blockSize(), 
+					-1, -1,				// use default I/O devices
+					CGestalt::numInChannels(), 
+					CGestalt::numOutChannels());
 #endif
 	theIO->start();						// start IO and register callback
 	mAudioDeviceManager.addAudioCallback(this);
@@ -569,7 +574,9 @@ void CSLComponent::sliderValueChanged (Slider* sliderThatWasMoved)
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 
+//
 /////////////// CSL/JUCE Audio callback method ///////////////////
+//
 
 void CSLComponent::audioDeviceIOCallback (const float** inputChannelData,
 							int totalNumInputChannels,
@@ -588,7 +595,8 @@ void CSLComponent::audioDeviceIOCallback (const float** inputChannelData,
 	if (theIO->mGraph) {
 		outBuffer.setSize(totalNumOutputChannels, numSamples);
 		outBuffer.mAreBuffersAllocated = true;
-								// copy JUCE data ptrs
+		
+								// copy JUCE data ptrs into outBuffer
 		for (unsigned i = 0; i < totalNumOutputChannels; i++)
 			outBuffer.setBuffer(i, outputChannelData[i]);
 

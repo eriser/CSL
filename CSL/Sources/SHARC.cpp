@@ -280,7 +280,7 @@ char ** SHARCLibrary::instrument_names() {
 	return names;
 }
 
-SHARCInstrument * SHARCLibrary::instrument_named(char * name) {
+SHARCInstrument * SHARCLibrary::instrument_named(const char * name) {
 	for (unsigned i = 0; i < _num_instruments; i++) {
 		if ( ! strcmp(_instruments[i]->_name, name)) {
 			return  _instruments[i];
@@ -289,7 +289,7 @@ SHARCInstrument * SHARCLibrary::instrument_named(char * name) {
 	return (SHARCInstrument *) 0;
 }
 
-SHARCSpectrum * SHARCLibrary::spectrum_named(char * inst, char * spect) {
+SHARCSpectrum * SHARCLibrary::spectrum_named(const char * inst, char * spect) {
 	SHARCInstrument * in = this->instrument_named(inst);
 	if (in == NULL) return (SHARCSpectrum *) 0;
 	return (in->spectrum_named(spect));
@@ -355,14 +355,14 @@ SHARCInstrument * SHARCLibrary::instrument(unsigned instr) {
 	return sSHARCLib->instrument_named(sSHARCLib->instrument_names()[instr]);
 }
 
-SHARCSpectrum * SHARCLibrary::spectrum(char * instr, char * note) {
+SHARCSpectrum * SHARCLibrary::spectrum(const char * instr, char * note) {
 	if ( ! sSHARCLib)
 		loadDefault();
 	SHARCInstrument * inst = sSHARCLib->instrument_named(instr);
 	return inst->spectrum_named(note);
 }
 
-SHARCSpectrum * SHARCLibrary::spectrum(char * instr, unsigned note) {
+SHARCSpectrum * SHARCLibrary::spectrum(const char * instr, unsigned note) {
 	if ( ! sSHARCLib)
 		loadDefault();
 	SHARCInstrument * inst = sSHARCLib->instrument_named(instr);

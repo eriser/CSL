@@ -7,7 +7,7 @@
 
 using namespace csl;
 
-FileIO::FileIO(char * path) : IO(), mFile(0), mIsPlaying(false), mIsThreadRunning(false) { 
+FileIO::FileIO(char * path) : IO(), mIsPlaying(false), mIsThreadRunning(false), mFile(0) { 
 	if ( ! path)
 		mPath = CGestalt::sndFileName();
 	else 

@@ -106,10 +106,10 @@ void Filter::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CExcep
 #ifdef CSL_DEBUG
 	logMsg("Filter nextBuffer");
 #endif	
-	SampleBuffer out = outputBuffer.monoBuffer(outBufNum);		// get ptr to output channel
+	SampleBuffer out = outputBuffer.buffer(outBufNum);		// get ptr to output channel
 	unsigned numFrames = outputBuffer.mNumFrames;				// get buffer length
-	SampleBuffer prevOuts = mPrevOutputs->monoBuffer(0);
-	SampleBuffer prevIns = mPrevInputs->monoBuffer(0);	
+	SampleBuffer prevOuts = mPrevOutputs->buffer(0);
+	SampleBuffer prevIns = mPrevInputs->buffer(0);	
 	SampleBuffer inputPtr;
 
 	DECLARE_SCALABLE_CONTROLS;						// declare the scale/offset buffers and values
@@ -415,7 +415,7 @@ void Moog::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CExcepti
 #ifdef CSL_DEBUG
 	logMsg("Moog Filter nextBuffer");
 #endif	
-	sample* out = outputBuffer.monoBuffer(outBufNum);	// get ptr to output channel
+	sample* out = outputBuffer.buffer(outBufNum);	// get ptr to output channel
 	unsigned numFrames = outputBuffer.mNumFrames;		// get buffer length
 	SampleBuffer inputPtr = mInputs[CSL_INPUT]->mBuffer->buffer(outBufNum);
 	DECLARE_SCALABLE_CONTROLS;							// declare the scale/offset buffers and values

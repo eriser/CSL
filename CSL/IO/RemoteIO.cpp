@@ -210,7 +210,7 @@ void RemoteIO::process_request_packet() {
 		_outputBuffer._numFrames = frames;
 		_inputBuffer._numFrames = frames;			// this is empty for now
 		for (unsigned i = 0; i < _outputs; i++)		// set output buffer sample pointers
-			_outputBuffer._monoBuffers[i] = (sample *) & sbuf[RFS_PACKET_SIZE 
+			_outputBuffer._buffers[i] = (sample *) & sbuf[RFS_PACKET_SIZE 
 										+ (i * frames * sizeof(sample))];
 #ifdef DO_TIMING
 		GET_TIME(&then);
