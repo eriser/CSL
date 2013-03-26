@@ -105,9 +105,9 @@ typedef enum {
 ///
 
 class Buffer {
-public:									/// Constructors: default is mono and default-size
+public:									/// Constructor: default is mono and default-size
 	Buffer(unsigned numChannels = 1, unsigned numFrames = CSL_mBlockSize); 
-	virtual ~Buffer();					///< Destructor
+	virtual ~Buffer();					///< Destructor de-allocated
 	
 									// public data members	
 	unsigned mNumChannels;				///< num channels in buffer (num mono buffers)
@@ -116,7 +116,8 @@ public:									/// Constructors: default is mono and default-size
 	unsigned mMonoBufferByteSize;		///< size of each buffer in bytes
 	unsigned mSequence;					///< sequential serial number
 	Timestamp mTimestamp;				///< the buffer's most recent timestamp
-
+	float duration();					///< answer the buffer's duration in seconds
+	
 	bool mAreBuffersAllocated;			///< are the buffers allocated?
 	bool mDidIAllocateBuffers;			///< who allocated my data buffers?
 	bool mIsPopulated;					///< does the buffer have data?

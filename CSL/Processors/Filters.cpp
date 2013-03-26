@@ -379,6 +379,8 @@ void Allpass::setupCoeffs () {
 	mBCoeff[0] = mACoeff[1] = coefficient; 
 }
 
+// Moog VCF Methods
+
 Moog::Moog (UnitGenerator & in) : Filter(in) {
 	setFrequency(500.0);
 	setAmount(0.99);

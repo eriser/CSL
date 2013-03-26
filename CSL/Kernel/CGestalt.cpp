@@ -27,7 +27,8 @@ static unsigned mNumInChannels = 2;								///< stereo inputs by default
 static unsigned mNumOutChannels = 2;							///< stereo outputs
 
 static unsigned mFrameRate = CSL_mFrameRate;					///< default sample rate (tested up to 96000)
-static csl::sample mFramePeriod = 1.0f / (float) CSL_mFrameRate;		///< 1 / default sample rate
+static float mFrameRateF = (float) CSL_mFrameRate;				///< default sample rate (tested up to 96000)
+static sample mFramePeriod = 1.0f / mFrameRateF;				///< 1 / default sample rate
 static unsigned mBlockSize = CSL_mBlockSize;					///< typical block size (can be as small as 128 in real usage)
 static unsigned mMaxBufferFrames = CSL_mMaxBufferFrames;		///< max block size (set large for zooming scopes)
 static unsigned mSndFileFrames = CSL_mSndFileFrames;			///< max block size (set large for zooming scopes)
@@ -36,12 +37,13 @@ static unsigned mMaxSndFileFrames = CSL_mMaxSndFileFrames;		///< max block size 
 static unsigned mVerbosity = CSL_mVerbosity;					///< very verbose
 static unsigned mLoggingPeriod = CSL_mLoggingPeriod;			///< log CPU every 15 sec
 static unsigned mOutPort = CSL_mOutPort;						///< RFS output port
-static std::string mDataFolder = CSL_DATA_DIR;					///< User's CSL data folder ()
+static string mDataFolder = CSL_DATA_DIR;						///< User's CSL data folder ()
 static bool mStopNow = false;									///< flag to stop threads and timers
 
 /// CGestalt Accessors for system constants
 
 unsigned CGestalt::frameRate() { return mFrameRate; }
+float CGestalt::frameRateF() { return mFrameRateF; }
 csl::sample CGestalt::framePeriod() { return mFramePeriod; }
 unsigned CGestalt::maxBufferFrames() { return mMaxBufferFrames; }
 unsigned CGestalt::sndFileFrames() { return mSndFileFrames; }
@@ -68,7 +70,8 @@ string CGestalt::dataFolder()	{
 
 void CGestalt::setFrameRate(unsigned sampleRate) {
 	mFrameRate = sampleRate;
-	mFramePeriod = 1.0f / (float) sampleRate;
+	mFrameRateF = (float) sampleRate;
+	mFramePeriod = 1.0f / mFrameRateF;
 }
 
 // General setters
@@ -194,6 +197,8 @@ string CGestalt::sndFileName() {
 #define UNDEFINED_IN_CRAM		// undefine this to compile with CRAM service logging
 
 #ifdef UNDEFINED_IN_CRAM
+
+#pragma mark Logging
 
 ///
 /// Logging code: if verbosity
@@ -328,6 +333,8 @@ float log2f(float n) {
 ///
 /// Global Sleep functions that work for windows and mac/unix.
 /// Note the use of the global flag gStopNow, which interrupts timers.
+
+#pragma mark Misc
 
 #define TIMER_INTERVAL 0.25f						// loop time in sec to check stopNow flag in sleep timers
 
@@ -485,6 +492,8 @@ unsigned csl::freqToKey(float frequency) {
 //
 // MVC Observable pattern implementations
 //
+
+#pragma mark MVC
 
 // attach/remove observers from models
 

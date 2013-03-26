@@ -38,15 +38,25 @@ void testClipper() {
 	logMsg("done.\n");
 }
 
-/// Test the FIR filter BP 200-300 Hz on pink noise
+/// Test the FIR filter - LPF @ 300 Hz on pink noise
 
-void testFIR() {
+void testFIR() {	
+//	double resp[] = { 1, 0 };					// amplitudes in the 2 freq bands (i.e., hi-pass)
+//	double freq[] = { 0, 200, 300, 22050 };		// corner freqs of the pass, transition and stop bands
+//	double weight[] = { 1, 2 };					// weights for error (ripple) in the 2 bands
+//	FilterSpecification fs(64, 2, freq, resp, weight);	// 64 taps (64-step IR), 2 bands
+
+//	double resp[] = { 0, 1, 0 };				// amplitudes in the 3 freq bands (i.e., band-pass)
+//	double freq[] = { 0, 200, 250, 500, 600, 22050 };	// corner freqs of the pass, and stop bands
+//	double weight[] = { 10, 2, 10 };			// weights for error (ripple) in the 3 bands
+//	FilterSpecification fs(64, 3, freq, resp, weight);	// 64 taps (64-step IR), 3 bands
+
 	PinkNoise noise;							// the sound source
-	double resp[2] = { 0, 1 };					// amplitudes in the 2 freq bands (i.e., hi-pass)
-	double freq[4] = { 0, 2000, 3000, 22050 };	// corner freqs of the pass, transition, and stop bands
-	double weight[2] = { 10, 20 };				// weights for error (ripple) in the 2 bands
-	FilterSpecification fs(64, 2, freq, resp, weight);	// 64 taps (64-step IR), 2 bands
-	FIR vox(noise, fs);							// create the filter
+//	FIR vox(noise, fs);							// create the filter
+
+	Butter butter1(noise, BW_HIGH_PASS, 800.0);
+	Butter vox(butter1, BW_LOW_PASS, 800.0);
+
 	MulOp mul(vox, 10);							// scale it back up
 	logMsg("playing FIR filtered noise...");
 	runTest(mul);

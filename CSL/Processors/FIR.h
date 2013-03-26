@@ -3,7 +3,7 @@
 ///	See the copyright notice and acknowledgment of authors in the file COPYRIGHT
 ///
 /// The FilterSpecification uses the Parks-McClellan/Remez iterative algorithm
-// It is provided under GPL by Jake Janovetz (janovetz@uiuc.edu)
+/// It is provided under GPL by Jake Janovetz (janovetz@uiuc.edu)
 ///
 /// The FIR implementation is based on a minimal version written for the MAT 240B course;
 /// it does not use the CSL RingBuffer helper class.
@@ -27,44 +27,45 @@ public:
 
 	friend class FIR;  ///< Allow the FIR to access private members of this class.
 
-					// Constructors
+					/// Constructors
 	FilterSpecification(unsigned numTaps = 0, unsigned numBands = 0, double *freqs = NULL, double *resps = NULL, double *weights = NULL);
 	~FilterSpecification();
 	
-					// Accessors
+					/// Accessors
 	void setFrequencies(double *frequencies);
 	void setResponses(double *responses);
 	void setWeights(double *weights);
 	void setNumTaps(unsigned numTaps);
 	
-	void planFilter();		// method to plan the filter (execute the search/iterate algorithm)	
+	void planFilter();		///< method to plan the filter (execute the search/iterate algorithm)	
 	double *mTapData;		///< the FIR tap weights (created by the planFilter method)
 
 protected:
 	unsigned mNumTaps;		///< number of taps desired
 	unsigned mNumBands;		///< length of specification
 	double *mFrequencies;	///< band edge frequencies (2 * mNumBands)
-	double *mResponses;	///< band responses (mNumBands)
+	double *mResponses;		///< band responses (mNumBands)
 	double *mWeights;		///< band error weights (mNumBands)
 
 };
 
-/* Examples
-	-- Simple LPF (2 bands) at 0.2 Fs with 0.05-width transition bands
-	responses =	{    1       x        0 };
-	freqs = 	{ 0    0.2   0.25    0.5 };
-	weights = 	{   10               20 };
-	
-	-- basic BPF (3 bands) between 0.2 and 0.3 Fs with 0.05-width transition bands
-	responses =	{    0.5        x      1      x         0.8 };
-	freqs = 	{ 0    0.15   0.2   0.3   0.35    0.5 };
-	weights = 	{   20               5                20 };
-	
-	-- Fancier dual-BPF
-	responses =	{    0        x      1       x         0        x      1        x       0 };
-	freqs = 	{ 0   0.05   0.1   0.15   0.18   0.25   0.3   0.36   0.41   0.5 };
-	weights = 	{   10               1                  3                1                20 };
-*/
+/// Examples
+///
+///	-- Simple LPF (2 bands) at 0.2 Fs with 0.05-width transition bands
+///	responses =	{    1       x        0 };
+///	freqs = 	{ 0    0.2   0.25    0.5 };
+///	weights = 	{   10               20 };
+///	
+///	-- basic BPF (3 bands) between 0.2 and 0.3 Fs with 0.05-width transition bands
+///	responses =	{    0.5        x      1      x         0.8 };
+///	freqs = 	{ 0    0.15   0.2   0.3   0.35    0.5 };
+///	weights = 	{   20               5                20 };
+///	
+///	-- Fancier dual-BPF
+///	responses =	{    0        x      1       x         0        x      1        x       0 };
+///	freqs = 	{ 0   0.05   0.1   0.15   0.18   0.25   0.3   0.36   0.41   0.5 };
+///	weights = 	{   10               1                  3                1                20 };
+///
 
 ///
 /// FIR Filter class
@@ -83,18 +84,18 @@ public:						/// Various constructors
 	
 	void setTaps(unsigned numTaps,  float *tapDelays);
 	void readTaps(char *fileName);
-					// The work method...
+					/// The work method...
 	void nextBuffer(Buffer &outputBuffer, unsigned outBufNum) throw (CException);
 
 protected:
 	FilterSpecification *mFilterSpec;
-	unsigned mOffset;		// offset "pointer" for loop counting
-							// Here are the sample buffers (dynamically allocated)
-	sample *mDLine;		// mNumTaps length delay line
+	unsigned mOffset;		///< offset "pointer" for loop counting
+							/// Here are the sample buffers (dynamically allocated)
+	sample *mDLine;			///< mNumTaps length delay line
 	
-	void resetDLine();		// zero-out mDline and reallocate memory if necessary;
+	void resetDLine();		///< zero-out mDline and reallocate memory if necessary;
 	
-							// Parks-McClellan/Remez FIR filter design algorithm
+							/// Parks-McClellan/Remez FIR filter design algorithm
 	void remez(double h[], int numtaps, int numband, double bands[], double des[], double weight[], int type);
 
 };

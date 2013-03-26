@@ -85,7 +85,7 @@ void FilterSpecification::planFilter() {
 	}
 	if (shouldNormalize)				// normalize the frequencies if they're given in Hz
 		for (i = 0; i < (mNumBands * 2); i++) 
-			mFrequencies[i]  = mFrequencies[i] / CGestalt::frameRate();
+			mFrequencies[i]  = mFrequencies[i] / CGestalt::frameRateF();
 						// now call the iterative design function
 	remez(mTapData, mNumTaps, mNumBands, mFrequencies, mResponses, mWeights, BANDPASS);
 }

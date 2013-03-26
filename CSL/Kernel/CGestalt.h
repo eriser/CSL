@@ -17,6 +17,7 @@
 #define CSL_Gestalt_H
 
 #include "CSL_Types.h"		// The system default values are defined there
+#include "CSL_Exceptions.h"		// The system default values are defined there
 
 #include <stdarg.h>			// for va_arg, vaList, etc.
 #include <string>
@@ -41,6 +42,7 @@ class CGestalt {
 public:												// Accessor (getter/setter) methods
 
 	static unsigned frameRate();					///< default frame rate
+	static float frameRateF();						///< default frame rate as a float
 	static void setFrameRate(unsigned frameRate);
 	static sample framePeriod();					///< default frame rate
 

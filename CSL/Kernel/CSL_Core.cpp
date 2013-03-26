@@ -16,15 +16,15 @@
 
 using namespace csl;
 
-#ifdef WIN32
-
-#define rint(x)			((int)(x + 0.5f))
-
+#ifdef WIN32			// Windows doesn't have rintf
+#define rint(x)	((int)(x + 0.5f))
 #endif
 
 //
 // Basic buffer methods
 //
+
+#pragma mark Buffer
 
 // Constructor with size args does not allocate
 
@@ -43,14 +43,14 @@ Buffer::Buffer(unsigned numChannels, unsigned numFrames) :
 	setSize(numChannels, numFrames);
 }
 
-// Free on destruction
+// Free buffers on destruction
 
 Buffer::~Buffer() {
 	if (mDidIAllocateBuffers)
 		freeBuffers();
 }
 
-// sample pointer accessor
+// sample pointer accessor (used to be called monoBuffer()
 
 SampleBuffer Buffer::buffer(unsigned bufNum) {
 	if (mNumChannels > bufNum)
@@ -96,6 +96,12 @@ void Buffer::setSizeOnly(unsigned numChannels, unsigned numFrames) {
 void Buffer::checkBuffers() throw (MemoryError) {
 	if ( ! mAreBuffersAllocated)
 		allocateBuffers();
+}
+
+// answer the buffer's duration in seconds
+
+float Buffer::duration() {
+	return ((float) mNumFrames / CGestalt::frameRateF()); 
 }
 
 // allocate the sample arrays
@@ -285,7 +291,7 @@ void Buffer::normalize(float maxVal) {
 	for (outBufNum = 0; outBufNum < numChans; outBufNum++) {
 		bbuffer = mBuffers[outBufNum];
 		for (i = 0; i < numFrames; i++) {
-			float samp = *bbuffer++;
+			float samp = fabs(*bbuffer++);
 			if (samp > maxSamp)
 				maxSamp = samp;
 		}
@@ -530,6 +536,8 @@ BufferCMap::~BufferCMap() { }
 // UnitGenerator implementation
 //
 
+#pragma mark UnitGenerator
+
 // mono by default
 
 UnitGenerator::UnitGenerator(unsigned rate, unsigned chans) :  Model(),
@@ -648,6 +656,8 @@ void UnitGenerator::nextBuffer(Buffer & outputBuffer,  unsigned outBufNum) throw
 //-------------------------------------------------------------------------------------------------//
 //
 // Port implementation
+
+#pragma mark Port
 
 Port::Port() :
 				mUGen(NULL),
@@ -969,6 +979,8 @@ void Scalable::trigger() {
 //
 // Effect implementation
 
+#pragma mark Effect
+
 Effect::Effect() : Controllable(), UnitGenerator() {
 	isInline = false;
 //	mInputs[CSL_INPUT] = new Port;
@@ -1272,6 +1284,8 @@ vector < IODevice *> gIODevices;
 
 // General IO Constructors in all modes
 
+#pragma mark IO
+
 IO::IO(unsigned s_rate, unsigned b_size, int in_device, int out_device, 
 				unsigned in_chans, unsigned out_chans)
 		: mGraph(NULL), mNumFramesPlayed(0), mSequence(0), 
@@ -1368,7 +1382,7 @@ void IO::printTimeStatistics(struct timeval * now, struct timeval * then, long *
 	if (now->tv_sec - * thisSec > (long) mLoggingPeriod) {		// print stats once every so often
 		*thisSec = now->tv_sec;
 		if (*timeSum != 0.0) {									// print and reset counters
-			float cycleTime = (float) CGestalt::blockSize() * 1000000.0f / (float) CGestalt::frameRate();
+			float cycleTime = (float) CGestalt::blockSize() * 1000000.0f / CGestalt::frameRateF();
 																// remember % usage
 			mUsage = (float) *timeSum / *timeVals * 100.0f / cycleTime;
 			*timeVals = 0;

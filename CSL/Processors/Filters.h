@@ -119,9 +119,12 @@ protected:
 };
 
 /// Butterworth IIR (2nd order recursive) filter.
+///
 /// This operates upon a buffer of frames of amplitude samples by applying the following equation
 /// y(n) = a0*x(n) + a1*x(n-1) + a2*x(n-2) - b1*y(n-1) - b2*y(n-2) where x is an amplitude sample.
 /// It has constructors that can calculate the coefficients from a given cutoff frequency.
+///
+/// Note that the bandwidth is ignored for HPF & LPF filters
 
 class Butter : public Filter {
 	
@@ -135,7 +138,7 @@ public:
 	Butter (UnitGenerator & in, ButterworthType type, float center, float bandwidth);
 	Butter (UnitGenerator & in, ButterworthType type, UnitGenerator & center, UnitGenerator & bandwidth);
 				// Filtering
-	void setupCoeffs ();
+	void setupCoeffs();
 
 protected:
 	int mFilterType;				// flag as to what kind of filter I am
@@ -181,6 +184,7 @@ public:
 
 /// Allpass Filter with a pole and a zero at equal frequency and straddling the unit circle.
 /// Allows all freqs to pass through but messes with phases.
+///
 /// Note that the Amount parameter of FrequencyAmount is ignored.
 
 class Allpass : public Filter {
@@ -199,7 +203,7 @@ protected:
 	Buffer				mCoeffBuffer;
 };
 
-/// Moog VCF class
+/// Moog-style resonant VCF class
 
 class Moog : public Filter {
 
@@ -217,10 +221,10 @@ public:
 	void nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CException);	
 
 protected:
-	float				k, p, r; 	// coefficients
-	float				x, oldx;
-	float				y1, y2, y3, y4, oldy1, oldy2, oldy3;
-	bool				debugging;
+	float k, p, r; 	// coefficients
+	float x, oldx;
+	float y1, y2, y3, y4, oldy1, oldy2, oldy3;
+	bool debugging;
 };
 
 }
