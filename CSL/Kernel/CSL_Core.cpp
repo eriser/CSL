@@ -280,9 +280,9 @@ void Buffer::copySamplesFromTo(Buffer & source, unsigned offset) throw (RunTimeE
 	}
 }
 
-// normalize the buffer(s) to the give max val
+// normalize the buffer(s) to the given max val; answer the prior max val
 
-void Buffer::normalize(float maxVal) {
+float Buffer::normalize(float maxVal) {
 	float * bbuffer = NULL;
 	unsigned outBufNum, i;
 	unsigned numChans = mNumChannels;
@@ -296,6 +296,8 @@ void Buffer::normalize(float maxVal) {
 				maxSamp = samp;
 		}
 	}
+	if (maxSamp == 0.0f)
+		return maxSamp;
 	float scaleV = maxVal / maxSamp;
 	for (outBufNum = 0; outBufNum < numChans; outBufNum++) {
 		bbuffer = mBuffers[outBufNum];
@@ -304,9 +306,10 @@ void Buffer::normalize(float maxVal) {
 			bbuffer++;
 		}
 	}
+	return maxSamp;
 }
 
-#ifdef USE_SRC
+#ifdef USE_SRC // sample-rate conversion methods
 
 // convert the sample rate using libSampleRate
 

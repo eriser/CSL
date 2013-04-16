@@ -167,14 +167,15 @@ typedef enum {					///< Enumeration for log message severity level
 
 void logMsg(const char * format, ...);		///< default is kLogInfo severity
 void logMsg(LogLevel level, const char* format, ...);
+    
+void logMsgNN(const char * format, ...);	///< no-newline versions
+void logMsgNN(LogLevel level, const char* format, ...);
 
 void logLine();								///< Log the file & line #
 void logURL();								///< log file/line as a URL
 
-// These two are private -- for handling var-args
+void vlogMsg(bool cz, LogLevel level, const char * format, va_list args);
 
-void vlogMsg(const char * format, va_list args);
-void vlogMsg(LogLevel level, const char * format, va_list args);
 
 /////////////////////////////////////////////////////////////////////////
 ///

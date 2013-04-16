@@ -1,5 +1,4 @@
 ///
-///
 /// CSL_Core.h -- the specification file for the core classes of CSL version 5
 ///
 ///	See the copyright notice and acknowledgment of authors in the file COPYRIGHT
@@ -157,7 +156,7 @@ public:									/// Constructor: default is mono and default-size
 	virtual void setBuffer(unsigned bufNum, SampleBuffer sPtr) { mBuffers[bufNum] = sPtr; };
 	virtual void setBuffer(unsigned bufNum, unsigned offset, sample samp) { *((mBuffers[bufNum]) + offset) = samp; };
 
-	void normalize(float maxVal);			///< normalize the buffer(s) to the give max val
+	float normalize(float maxVal);			///< normalize the buffer(s) to the given max; answer the prior max
 	
 /// Buffer Sample Processing (optional).
 /// One could also easily add Buffer operators, such as (Buffer + Buffer) or (Buffer * Buffer)

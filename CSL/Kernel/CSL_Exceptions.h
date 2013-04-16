@@ -45,7 +45,7 @@ typedef enum {
 
 ///
 /// Base class of CSL exceptions (written upper-case).
-///		Has a string message
+///	Has a string message
 ///
 
 class CException : public std::exception {

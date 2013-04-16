@@ -216,28 +216,8 @@ string CGestalt::sndFileName() {
 	}
 #endif
 
-//#ifdef WIN32
-//#define BE_SILENT			// logging turned off entirely (e.g., on iPhone)
-//#endif
 
-#ifdef BE_SILENT
-
-void csl::logMsg(const char * format, ...) { }
-
-void csl::logMsg(LogLevel level, const char * format, ...) { }
-
-#else		// logging
-
-void csl::vlogMsg(const char * format, va_list args) {
-		vlogMsg(kLogInfo, format, args);
-}
-
-void csl::logMsg(const char * format, ...) {
-	va_list args;
-	va_start(args, format);
-	vlogMsg(format, args);
-	va_end(args);
-}
+// These two are private -- for handling var-args
 
 #ifdef FMAK_AR			// special printing for FMAK apps
 
@@ -246,11 +226,12 @@ using namespace fmak;
 class FMAKComponent;			// forward declaration of FMAK component class
 extern FMAKComponent * gComp;
 
-void csl::vlogMsg(LogLevel level, const char * format, va_list args) {
+void csl::vlogMsg(bool cz, LogLevel level, const char * format, va_list args) {
 	char message[CSL_LINE_LEN];
 	vsprintf(message, format, args);
-	sprintf(message + strlen(message), "\n");
-	gComp->printMsg(message);
+	if (cz)
+        sprintf(message + strlen(message), "\n");
+    gComp->printMsg(message);
 //	vfprintf(stderr, format, args);
 //	fprintf(stderr, "\n");
 //	fflush(stderr);
@@ -259,7 +240,7 @@ void csl::vlogMsg(LogLevel level, const char * format, va_list args) {
 
 #else			// normal way
 
-void csl::vlogMsg(LogLevel level, const char * format, va_list args) {
+void csl::vlogMsg(bool cz, LogLevel level, const char * format, va_list args) {
 	switch(level) {
 		case kLogInfo:
 			if (mVerbosity < 3)		return;
@@ -282,7 +263,8 @@ void csl::vlogMsg(LogLevel level, const char * format, va_list args) {
 			break;
 	}
 	vfprintf(stderr, format, args);
-	fprintf(stderr, "\n");
+	if (cz)
+        fprintf(stderr, "\n");
 	fflush(stderr);
 	if (level == kLogFatal)
 		exit(1);
@@ -290,10 +272,47 @@ void csl::vlogMsg(LogLevel level, const char * format, va_list args) {
 
 #endif
 
+//#ifdef WIN32
+//#define BE_SILENT			// logging turned off entirely (e.g., on iPhone)
+//#endif
+
+#ifdef BE_SILENT
+
+void csl::logMsg(const char * format, ...) { }
+
+void csl::logMsg(LogLevel level, const char * format, ...) { }
+
+void csl::logMsg(LogLevel level, const char * format, ...) { }
+
+void csl::logMsgNN(LogLevel level, const char * format, ...) { }
+
+#else		// logging
+
+void csl::logMsg(const char * format, ...) {
+	va_list args;
+	va_start(args, format);
+	vlogMsg(true, kLogInfo, format, args);
+	va_end(args);
+}
+
+void csl::logMsgNN(const char * format, ...) {
+	va_list args;
+	va_start(args, format);
+	vlogMsg(false, kLogInfo, format, args);
+	va_end(args);
+}
+
 void csl::logMsg(LogLevel level, const char * format, ...) {
 	va_list args;
 	va_start(args, format);
-	vlogMsg(level, format, args);
+	vlogMsg(true, level, format, args);
+	va_end(args);
+}
+
+void csl::logMsgNN(LogLevel level, const char * format, ...) {
+	va_list args;
+	va_start(args, format);
+	vlogMsg(false, level, format, args);
 	va_end(args);
 }
 
