@@ -178,8 +178,12 @@ namespace csl {								///< All of CSL takes place within the "csl" namespace
 
 //// CSL base audio and geometrical data type declarations - PAY ATTENTION
 
-												///< short-hand for the base sample type 
-typedef float sample;							/// (could be changed to int)
+												// float array typedefs
+typedef float * FloatArray;						///< float pointer type
+typedef FloatArray * FloatArrayPtr;				///< float pointer pointer type
+
+												/// short-hand for the base sample type
+typedef float sample;							///< (could be changed to int)
 typedef float Sample;							///< the same, written upper-case
 
 typedef sample* SampleBuffer;					///< 1-channel buffer data type, vector of (sample) 
@@ -187,7 +191,7 @@ typedef SampleBuffer* SampleBufferVector;		///< Multi-channel buffer data type, 
 typedef SampleBuffer* SampleBufferArray;		///< Multi-channel buffer data type
 
 typedef sample SampleComplex[2];				///< array-of-2 complex # type (like FFTW)
-#define cx_r(val) val[0]						/// complex # accesor macros
+#define cx_r(val) val[0]						///< complex # accesor macros
 #define cx_i(val) val[1]
 #define ComplexPtr SampleBuffer					///< shorthand
 
@@ -203,9 +207,12 @@ class CPoint;									///< Forward declaration
 typedef std::vector <CPoint *> PointVector;		///< A vector of points
 
 typedef std::vector<unsigned> UnsignedVector;	///< A vector of unsigneds
+typedef std::vector<float> FloatVector;			///< A vector of floats
 
 typedef void * VoidFcnPtr(void * arg);			///< the generic void fcn pointer
-typedef void VoidFcnPtrN(void);						///< the truly void fcn pointer
+typedef void VoidFcnPtrN(void);					///< the truly void fcn pointer
+
+typedef unsigned uint;
 
 //// I/O and control port map types
 
@@ -217,8 +224,8 @@ class Instrument;								///< Forward declaration to Instrument
 class Observer;									///< Forward declaration
 
 typedef unsigned CSL_MAP_KEY;					///< the type I use for map keys (could also be a string)
-												/// PortMap: a map between a name/key and a port object 
-												/// (used for control and audio inputs)
+												///< PortMap: a map between a name/key and a port object
+												///< (used for control and audio inputs)
 typedef std::map <CSL_MAP_KEY, Port *> PortMap;
 												/// Buffer/UGenVector: unit generator pointers (used for outputs)
 typedef std::vector <Buffer *> BufferVector;
