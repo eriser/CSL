@@ -132,15 +132,13 @@ void FFTR_Wrapper::nextBuffer(Buffer & in, Buffer & out) throw (CException) {
 				cx_r(cplx) = *rPtr++ * normFactor;
 				cx_i(cplx) = *iPtr++ * normFactor;
 			}
-		} 
-		else if (mType == CSL_FFT_REAL) {			// real: write magnitude to mono output
+		} else if (mType == CSL_FFT_REAL) {			// real: write magnitude to mono output
 			ioPtr = out.buffer(0);					// output pointer
 			SampleBuffer rPtr = mTempBuf;
 			SampleBuffer iPtr = mTempBuf + (mSize / 2) ; // + 1;
 			for (unsigned j = 0; j < mSize / 2; j++)
 				*ioPtr++ = hypotf(*rPtr++, *iPtr++);
-		} 
-		else if (mType == CSL_FFT_MAGPHASE) {		// complex: write mag/phase to buffer[0]/[1]
+		} else if (mType == CSL_FFT_MAGPHASE) {		// complex: write mag/phase to buffer[0]/[1]
 			ioPtr = out.buffer(0);					// output pointer
 			SampleBuffer rPtr = mTempBuf;
 			SampleBuffer iPtr = mTempBuf + (mSize / 2);
@@ -160,18 +158,28 @@ void FFTR_Wrapper::nextBuffer(Buffer & in, Buffer & out) throw (CException) {
 			} // end of loop
 		}
 	} else {										// mDirection == CSL_FFT_INVERSE
-													// assume CSL_FFT_COMPLEX format
+		if (mType == CSL_FFT_COMPLEX) {				// CSL_FFT_COMPLEX format
 													// copy complex spectrum to un-packed IFFT format
-		SampleComplexPtr ioPtr = (SampleComplexPtr) in.buffer(0);
-		SampleBuffer rPtr = mTempBuf;				// copy data to FFTReal format
-		SampleBuffer iPtr = mTempBuf + (mSize / 2);
-		
-		for (unsigned j = 0; j < mSize / 2; j++) {		// loop to unpack complex array
-			ComplexPtr cplx = ioPtr[j];
-			*rPtr++ = cx_r(cplx);
-			*iPtr++ = cx_i(cplx);
+			SampleComplexPtr ioPtr = (SampleComplexPtr) in.buffer(0);
+			SampleBuffer rPtr = mTempBuf;			// copy data to FFTReal format
+			SampleBuffer iPtr = mTempBuf + (mSize / 2);
+			
+			for (unsigned j = 0; j < mSize / 2; j++) {	// loop to unpack complex array
+				ComplexPtr cplx = ioPtr[j];
+				*rPtr++ = cx_r(cplx);
+				*iPtr++ = cx_i(cplx);
+			}
+		} else if (mType == CSL_FFT_REAL) {			// real: copy real spectrum to un-packed IFFT format
+			SampleBuffer ioPtr = in.buffer(0);
+			SampleBuffer rPtr = mTempBuf;			// copy data to FFTReal format
+			SampleBuffer iPtr = mTempBuf + (mSize / 2);
+
+			for (unsigned j = 0; j < mSize / 2; j++) {	// loop to unpack real array
+				*rPtr++ = *ioPtr++;
+				*iPtr++ = 0.0f;
+			}
 		}
-		SampleBuffer oPtr = out.buffer(0);					// output pointer
+		SampleBuffer oPtr = out.buffer(0);			// output pointer
 
 		mFFT.do_ifft(mTempBuf, oPtr);
 
