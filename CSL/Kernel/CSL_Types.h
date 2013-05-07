@@ -251,7 +251,7 @@ typedef std::map <std::string, std::string> StringMap;
 
 typedef unsigned long Timestamp;
 
-//// struct used for the JUCE pop-up menu of tests (see the test files)
+/// struct used for the JUCE pop-up menu of tests (see the test files)
 
 typedef struct {
 	const char * name;		// test name (menu item)
