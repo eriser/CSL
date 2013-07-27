@@ -145,7 +145,7 @@
 //// Which MIDI IO port class to use? 
 //// (define here or choose with a compiler option, e.g., -DUSE_PMIDI)
 
-//#define USE_JMIDI
+//#define USE_JMIDI					// this is now a compile-time option, like the FFT and sndfile libs
 #define DEFAULT_MIDI_IN 0
 #define DEFAULT_MIDI_OUT 0
 
@@ -159,31 +159,27 @@
 
 #define Osc WavetableOscillator				// default "Osc" -- or use Sine?
 
-
 // Which FFT wrapper class to use? (choose with a compiler option, -DUSE_FFTREAL)
 
 //#define USE_FFTW							// use FFTW (faster but complicated to build)
 //#define USE_FFTREAL						// use FFTReal (smaller and simpler)
-
 
 ////////////////////////// Core CSL Types //////////////////////////////////////////////
 
 #include <vector>							///< we use the STL vector, map, and string classes
 #include <string>	
 #include <map>
-//#include <juce.h>
 
 namespace csl {								///< All of CSL takes place within the "csl" namespace
 
-
-//// CSL base audio and geometrical data type declarations - PAY ATTENTION
+//// CSL base audio and geometrical data type declarations - PAY ATTENTION ///////
 
 												// float array typedefs
 typedef float * FloatArray;						///< float pointer type
 typedef FloatArray * FloatArrayPtr;				///< float pointer pointer type
 
 												/// short-hand for the base sample type
-typedef float sample;							///< (could be changed to int)
+typedef float sample;							///< (could be changed to int, or double)
 typedef float Sample;							///< the same, written upper-case
 
 typedef sample* SampleBuffer;					///< 1-channel buffer data type, vector of (sample) 
