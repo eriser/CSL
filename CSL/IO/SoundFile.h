@@ -104,7 +104,12 @@ public:									/// Constructor. Values not passed default to null.
 	Abst_SoundFile(Abst_SoundFile & otherSndFile);	///< Copy constructor -- shares sample buffer
 	~Abst_SoundFile();
 	
-													///< open file and get stats; read it if "load"
+
+	static bool isSndfileName(const char * path);			///< Answer whether the given name looks like a snd file
+	static SoundFileFormat sndfileNameType(const char * path);	///< Answer the snd file type
+	static const char * mimeType(const char * path);				///< Answer the MIME type based on the file name
+
+	///< open file and get stats; read it if "load"
 	virtual void openForRead(bool load = true) throw (CException) = 0;
 													/// Open a file for writing. 
 													/// Default values are some common format.

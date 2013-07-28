@@ -10,8 +10,22 @@
 #include <stdlib.h>		// for malloc
 #include <math.h>
 
+// Sound files
+
+#ifdef USE_JSND
+#include "SoundFileJ.h"
+#define SoundFile JSoundFile			// JUCE snd file class
+#endif
+
 #ifdef USE_LSND
-#include <samplerate.h>	// libsamplerate header file
+#include "SoundFileL.h"
+#include <samplerate.h>					// libsamplerate header file
+#define SoundFile LSoundFile			// JUCE snd file class
+#endif
+
+#ifdef USE_CASND
+#include "SoundFileCA.h"
+#define SoundFile CASoundFile			// JUCE snd file class
 #endif
 
 using namespace csl;
@@ -278,6 +292,39 @@ void Buffer::copySamplesFromTo(Buffer & source, unsigned offset) throw (RunTimeE
 		memcpy(mBuffers[outBufNum] + offset, source.buffer(sBufNum), 
 				(source.mNumFrames * sizeof(sample)));
 	}
+}
+
+// read a buffer from a snd file; answer success
+
+bool Buffer::readFromFile(char * finam) {
+	if (strlen(finam) == 0) {		// if no file name
+		logMsg(kLogError, "Sound file name is empty.");
+//		throw LengthError("Sound file name is empty.");
+		return false;
+	}
+									// open snd file
+	SoundFile * inFile = SoundFile::openSndfile(finam);
+
+	if ( ! inFile->isValid()) {		// check result status
+		logMsg(kLogError, "Error opening file \"%s\" (invalid)", finam);
+		return false;
+	}
+									// copy data over to new buffer
+	this->copyFrom(inFile->mWavetable);
+	this->mDidIAllocateBuffers = true;
+	inFile->mWavetable.mDidIAllocateBuffers = false;
+	delete inFile;				// delete infile
+
+	if (mNumFrames == 0) {
+		logMsg(kLogError, "Error opening file \"%s\"", finam);
+		return false;
+	}
+									// everything's OK; proceed
+//	logMsg("Opened file: \"%s\" = %5.3f sec = %d samps = %d win",
+//			finam, ((float)mSndBuffer.mNumFrames / CGestalt::frameRateF()),
+//			mSndBuffer.mNumFrames, (mSndBuffer.mNumFrames / mFeatExtr->mHopSize));
+	return true;
+
 }
 
 // normalize the buffer(s) to the given max val; answer the prior max val

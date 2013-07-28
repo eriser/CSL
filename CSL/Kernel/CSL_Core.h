@@ -140,7 +140,8 @@ public:									/// Constructor: default is mono and default-size
 	void copySamplesFrom(Buffer & src) throw (RunTimeError);	///< import data from the given buffer
 	void copySamplesFromTo(Buffer & src, unsigned offset) throw (RunTimeError);	///< same with write offset
 	void copyOnlySamplesFrom(Buffer & src) throw (RunTimeError);///< import data from the given buffer
-	
+	bool readFromFile(char * fname);							///< read a buffer from a snd file; answer success
+
 	csl::Status convertRate(int fromRate, int toRate);			///< convert the sample rate using libSampleRate
 
 											/// answer a samp ptr with offset

@@ -70,16 +70,12 @@ public:							/// Constructor with defaults
 //	LSoundFile(char * buffer);						///< virtual version uses a sample buffer
 	LSoundFile(LSoundFile & otherSndFile);			///< Copy constructor -- shares sample buffer
 	~LSoundFile();
-													/// Factory method
+													/// Factory methods
 	static LSoundFile * openSndfile(string path, int start = -1, int stop = -1, bool doRead = true);
 	static LSoundFile * openSndfile(float maxDurInSecs, string path);
-	
-	static bool isSndfileName(const char * path);			///< Answer whether the given name looks like a snd file
-	static SoundFileFormat sndfileNameType(const char * path);	///< Answer the snd file type
-	static const char * mimeType(const char * path);				///< Answer the MIME type based on the file name
 
 	SoundFileFormat format();						///< get format
-	
+
 	virtual void openForRead(bool load = true) throw (CException);	///< open file and get stats
 													/// Open a file for write. 
 													/// Default values are some common format.

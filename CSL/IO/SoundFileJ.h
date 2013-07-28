@@ -8,8 +8,7 @@
 #define CSL_SoundFileJ_H
 
 #include "SoundFile.h"
-
-#include "JuceHeader.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 
 namespace csl {
 
@@ -20,9 +19,12 @@ namespace csl {
 class JSoundFile : public Abst_SoundFile {
 public:
 	JSoundFile(string path, int start = -1, int stop = -1);
-//	JSoundFile(string folder, string path, int start = -1, int stop = -1);
 	JSoundFile(JSoundFile & otherSndFile);			///< Copy constructor -- shares sample buffer
 	~JSoundFile();
+
+													/// Factory methods
+	static JSoundFile * openSndfile(string path, int start = -1, int stop = -1, bool doRead = true);
+//	static JSoundFile * openSndfile(float maxDurInSecs, string path);
 
 	unsigned duration() const;						///< number of frames in the sound file
 	SoundFileFormat format();						///< get format

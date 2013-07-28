@@ -34,6 +34,78 @@ void SoundFileMetadata::dump() {
 //		logMsg("		Comment: %s", mComment.c_str());
 }
 
+
+/// Sound file name extensions we recognize - ToDo: should this be in a config file?
+
+const char * gSndFileExts[] = { "mp3", "wav", "aiff", "aif", "mp4", "m4p", "m4b", "m4a", "aac", "flac", 0 };
+
+///< Answer whether the given name looks like a snd file
+
+bool Abst_SoundFile::isSndfileName(const char * path) {
+	const char * dot = strrchr(path, '.');			// find file name ext
+	if ( ! dot)
+		return false;
+	dot++;
+	if ( ! dot)
+		return false;
+	for (unsigned i = 0; gSndFileExts[i]; i++) {
+		if(strcasestr(dot, gSndFileExts[i]))
+			return true;
+	}
+	return false;
+}
+
+///< Answer the snd file type
+
+SoundFileFormat Abst_SoundFile::sndfileNameType(const char * path) {
+	const char * lastDot = strrchr(path, '.');		// find the last dot in the name
+	if ( ! lastDot)
+		return kSoundFileFormatOther;
+	lastDot++;
+	if ( ! lastDot)
+		return kSoundFileFormatOther;
+	if (strcasestr(lastDot, "wav"))				// guess the file type from the file name
+		return kSoundFileFormatWAV;
+	if (strcasestr(lastDot, "mp3"))
+		return kSoundFileFormatMP3;
+	if (strcasestr(lastDot, "aif"))
+		return kSoundFileFormatAIFF;
+	if (strcasestr(lastDot, "aiff"))
+		return kSoundFileFormatAIFF;
+	if (strcasestr(lastDot, "m4a"))
+		return kSoundFileFormatMP4;
+	if (strcasestr(lastDot, "mp4"))
+		return kSoundFileFormatMP4;
+	if (strcasestr(lastDot, "m4b"))
+		return kSoundFileFormatMP4;
+	if (strcasestr(lastDot, "aac"))
+		return kSoundFileFormatAAC;
+	if (strcasestr(lastDot, "flac"))
+		return kSoundFileFormatFLAC;
+	if (strcasestr(lastDot, "caf"))
+		return kSoundFileFormatCAF;
+	if (strcasestr(lastDot, "ogg"))
+		return kSoundFileFormatOGG;
+	if (strcasestr(lastDot, "shn"))
+		return kSoundFileFormatSHN;
+	if (strcasestr(lastDot, "snd"))
+		return kSoundFileFormatSND;
+	return kSoundFileFormatOther;
+}
+
+// Answer the MIME type based on the file name
+
+const char * Abst_SoundFile::mimeType(const char * path) {
+	SoundFileFormat fmt = Abst_SoundFile::sndfileNameType(path);
+	switch (fmt) {
+		case kSoundFileFormatAIFF: return "audio/x-aiff";
+		case kSoundFileFormatMP3:  return "audio/mpeg";
+		case kSoundFileFormatMP4:  return "audio/mp4a-latm";
+		case kSoundFileFormatWAV:  return "audio/x-wav";
+		default:				   return "audio/basic";
+	}
+}
+
 // Abst_SoundFile Constructors
 
 Abst_SoundFile::Abst_SoundFile(string tpath, int tstart, int tstop) : 

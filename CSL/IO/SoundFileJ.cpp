@@ -12,7 +12,18 @@ using namespace csl;
 // JSoundFile implementation
 //
 
-JSoundFile::JSoundFile(string tpath, int tstart, int tstop) 
+// Factory method
+
+JSoundFile * JSoundFile::openSndfile(string tpath, int tstart, int tstop, bool doRead) {
+	return new JSoundFile(tpath, tstart, tstop);
+}
+
+//JSoundFile * JSoundFile::openSndfile(float maxDurInSecs, string tpath) {
+//	return new JSoundFile(maxDurInSecs, tpath);
+//}
+
+
+JSoundFile::JSoundFile(string tpath, int tstart, int tstop)
 	: Abst_SoundFile(tpath, tstart, tstop),
 		mAFReader(0),
 		mAFWriter(0),
