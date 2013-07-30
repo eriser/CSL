@@ -7,7 +7,7 @@
 // CSL Kernel
 
 #include "CSL_Core.h"			/// The core of CSL 5
-#include "RingBuffer.h"			/// Utility circular buffer
+//#include "RingBuffer.h"			/// Utility circular buffer
 #include "BlockResizer.h"		/// BlockResizer
 #include "CPoint.h"				/// 2D & 3D points
 //#include "ThreadUtilities.h"	/// CThread utilities
@@ -62,7 +62,7 @@
 // MIDI
 
 #ifdef USE_JMIDI
-//	#include "MIDIIOJ.h"
+	#include "MIDIIOJ.h"
 #endif
 
 #ifdef USE_PMIDI

@@ -5,7 +5,7 @@
 //
 
 #include "CSL_Core.h"	// it's all declared here
-#include "RingBuffer.h"	// UnitGenerator uses RingBuffers
+//#include "RingBuffer.h"	// UnitGenerator uses RingBuffers
 #include <string.h>		// for bzero / memset
 #include <stdlib.h>		// for malloc
 #include <math.h>
@@ -13,19 +13,16 @@
 // Sound files
 
 #ifdef USE_JSND
-#include "SoundFileJ.h"
-#define SoundFile JSoundFile			// JUCE snd file class
+	#include "SoundFileJ.h"
 #endif
 
 #ifdef USE_LSND
-#include "SoundFileL.h"
-#include <samplerate.h>					// libsamplerate header file
-#define SoundFile LSoundFile			// JUCE snd file class
+	#include "SoundFileL.h"
+	#include <samplerate.h>			// libsamplerate header file
 #endif
 
 #ifdef USE_CASND
-#include "SoundFileCA.h"
-#define SoundFile CASoundFile			// JUCE snd file class
+	#include "SoundFileCA.h"
 #endif
 
 using namespace csl;

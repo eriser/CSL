@@ -35,7 +35,7 @@
 #endif
 
 #ifdef USE_FFTREAL
-	#include <FFTReal.h>
+	#include "FFTReal.h"
 	#define FFTWrapper FFTR_Wrapper	
 #endif
 

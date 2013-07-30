@@ -145,14 +145,14 @@
 //// Which MIDI IO port class to use? 
 //// (define here or choose with a compiler option, e.g., -DUSE_PMIDI)
 
-//#define USE_JMIDI					// this is now a compile-time option, like the FFT and sndfile libs
+//#define USE_JMIDI							// this is now a compile-time option, like the FFT and sndfile libs
 #define DEFAULT_MIDI_IN 0
 #define DEFAULT_MIDI_OUT 0
 
 //// Use an OSC API?
 
-#ifndef CSL_WINDOWS					// works on Mac & Linux
-// #define USE_LOSC					// liblo for OSC
+#ifndef CSL_WINDOWS							// works on Mac & Linux
+	#define USE_LOSC						// liblo for OSC
 #endif
 
 //// Which default "Osc" class to use -- WavetableOscillator (table-lookup) or Sine (computed)?
@@ -161,10 +161,10 @@
 
 // Which FFT wrapper class to use? (choose with a compiler option, -DUSE_FFTREAL)
 
-//#define USE_FFTW							// use FFTW (faster but complicated to build)
-//#define USE_FFTREAL						// use FFTReal (smaller and simpler)
+//#define USE_FFTW							// use FFTW (faster but complicated to build, also MIT license)
+//#define USE_FFTREAL						// use FFTReal (smaller and simpler, also public domain)
 
-////////////////////////// Core CSL Types //////////////////////////////////////////////
+////////////////////////// Core CSL Typedefs //////////////////////////////////////////////
 
 #include <vector>							///< we use the STL vector, map, and string classes
 #include <string>	
@@ -174,11 +174,11 @@ namespace csl {								///< All of CSL takes place within the "csl" namespace
 
 //// CSL base audio and geometrical data type declarations - PAY ATTENTION ///////
 
-												// float array typedefs
+											// float array typedefs
 typedef float * FloatArray;						///< float pointer type
 typedef FloatArray * FloatArrayPtr;				///< float pointer pointer type
 
-												/// short-hand for the base sample type
+											// short-hand for the base sample type
 typedef float sample;							///< (could be changed to int, or double)
 typedef float Sample;							///< the same, written upper-case
 
@@ -210,7 +210,7 @@ typedef void VoidFcnPtrN(void);					///< the truly void fcn pointer
 
 typedef unsigned uint;
 
-//// I/O and control port map types
+//// I/O and control port map types ------------------------------------------
 
 class Buffer;									///< Forward declaration to Buffer (in CSL_Core.h)
 class UnitGenerator;							///< Forward declaration to UnitGenerator (in CSL_Core.h)
@@ -254,7 +254,6 @@ typedef struct {
 	VoidFcnPtrN * fcn;		// test void fcn ptr
 	const char * comment;	// test comment
 } testStruct;
-
 
 //// Hashmap keys for the default I/O ports (could be strings or int indeces)
 
@@ -325,7 +324,7 @@ typedef struct {
 #define CSL_TWOPI				6.2831853071795865f
 #define CSL_PIHALF				1.570796326795f
 #define CSL_SQRT_TWO			1.414213562f
-#define CSL_SPEED_OF_SOUND		330.0f
+#define CSL_SPEED_OF_SOUND		330.0f					// in m/sec
 #define CSL_EXP_PER_DB			0.11512925464970228f
 #define CSL_SAMPS_PER_METER		133.63636363636364f
 #define CSL_DEGS_PER_RAD		57.295779513082321f
@@ -335,7 +334,7 @@ typedef struct {
 ///
 
 #ifdef CSL_WINDOWS			// Microsoft is explicit
-//#include "stdafx.h"
+	#include "stdafx.h"
 							// Hypotenuse = complex-to-real-magnitude
 	#define hypotf(av, bv)	sqrtf((av * av) + (bv * bv))
 
