@@ -22,7 +22,6 @@ JSoundFile * JSoundFile::openSndfile(string tpath, int tstart, int tstop, bool d
 //	return new JSoundFile(maxDurInSecs, tpath);
 //}
 
-
 JSoundFile::JSoundFile(string tpath, int tstart, int tstop)
 	: Abst_SoundFile(tpath, tstart, tstop),
 		mAFReader(0),
@@ -182,11 +181,11 @@ void JSoundFile::readBufferFromFile(unsigned numFrames) {
 		return;
 	}
 											// JUCE read fcn
-	logMsg ("JSound file read %d", numFrames);
+//	logMsg ("JSound file read %d", numFrames);
 											// create a temp AudioSampleBuffer for the wavetable
 	AudioSampleBuffer asBuffer(mWavetable.buffers(), myChannels, numFrames);
     mAFReader->read(&asBuffer, mCurrentFrame, numFrames, 0, true, true);
-		currentFrame += numFrames;	
+	currentFrame += numFrames;	
 //	} else {
 //		logMsg (kLogError, "Sound file read error");
 //		throw IOError("Sound file read error");

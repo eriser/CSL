@@ -22,6 +22,7 @@
 		457D785CDE57C57F9A6C9E2E /* FFTReal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C75C6AD055EB8D0C2B1E1E59 /* FFTReal.cpp */; };
 		45B8B21C99EB1BBDA9D28C70 /* Test_Envelopes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB57B85DDFC730DD5372A459 /* Test_Envelopes.cpp */; };
 		49F2D3A76EA721A4B47223CB /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC5A4772C72BB3F91AB19660 /* Carbon.framework */; };
+		4C82586017AB3F5300D736ED /* liblo.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C82585F17AB3F5300D736ED /* liblo.dylib */; };
 		4CA5509316DD6E52005707B6 /* SoundFileJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 103CBDDE0767FC2B2A1324D4 /* SoundFileJ.cpp */; };
 		52C60FE1EB4950421AEE14F0 /* juce_audio_basics.mm in Sources */ = {isa = PBXBuildFile; fileRef = CA10115FBE7CD1EB6F933DFC /* juce_audio_basics.mm */; };
 		540E5A5A0A31ED1F5CFE1FE2 /* Granulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35769BC11EB2F236223D2A2C /* Granulator.cpp */; };
@@ -358,6 +359,7 @@
 		4BC5964B370E1B425D064F0F /* juce_Sampler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Sampler.h; path = ../../JuceLibraryCode/modules/juce_audio_formats/sampler/juce_Sampler.h; sourceTree = SOURCE_ROOT; };
 		4BC92B781EDF69B629330E10 /* juce_TableHeaderComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_TableHeaderComponent.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_TableHeaderComponent.h; sourceTree = SOURCE_ROOT; };
 		4C1CE88BD4DDF7A4CECBA4A7 /* juce_ApplicationCommandInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_ApplicationCommandInfo.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/commands/juce_ApplicationCommandInfo.h; sourceTree = SOURCE_ROOT; };
+		4C82585F17AB3F5300D736ED /* liblo.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = liblo.dylib; path = ../../../../../../usr/local/lib/liblo.dylib; sourceTree = "<group>"; };
 		4C862C76A31FE67501B943DE /* juce_DrawableText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_DrawableText.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/drawables/juce_DrawableText.h; sourceTree = SOURCE_ROOT; };
 		4C8BFB9D5DFEE2E549637514 /* juce_ComponentDragger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_ComponentDragger.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/mouse/juce_ComponentDragger.h; sourceTree = SOURCE_ROOT; };
 		4CA5503A16DD69C7005707B6 /* libsndfile.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsndfile.dylib; path = /usr/local/lib/libsndfile.dylib; sourceTree = "<absolute>"; };
@@ -1034,6 +1036,7 @@
 				27C6848D89459C12B4733B7E /* CoreMIDI.framework in Frameworks */,
 				9FC017E8A9026C46840D9E34 /* DiscRecording.framework in Frameworks */,
 				AA93304A6A702FEC203B1A45 /* IOKit.framework in Frameworks */,
+				4C82586017AB3F5300D736ED /* liblo.dylib in Frameworks */,
 				CF43116B0EE411800FA3B1C6 /* QuartzCore.framework in Frameworks */,
 				54FBCDC47A1AF94CE8367D78 /* WebKit.framework in Frameworks */,
 			);
@@ -1357,6 +1360,7 @@
 			isa = PBXGroup;
 			children = (
 				4CA5503A16DD69C7005707B6 /* libsndfile.dylib */,
+				4C82585F17AB3F5300D736ED /* liblo.dylib */,
 				096D36541FE92E06F2CB2579 /* AudioToolbox.framework */,
 				EC5A4772C72BB3F91AB19660 /* Carbon.framework */,
 				A0E2A0952297FC1B484D2B7C /* Cocoa.framework */,
@@ -2876,6 +2880,9 @@
 /* Begin PBXProject section */
 		03E4F3C1C1F0ACF90FB6B0E7 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+			};
 			buildConfigurationList = D977EFA00DF5928DE2E25DD9 /* Build configuration list for PBXProject "CSL_JUCE" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -2993,6 +3000,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3027,6 +3035,7 @@
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lsndfile";
+				SDKROOT = macosx10.8;
 				SDKROOT_ppc = macosx10.5;
 				SRCROOT = ../..;
 			};
@@ -3057,6 +3066,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -3087,6 +3097,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = "-lsndfile";
+				SDKROOT = macosx10.8;
 				SDKROOT_ppc = macosx10.5;
 				SRCROOT = ../..;
 			};
@@ -3117,6 +3128,7 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = CSL_Demo;
 				WARNING_CFLAGS = "-Wreorder";
 				ZERO_LINK = NO;

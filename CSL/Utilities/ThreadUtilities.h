@@ -10,7 +10,9 @@
 #include "CSL_Types.h"
 
 #ifdef USE_JTHREADS
-#include "JuceHeader.h"			// JUCE core
+	#include "JuceHeader.h"			// JUCE core
+#else
+	#include <pthread.h>
 #endif
 
 namespace csl {

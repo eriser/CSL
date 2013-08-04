@@ -364,7 +364,7 @@ void Impulse::nextBuffer(Buffer & outputBuffer, unsigned outBufNum) throw (CExce
 	SampleBuffer buffer = outputBuffer.buffer(outBufNum);		// get pointer to the selected output channel
 	unsigned numFrames = outputBuffer.mNumFrames;			// the number of frames to fill
 	unsigned i, j;
-	unsigned count = mCounter;
+	int count = mCounter;
 	DECLARE_PHASED_CONTROLS;								// declare the frequency buffer and value as above
 	DECLARE_SCALABLE_CONTROLS;								// declare the scale/offset buffers and values as above
 #ifdef CSL_DEBUG

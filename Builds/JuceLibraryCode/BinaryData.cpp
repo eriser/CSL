@@ -67,7 +67,7 @@ const char* Speaker_layout_dat = (const char*) temp_b63333d3;
 const char* getNamedResource (const char*, int&) throw();
 const char* getNamedResource (const char* resourceNameUTF8, int& numBytes) throw()
 {
-    int hash = 0;
+    unsigned long hash = 0;
     if (resourceNameUTF8 != 0)
         while (*resourceNameUTF8 != 0)
             hash = 31 * hash + *resourceNameUTF8++;

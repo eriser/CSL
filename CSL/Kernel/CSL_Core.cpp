@@ -164,6 +164,8 @@ void Buffer::freeBuffers() {
 	delete mBuffers;
 	mBuffers = 0;
 	mNumAlloc = 0;
+	mNumFrames = 0;
+	mMonoBufferByteSize = 0;
 }
 
 // empty the sample buffers
@@ -304,13 +306,14 @@ bool Buffer::readFromFile(char * finam) {
 
 	if ( ! inFile->isValid()) {		// check result status
 		logMsg(kLogError, "Error opening file \"%s\" (invalid)", finam);
+		delete inFile;
 		return false;
 	}
 									// copy data over to new buffer
 	this->copyFrom(inFile->mWavetable);
 	this->mDidIAllocateBuffers = true;
 	inFile->mWavetable.mDidIAllocateBuffers = false;
-	delete inFile;				// delete infile
+	delete inFile;					// delete infile
 
 	if (mNumFrames == 0) {
 		logMsg(kLogError, "Error opening file \"%s\"", finam);
@@ -321,7 +324,6 @@ bool Buffer::readFromFile(char * finam) {
 //			finam, ((float)mSndBuffer.mNumFrames / CGestalt::frameRateF()),
 //			mSndBuffer.mNumFrames, (mSndBuffer.mNumFrames / mFeatExtr->mHopSize));
 	return true;
-
 }
 
 // normalize the buffer(s) to the given max val; answer the prior max val
