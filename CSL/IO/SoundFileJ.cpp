@@ -59,11 +59,17 @@ JSoundFile::JSoundFile(JSoundFile & otherSndFile)
 		mIOFile(otherSndFile.mIOFile),
 		mOutStream(otherSndFile.mOutStream) { }
 
+// d'tor cleans up poinger members
+
 JSoundFile::~JSoundFile() {
 	if (mAFReader)
 		delete mAFReader;
 	if (mAFWriter)
 		delete mAFWriter;
+	if (mIOFile)
+		delete mIOFile;
+	if (mOutStream)
+		delete mOutStream;
 }
 
 // Accessors
