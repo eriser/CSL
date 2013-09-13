@@ -355,6 +355,40 @@ float Buffer::normalize(float maxVal) {
 	return maxSamp;
 }
 
+// normalize the given region only
+
+float Buffer::normalize(float maxVal, float from, float to) {
+	float * bbuffer = NULL;
+	unsigned outBufNum, i;
+	unsigned numChans = mNumChannels;
+	unsigned numFrames = mNumFrames;
+	float maxSamp = 0.0f;
+	unsigned samp0 = (unsigned)(from * CGestalt::frameRateF());
+	unsigned sampN = (unsigned)(to * CGestalt::frameRateF());
+	
+	for (outBufNum = 0; outBufNum < numChans; outBufNum++) {
+		bbuffer = mBuffers[outBufNum] + samp0;
+		for (i = samp0; i < sampN; i++) {
+			float samp = fabs(*bbuffer++);
+			if (samp > maxSamp)
+				maxSamp = samp;
+		}
+	}
+	if (maxSamp == 0.0f)
+		return maxSamp;
+	if (maxSamp == maxVal)
+		return maxSamp;
+	float scaleV = maxVal / maxSamp;
+	for (outBufNum = 0; outBufNum < numChans; outBufNum++) {
+		bbuffer = mBuffers[outBufNum] + samp0;
+		for (i = samp0; i < sampN; i++) {
+			*bbuffer *= scaleV;
+			bbuffer++;
+		}
+	}
+	return maxSamp;
+}
+
 #ifdef USE_SRC // sample-rate conversion methods
 
 // convert the sample rate using libSampleRate

@@ -28,7 +28,7 @@ public:
 
 	unsigned duration() const;						///< number of frames in the sound file
 	SoundFileFormat format();						///< get format
-													// open file and get stats
+													/// open file and get stats
 	void openForRead(bool load = true) throw (CException);
 													/// Open a file for write. Default values are some common format.
 	void openForWrite(SoundFileFormat format = kSoundFileFormatAIFF, 

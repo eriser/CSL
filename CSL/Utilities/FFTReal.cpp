@@ -17,8 +17,6 @@
 #include	<cassert>
 #include	<cmath>
 
-//#include <stdio.h>
-
 #if defined (_MSC_VER)
 #pragma pack (push, 8)
 #endif	// _MSC_VER

@@ -66,10 +66,10 @@ JSoundFile::~JSoundFile() {
 		delete mAFReader;
 	if (mAFWriter)
 		delete mAFWriter;
+//	if (mOutStream)
+//		delete mOutStream;
 	if (mIOFile)
 		delete mIOFile;
-	if (mOutStream)
-		delete mOutStream;
 }
 
 // Accessors
@@ -119,7 +119,7 @@ void JSoundFile::openForRead(bool load) throw (CException) {
 	String fname(mPath.c_str());
 	mIOFile = new File(fname);					// create a JUCE file object
 	if ( ! mIOFile->exists()) {
-		logMsg(kLogError, "Cannot find sound file \"%s\"", mPath.c_str());
+//		logMsg(kLogError, "Cannot find sound file \"%s\"", mPath.c_str());
 		return;
 	}
 	AudioFormatManager formatManager;			// get a format manager 
@@ -151,7 +151,8 @@ void JSoundFile::openForWrite(SoundFileFormat tformat, unsigned tchannels, unsig
 	StringPairArray metaDict;
 	AiffAudioFormat afmt;
 	WavAudioFormat wfmt;
-
+//			createWriterFor (OutputStream *streamToWriteTo, double sampleRateToUse,
+//					unsigned int numberOfChannels, int bitsPerSample, const StringPairArray &metadataValues, int qualityOptionIndex) 
 	switch (tformat) {
 		case kSoundFileFormatAIFF:
 			mAFWriter = afmt.createWriterFor(mOutStream, (double) rate, tchannels, bitDepth, metaDict, 0);
@@ -168,6 +169,8 @@ void JSoundFile::openForWrite(SoundFileFormat tformat, unsigned tchannels, unsig
 
 void JSoundFile::close() {
 	freeBuffer();
+	if (mMode == kSoundFileWrite)
+		mOutStream->flush();
 }
 
 // read some samples from the file into the temp buffer
@@ -266,8 +269,8 @@ unsigned JSoundFile::seekTo(int position, SeekPosition whence) throw(CException)
 void JSoundFile::writeBuffer(Buffer &inputBuffer) throw(CException) {
 	unsigned numFrames = inputBuffer.mNumFrames;	
 											// JUCE write fcn
-//    if (mAFWriter->write(inputBuffer.mBuffers, numFrames)) {
-	if (1) {
+//				   writeFromFloatArrays (const float **channels, int numChannels, int numSamples)
+	if (mAFWriter->writeFromFloatArrays((const float **)inputBuffer.buffers(), 1, numFrames)) {
 		mCurrentFrame += numFrames;	
 	} else {
 		logMsg (kLogError, "Sound file write error");

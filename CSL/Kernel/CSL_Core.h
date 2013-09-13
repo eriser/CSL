@@ -158,6 +158,7 @@ public:									/// Constructor: default is mono and default-size
 	virtual void setBuffer(unsigned bufNum, unsigned offset, sample samp) { *((mBuffers[bufNum]) + offset) = samp; };
 
 	float normalize(float maxVal);			///< normalize the buffer(s) to the given max; answer the prior max
+	float normalize(float maxVal, float from, float to);	///< normalize the given region only
 	
 /// Buffer Sample Processing (optional).
 /// One could also easily add Buffer operators, such as (Buffer + Buffer) or (Buffer * Buffer)
