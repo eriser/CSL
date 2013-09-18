@@ -42,6 +42,8 @@ public:
 	void readBufferFromFile(unsigned numFrames);	///< read a buffer from the file (possibly all of it)
 
 	void writeBuffer(Buffer &inputBuffer) throw (CException);	///< write a buffer of data into the file
+	void writeBuffer(Buffer &inB, unsigned fromFrame, unsigned toFrame)
+			throw (CException);
 
 	AudioFormatReader * mAFReader;					///< my reader
 	AudioFormatWriter * mAFWriter;					///< and my writer

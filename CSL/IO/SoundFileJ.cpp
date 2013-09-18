@@ -278,3 +278,22 @@ void JSoundFile::writeBuffer(Buffer &inputBuffer) throw(CException) {
 	}
 }
 
+// write a CSL buffer to the interleaved output file
+
+void JSoundFile::writeBuffer(Buffer &inputBuffer, unsigned fromFrame, unsigned toFrame) throw(CException) {
+	unsigned numFrames = inputBuffer.mNumFrames;	
+											// JUCE write fcn
+//				   writeFromFloatArrays (const float **channels, int numChannels, int numSamples)
+	SampleBufferArray inp = inputBuffer.buffers();
+	for (unsigned i = 0; i < mNumChannels; i++)
+		inp[i] += fromFrame;
+	if (mAFWriter->writeFromFloatArrays((const float **)inp, 1, (toFrame - fromFrame))) {
+		mCurrentFrame += numFrames;	
+	} else {
+		logMsg (kLogError, "Sound file write error");
+		throw IOError("Sound file write error");
+	}
+	for (unsigned i = 0; i < mNumChannels; i++)
+		inp[i] -= fromFrame;
+}
+

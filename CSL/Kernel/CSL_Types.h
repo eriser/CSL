@@ -68,6 +68,10 @@
 	#define CSL_MACOSX
 #endif
 
+#if defined (ANDROID)						// Android
+	#define CSL_ANDROID
+#endif
+
 //// Global definitions
 
 #define CSL_ENUMS				// define this to use the various enumerations (which are problematic with SWIG)

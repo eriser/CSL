@@ -305,7 +305,7 @@ bool Buffer::readFromFile(char * finam) {
 	SoundFile * inFile = SoundFile::openSndfile(finam);
 
 	if ( ! inFile->isValid()) {		// check result status
-		logMsg(kLogError, "Error opening file \"%s\" (invalid)", finam);
+		logMsg(kLogError, "Error opening sound file \"%s\" (invalid)", finam);
 		delete inFile;
 		return false;
 	}
@@ -316,7 +316,7 @@ bool Buffer::readFromFile(char * finam) {
 	delete inFile;					// delete infile
 
 	if (mNumFrames == 0) {
-		logMsg(kLogError, "Error opening file \"%s\"", finam);
+		logMsg(kLogError, "Error opening sound file \"%s\"", finam);
 		return false;
 	}
 									// everything's OK; proceed

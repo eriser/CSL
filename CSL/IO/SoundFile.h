@@ -129,6 +129,8 @@ public:									/// Constructor. Values not passed default to null.
 	virtual void nextBuffer(Buffer &outB) throw (CException);
 													/// write a buffer of data into the file
 	virtual void writeBuffer(Buffer &inB) throw (CException) = 0;
+	virtual void writeBuffer(Buffer &inB, unsigned fromFrame, unsigned toFrame)
+			throw (CException) = 0;
 	virtual SampleBuffer buffer(unsigned bufNum) { return mWavetable.buffer(bufNum); }
 
 										/// accessors

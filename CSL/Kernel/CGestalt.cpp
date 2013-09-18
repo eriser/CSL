@@ -240,6 +240,8 @@ void csl::vlogMsg(bool cz, LogLevel level, const char * format, va_list args) {
 
 #else			// normal way
 
+#ifndef CSL_ANDROID
+
 void csl::vlogMsg(bool cz, LogLevel level, const char * format, va_list args) {
 	switch(level) {
 		case kLogInfo:
@@ -270,6 +272,41 @@ void csl::vlogMsg(bool cz, LogLevel level, const char * format, va_list args) {
 		exit(1);
 }
 
+#else
+
+// Sam's Android printing
+
+void csl::vlogMsg(bool cz, LogLevel level, const char * format, va_list args) {
+	switch(level) {
+		case kLogInfo:
+			if (mVerbosity < 3)		return;
+			SWALLOW_CR()
+			fprintf(stderr, CSL_LOG_PREFIX);
+			break;
+		case kLogWarning:
+			if (mVerbosity < 2)		return;
+			SWALLOW_CR()
+			fprintf(stderr, "%s%s", CSL_LOG_PREFIX, "Warning: ");		
+			break;
+		case kLogError:
+			if (mVerbosity < 1)		return;
+			SWALLOW_CR()
+			fprintf(stderr, "%s%s", CSL_LOG_PREFIX, "Error: ");		
+			break;
+		case kLogFatal:
+			SWALLOW_CR()
+			fprintf(stderr, "%s%s", CSL_LOG_PREFIX, "FATAL ERROR: ");
+			break;
+	}
+	vfprintf(stderr, format, args);
+	if (cz)
+        fprintf(stderr, "\n");
+	fflush(stderr);
+	if (level == kLogFatal)
+		exit(1);
+}
+
+#endif
 #endif
 
 //#ifdef WIN32
@@ -334,18 +371,20 @@ void csl::logURL() {
 
 // A couple of useful functions that didn't fit in anywhere else...
 
-#ifndef WIN32
-	#include <unistd.h>		// for usleep
-#else
+#if defined (CSL_WINDOWS) || defined (CSL_ANDROID)
 
 void usleep(int usec) {
 	unsigned msec = usec / 1000;
 	unsigned now = Time::getMillisecondCounter();
 	Time::waitForMillisecondCounter(now + msec);
 }
+
 float log2f(float n) {
     return logf(n) / logf(2.0f);
 }
+
+#else
+	#include <unistd.h>		// for usleep
 #endif
 
 //#ifndef WIN32
