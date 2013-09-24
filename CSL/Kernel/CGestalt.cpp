@@ -1,6 +1,7 @@
-//
-//  CGestalt.cpp -- the gestalt class implementation
-// The MVC Observer/Subject or dependency pattern classes are also here.
+///
+///  CGestalt.cpp -- the gestalt class implementation.
+///
+///	The MVC Observer/Subject or dependency pattern classes are also here.
 //
 //	See the copyright notice and acknowledgment of authors in the file COPYRIGHT
 //
@@ -17,6 +18,8 @@ using namespace std;
 #ifdef WIN32
 #include <crtdbg.h>
 #endif
+
+//using namespace juce;
 
 ////// These are the system default values //////
 ///
@@ -40,6 +43,9 @@ static unsigned mOutPort = CSL_mOutPort;						///< RFS output port
 static string mDataFolder = CSL_DATA_DIR;						///< User's CSL data folder ()
 static bool mStopNow = false;									///< flag to stop threads and timers
 
+static unsigned sScreenWidth;									///< screen width is global (so you can reference it without including this file)
+static unsigned sScreenHeight;									///< screen height is global
+
 /// CGestalt Accessors for system constants
 
 unsigned CGestalt::frameRate() { return mFrameRate; }
@@ -54,7 +60,11 @@ unsigned CGestalt::numOutChannels() { return mNumOutChannels; }
 unsigned CGestalt::verbosity() { return mVerbosity; }
 unsigned CGestalt::loggingPeriod() { return mLoggingPeriod; }
 unsigned CGestalt::outPort()	{ return mOutPort; }
+
 bool CGestalt::stopNow()	{ return mStopNow; }
+
+unsigned CGestalt::screenWidth() { return sScreenWidth; }							///< current screen width
+unsigned CGestalt::screenHeight() { return sScreenHeight; }							///< current screen height
 
 // handle dataFolder paths relative to "~"
 
@@ -89,6 +99,9 @@ void CGestalt::setDataFolder(std::string dataFolder) { mDataFolder = dataFolder;
 
 void CGestalt::setStopNow()  { mStopNow = true; }
 void CGestalt::clearStopNow()  { mStopNow = false; }
+
+void CGestalt::setScreenWidth(unsigned numPixels) { sScreenWidth = numPixels; }
+void CGestalt::setScreenHeight(unsigned numPixels) { sScreenHeight = numPixels; }
 
 // get init file name
 

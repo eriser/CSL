@@ -64,12 +64,16 @@
 	#define CSL_WINDOWS
 #endif
 
-#if defined (__APPLE__)						// Mac OSX
+#if defined __APPLE__						// Mac OSX
 	#define CSL_MACOSX
 #endif
 
 #if defined (ANDROID)						// Android
 	#define CSL_ANDROID
+#endif
+
+#ifdef JUCE_IOS								// iOS
+	#define CSL_IOS
 #endif
 
 //// Global definitions

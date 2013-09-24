@@ -17,18 +17,17 @@
 #define CSL_Gestalt_H
 
 #include "CSL_Types.h"		// The system default values are defined there
-#include "CSL_Exceptions.h"		// The system default values are defined there
+#include "CSL_Exceptions.h"	// The system default values are defined there
 
 #include <stdarg.h>			// for va_arg, vaList, etc.
 #include <string>
 
 #ifdef USE_JUCE
-#include "JuceHeader.h"
-#include "modules/juce_core/time/juce_Time.h"
-
-//using namespace juce;
+	#include "JuceHeader.h"
+	#include "modules/juce_core/time/juce_Time.h"
+	#include <sys/time.h>
 #else
-#include <sys/time.h>
+	#include <sys/time.h>
 #endif
 
 namespace csl {
@@ -85,6 +84,11 @@ public:												// Accessor (getter/setter) methods
 	static void storeToInitFile(char key, std::string data);
 	
 	static std::string sndFileName();				///< pick a new sound file name to use based on OUT_SFILE_NAME
+
+	static unsigned screenWidth();					///< current screen width
+	static void setScreenWidth(unsigned numPixels);
+	static unsigned screenHeight();					///< current screen height
+	static void setScreenHeight(unsigned numPixels);
 
 };
 
